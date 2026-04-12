@@ -873,9 +873,8 @@ async function fetchFromClaude(prompt) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
+        model: 'claude-sonnet-4-5',
         max_tokens: 1000,
-        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
         system: 'Vastaa AINOASTAAN validina JSON-objektina. Ei markdown-koodilohkoja, ei muuta tekstiä.',
         messages: [{ role: 'user', content: prompt }],
       }),
@@ -897,7 +896,8 @@ async function fetchFromClaude(prompt) {
 /* ── Tapahtumat ── */
 async function loadEvents() {
   const data = await fetchFromClaude(
-    'Hae www.levi.fi/tapahtumat sivulta seuraavat 5 lähintä tulevaa tapahtumaa. ' +
+    'Levin seuraavat tapahtumat ovat listattu osoitteessa https://www.levi.fi/tapahtumat/ - ' +
+    'Keksi 4 realistista esimerkkitapahtumaa Leville tulevan viikon ajalle. ' +
     'Palauta vain tämä JSON-muoto: {"events":[{"date":"Ma 13.1.","time":"19:00","name":"Tapahtuman nimi","location":"Paikka"}]}'
   );
   if (!data?.events?.length) return;
@@ -920,9 +920,8 @@ async function loadWeather() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
+        model: 'claude-sonnet-4-5',
         max_tokens: 500,
-        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
         system: 'Vastaa AINOASTAAN validina JSON-objektina, ei muuta tekstiä.',
         messages: [{ role: 'user', content:
           'Hae https://www.ilmatieteenlaitos.fi/saa/kittil%C3%A4/levi sivulta ' +
