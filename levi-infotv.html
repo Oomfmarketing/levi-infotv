@@ -875,6 +875,7 @@ async function fetchFromClaude(prompt) {
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 2000,
+        tools: [{"type":"web_search_20250305","name":"web_search","max_uses":1}],
         system: 'Vastaa AINOASTAAN validina JSON-objektina. Ei markdown-koodilohkoja, ei muuta tekstiä.',
         messages: [{ role: 'user', content: prompt }],
       }),
@@ -926,6 +927,7 @@ async function loadWeather() {
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 800,
+        tools: [{"type":"web_search_20250305","name":"web_search","max_uses":1}],
         system: 'Vastaa AINOASTAAN validina JSON-objektina, ei muuta tekstiä.',
         messages: [{ role: 'user', content:
           'Hae https://www.ilmatieteenlaitos.fi/saa/kittil%C3%A4/levi sivulta ' +
