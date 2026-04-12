@@ -869,14 +869,9 @@ const REFRESH_MS = 10 * 60 * 1000;
 
 async function fetchFromClaude(prompt) {
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://levi-proxy.flat-cloud-8d4c.workers.dev', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': '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',
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
@@ -921,14 +916,9 @@ async function loadEvents() {
 /* ── Sää FMI suorahaku ── */
 async function loadWeather() {
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://levi-proxy.flat-cloud-8d4c.workers.dev', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': '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',
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 500,
