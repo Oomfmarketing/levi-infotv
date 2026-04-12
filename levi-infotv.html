@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920">
+<title>Levi Info TV</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Barlow:wght@300;400;500&family=Barlow+Condensed:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- QR-koodit: qrcode.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<!-- YouTube IFrame API -->
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  html, body {
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    background: #04101E;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :root {
+    --navy:      #002B5C;
+    --blue:      #003E7E;
+    --gold:      #D4A843;
+    --gold-dim:  rgba(212,168,67,0.15);
+    --gold-line: rgba(212,168,67,0.3);
+    --ice:       #6BB8D4;
+    --ice-dim:   rgba(107,184,212,0.11);
+    --snow:      #EAF4FA;
+    --muted:     rgba(234,244,250,0.40);
+    --panel:     rgba(255,255,255,0.036);
+    --border:    rgba(107,184,212,0.10);
+    --deep:      #060F1C;
+    --night:     #04101E;
+    --green:     #4DBF7F;
+    --red:       #D95050;
+    --amber:     #E0A030;
+  }
+
+  /* Aurora */
+  body::before {
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(ellipse 1500px 400px at 200px   0px, rgba(0,62,126,0.28) 0%, transparent 100%),
+      radial-gradient(ellipse  900px 260px at 1550px 50px, rgba(0,43,92,0.34)  0%, transparent 100%),
+      radial-gradient(ellipse  600px 180px at  960px  0px, rgba(26,90,138,0.14) 0%, transparent 100%);
+    animation: aurora 24s ease-in-out infinite alternate;
+  }
+  @keyframes aurora {
+    0%   { opacity:.5; transform:scaleX(1)    translateY(0);   }
+    50%  { opacity:.9; transform:scaleX(1.05) translateY(-5px);}
+    100% { opacity:.6; transform:scaleX(.97)  translateY(3px); }
+  }
+
+  /* Stars */
+  body::after {
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:
+      radial-gradient(1.5px 1.5px at  210px  85px, rgba(255,255,255,.5) 0%,transparent 100%),
+      radial-gradient(1px   1px   at  590px  60px, rgba(255,255,255,.35) 0%,transparent 100%),
+      radial-gradient(2px   2px   at 1060px 105px, rgba(255,255,255,.55) 0%,transparent 100%),
+      radial-gradient(1.5px 1.5px at 1390px  45px, rgba(255,255,255,.4) 0%,transparent 100%),
+      radial-gradient(1px   1px   at 1730px 125px, rgba(255,255,255,.28) 0%,transparent 100%),
+      radial-gradient(1px   1px   at  430px 175px, rgba(255,255,255,.22) 0%,transparent 100%),
+      radial-gradient(1px   1px   at 1210px  75px, rgba(255,255,255,.44) 0%,transparent 100%);
+  }
+
+  /* ════ MASTER GRID  1920×1080 ════
+     cols: [cam 1560px] [sidebar 360px]
+     rows: [header 72px] [main 952px] [footer 56px]
+  */
+  .screen {
+    position: relative; z-index:1;
+    width: 1920px; height: 1080px;
+    display: grid;
+    grid-template-columns: 1560px 360px;
+    grid-template-rows:    72px 952px 56px;
+    gap: 1px;
+    background: var(--border);
+  }
+
+  /* ════ HEADER 1920×72 ════ */
+  header {
+    grid-column: 1/-1;
+    display: flex; align-items: center;
+    padding: 0 32px;
+    background: rgba(4,16,30,.97);
+    border-bottom: 1px solid var(--border);
+    gap: 20px;
+  }
+
+  .wordmark { display:flex; align-items:baseline; gap:0; flex-shrink:0; }
+  .wm-levi  {
+    font-family:'Cormorant Garamond',serif;
+    font-weight:700; font-size:2.3rem;
+    color:var(--snow); letter-spacing:.05em; line-height:1;
+  }
+  .wm-dot { color:var(--gold); font-family:'Cormorant Garamond',serif; font-size:2.3rem; line-height:1; }
+  .wm-fi  {
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:300; font-size:.75rem; letter-spacing:.32em;
+    text-transform:uppercase; color:var(--gold);
+    margin-left:12px; align-self:center;
+  }
+
+  .sep { width:1px; height:32px; background:var(--border); flex-shrink:0; }
+  .tagline {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.68rem; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--muted); white-space:nowrap;
+  }
+  .gap { flex:1; }
+
+  .hw-strip { display:flex; align-items:center; gap:24px; }
+  .hw-item  { display:flex; flex-direction:column; align-items:center; gap:2px; }
+  .hw-val   {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:1.35rem; font-weight:600;
+    color:var(--snow); line-height:1; letter-spacing:.02em;
+  }
+  .hw-lbl   {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.58rem; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--muted);
+  }
+
+  .clock-block { text-align:right; flex-shrink:0; }
+  .clock    {
+    font-family:'Cormorant Garamond',serif;
+    font-size:2.1rem; font-weight:600;
+    color:var(--snow); letter-spacing:.04em; line-height:1;
+  }
+  .dateline {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.6rem; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--muted);
+  }
+
+  /* ════ KAMERA 1560×952 ════ */
+  .cam-area {
+    grid-column:1; grid-row:2/3;
+    width:1560px; height:952px;
+    position:relative; overflow:hidden; background:#000;
+  }
+
+  /* YouTube IFrame API luo iframe:n tähän diviin */
+  #yt-player {
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    border:none;
+    /* Piilotetaan YouTube UI skaalaamalla */
+    pointer-events:none;
+  }
+
+  /* Skaalataan video leveämmäksi jotta YT-ui putoaa ulos */
+  #yt-player iframe {
+    position:absolute;
+    top: -10%;
+    left: -5%;
+    width: 110%;
+    height: 120%;
+    border:none;
+    pointer-events:none;
+  }
+
+  /* Panomax iframe (cam 10) */
+  #panomax-frame {
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    border:none; display:none;
+    pointer-events:none;
+  }
+
+  /* Overlay: top */
+  .cam-top {
+    position:absolute; top:0; left:0; right:0; height:90px;
+    padding:18px 24px;
+    background:linear-gradient(rgba(3,8,18,.82),transparent);
+    display:flex; align-items:flex-start; justify-content:space-between;
+    z-index:20; pointer-events:none;
+  }
+  .cam-left { display:flex; align-items:center; gap:10px; }
+  .live-dot {
+    width:10px; height:10px; border-radius:50%;
+    background:var(--red); flex-shrink:0;
+    animation:blink 1.3s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.15} }
+  .cam-name-txt {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.95rem; font-weight:600; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--snow);
+  }
+  .cam-counter {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.72rem; letter-spacing:.14em; color:var(--muted);
+  }
+
+  /* Overlay: bottom */
+  .cam-bot {
+    position:absolute; bottom:0; left:0; right:0; height:110px;
+    padding:0 24px 30px;
+    background:linear-gradient(transparent,rgba(3,8,18,.88));
+    display:flex; flex-direction:column; justify-content:flex-end;
+    z-index:20; pointer-events:none;
+  }
+  .cam-loc {
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.4rem; font-weight:600; color:var(--snow); letter-spacing:.04em;
+  }
+  .cam-sub {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.72rem; color:var(--muted); letter-spacing:.14em; margin-top:3px;
+  }
+
+  /* Dotsit */
+  .cam-dots {
+    position:absolute; bottom:15px; left:50%;
+    transform:translateX(-50%);
+    display:flex; gap:9px; z-index:21;
+  }
+  .dot {
+    width:7px; height:7px; border-radius:50%;
+    background:rgba(255,255,255,.16);
+    transition:background .35s, transform .35s;
+  }
+  .dot.active { background:var(--gold); transform:scale(1.45); }
+
+  /* Progress */
+  .cam-prog {
+    position:absolute; bottom:0; left:0;
+    height:3px; background:var(--gold); z-index:22; width:0%;
+  }
+
+  /* ════ SIDEBAR 360×952 ════ */
+  .sidebar {
+    grid-column:2; grid-row:2/3;
+    width:360px; height:952px;
+    display:flex; flex-direction:column;
+    gap:1px; background:var(--border); overflow:hidden;
+  }
+
+  .panel {
+    background:var(--deep);
+    padding:16px 18px;
+    overflow:hidden; position:relative;
+  }
+  .panel-lbl {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.62rem; letter-spacing:.26em;
+    text-transform:uppercase; color:var(--muted);
+    margin-bottom:12px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .panel-lbl::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  /* Sää 210px */
+  .weather-panel { flex:0 0 210px; }
+
+  .w-main { display:flex; align-items:center; gap:14px; margin-bottom:12px; }
+  .w-icon { font-size:2.8rem; line-height:1; filter:drop-shadow(0 0 8px rgba(107,184,212,.28)); }
+  .w-temp {
+    font-family:'Cormorant Garamond',serif;
+    font-size:2.8rem; font-weight:700; color:var(--snow); line-height:1;
+  }
+  .w-desc { font-size:.76rem; color:var(--muted); margin-top:4px; }
+
+  .snow-row { display:flex; gap:14px; align-items:baseline; margin-bottom:12px; }
+  .snow-fig {
+    font-family:'Cormorant Garamond',serif;
+    font-size:2rem; font-weight:700; color:var(--snow); line-height:1;
+  }
+  .snow-unit { font-size:.74rem; color:var(--muted); margin-left:3px; }
+  .snow-lbl  {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.54rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-top:3px;
+  }
+  .snow-div  { width:1px; height:30px; background:var(--border); }
+
+  .w-grid { display:grid; grid-template-columns:1fr 1fr; gap:5px; }
+  .w-stat { background:var(--panel); border:1px solid var(--border); border-radius:3px; padding:7px 10px; }
+  .ws-lbl {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.54rem; letter-spacing:.15em; text-transform:uppercase; color:var(--muted); margin-bottom:2px;
+  }
+  .ws-val {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:1rem; font-weight:600; color:var(--ice);
+  }
+
+  /* Rinnetilanne 246px */
+  .slopes-panel { flex:0 0 246px; overflow:hidden; display:flex; flex-direction:column; }
+
+  .lifts-wrap { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:9px; }
+  .lift-chip {
+    display:flex; align-items:center; gap:4px;
+    background:var(--panel); border:1px solid var(--border);
+    border-radius:3px; padding:4px 8px;
+    font-family:'Barlow Condensed',sans-serif; font-size:.7rem;
+  }
+  .l-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .l-dot.open   { background:var(--green); box-shadow:0 0 5px var(--green); }
+  .l-dot.closed { background:var(--red); }
+
+  .slope-list { display:flex; flex-direction:column; gap:4px; overflow:hidden; flex:1; }
+  .slope-row {
+    display:flex; align-items:center; gap:8px;
+    padding:5px 8px;
+    background:var(--panel); border:1px solid var(--border);
+    border-radius:3px; border-left:3px solid transparent;
+  }
+  .slope-row.s-open    { border-left-color:var(--green); }
+  .slope-row.s-closed  { border-left-color:var(--red); opacity:.45; }
+  .slope-row.s-limited { border-left-color:var(--amber); }
+
+  .diff {
+    width:16px; height:16px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Barlow Condensed',sans-serif; font-size:.54rem; font-weight:700;
+  }
+  .diff.g { background:var(--green); color:#000; }
+  .diff.b { background:#3d88cc; color:#fff; }
+  .diff.r { background:var(--red);  color:#fff; }
+  .diff.k { background:#eee; color:#000; }
+
+  .slope-name { flex:1; font-size:.76rem; }
+  .slope-st   {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.62rem; letter-spacing:.1em; text-transform:uppercase;
+  }
+  .slope-st.open    { color:var(--green); }
+  .slope-st.closed  { color:var(--red); }
+  .slope-st.limited { color:var(--amber); }
+  .slope-legend {
+    font-family:'Barlow Condensed',sans-serif;
+    margin-top:7px; font-size:.56rem; color:var(--muted); letter-spacing:.09em;
+  }
+
+  /* Ruokalista flex:1 */
+  .menu-panel { flex:1; overflow-y:auto; scrollbar-width:none; }
+  .menu-panel::-webkit-scrollbar { display:none; }
+
+  .menu-cat {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.6rem; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--gold); margin-bottom:5px; margin-top:10px;
+    padding-bottom:4px; border-bottom:1px solid var(--gold-line);
+  }
+  .menu-cat:first-child { margin-top:0; }
+  .menu-row {
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding:4px 0; border-bottom:1px solid rgba(255,255,255,.04); gap:5px;
+  }
+  .menu-row:last-child { border-bottom:none; }
+  .menu-n { font-size:.78rem; flex:1; }
+  .menu-d { font-size:.62rem; color:var(--muted); display:block; margin-top:1px; }
+  .menu-p {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.9rem; font-weight:600; color:var(--ice); white-space:nowrap; flex-shrink:0;
+  }
+
+  /* ─── MAINOSRUUTU + QR ─── */
+  .ad-panel {
+    flex:0 0 auto;
+    position:relative; overflow:hidden;
+    background:linear-gradient(150deg,#071E3D,#04101E);
+  }
+  .ad-panel::before {
+    content:''; position:absolute; inset:-60%;
+    background:radial-gradient(ellipse at center,rgba(212,168,67,.055) 0%,transparent 60%);
+    animation:adglow 10s ease-in-out infinite alternate;
+  }
+  @keyframes adglow { 0%{transform:translate(-14%,-14%)} 100%{transform:translate(14%,14%)} }
+
+  .ad-slide {
+    position:absolute; inset:0;
+    display:flex; flex-direction:row;
+    align-items:center;
+    gap:12px; padding:14px 16px; z-index:1;
+    opacity:0; transition:opacity .9s ease;
+  }
+  .ad-slide.active { opacity:1; }
+
+  /* QR-alue */
+  .ad-qr {
+    flex-shrink:0;
+    width:90px; height:90px;
+    background:#fff; border-radius:6px;
+    display:flex; align-items:center; justify-content:center;
+    padding:4px;
+  }
+  .ad-qr canvas, .ad-qr img { display:block; }
+
+  /* Mainos teksti */
+  .ad-text { flex:1; display:flex; flex-direction:column; gap:4px; }
+  .ad-pre   {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.56rem; letter-spacing:.24em; text-transform:uppercase; color:var(--muted);
+  }
+  .ad-title {
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.15rem; font-weight:700; color:var(--snow); letter-spacing:.02em; line-height:1.15;
+  }
+  .ad-sub   { font-size:.68rem; color:var(--ice); line-height:1.35; }
+  .ad-cta   {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.6rem; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--gold); margin-top:2px;
+    display:flex; align-items:center; gap:5px;
+  }
+  .ad-cta::before {
+    content:''; display:inline-block;
+    width:16px; height:1px; background:var(--gold);
+  }
+
+  /* ════ FOOTER 1920×56 ════ */
+  footer {
+    grid-column:1/-1;
+    display:flex; align-items:center;
+    padding:0 24px;
+    background:rgba(4,16,30,.97);
+    border-top:1px solid var(--border);
+    gap:16px; overflow:hidden;
+    height:56px;
+  }
+  .ticker-lbl {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.6rem; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--gold);
+    background:var(--gold-dim); border:1px solid var(--gold-line);
+    padding:4px 10px; white-space:nowrap; flex-shrink:0;
+  }
+  .ticker-track { overflow:hidden; flex:1; height:100%; display:flex; align-items:center; }
+  .ticker-text  {
+    white-space:nowrap;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:.84rem; letter-spacing:.05em; color:var(--snow);
+    animation:ticker 60s linear infinite;
+  }
+  @keyframes ticker { 0%{transform:translateX(1920px)} 100%{transform:translateX(-100%)} }
+  .ticker-sep { color:var(--muted); margin:0 22px; }
+</style>
+</head>
+<body>
+<div class="screen">
+
+  <!-- ════ HEADER ════ -->
+  <header>
+    <div class="wordmark">
+      <span class="wm-levi">Levi</span>
+      <span class="wm-dot">.</span>
+      <span class="wm-fi">fi</span>
+    </div>
+    <div class="sep"></div>
+    <div class="tagline">Info · Sää · Rinnetilanne · Palvelut</div>
+    <div class="gap"></div>
+    <div class="hw-strip">
+      <div class="hw-item"><div class="hw-val">−12°C</div><div class="hw-lbl">Lämpötila</div></div>
+      <div class="sep"></div>
+      <div class="hw-item"><div class="hw-val">82 cm</div><div class="hw-lbl">Lumi / huippu</div></div>
+      <div class="sep"></div>
+      <div class="hw-item"><div class="hw-val">+14 cm</div><div class="hw-lbl">Uutta / 24h</div></div>
+      <div class="sep"></div>
+      <div class="hw-item"><div class="hw-val">4 m/s KO</div><div class="hw-lbl">Tuuli</div></div>
+      <div class="sep"></div>
+      <div class="hw-item"><div class="hw-val">40 / 43</div><div class="hw-lbl">Rinteet auki</div></div>
+    </div>
+    <div class="sep" style="margin:0 8px 0 22px;"></div>
+    <div class="clock-block">
+      <div class="clock" id="clock">--:--</div>
+      <div class="dateline" id="dateline">---</div>
+    </div>
+  </header>
+
+  <!-- ════ KAMERA ════ -->
+  <div class="cam-area">
+    <!-- YouTube IFrame API player sijoittuu tähän -->
+    <div id="yt-player"></div>
+    <!-- Panomax 360° (cam 10) -->
+    <iframe id="panomax-frame"
+      src="https://flycam.panomax.com/tuikku"
+      allow="autoplay;encrypted-media"
+      allowfullscreen></iframe>
+
+    <div class="cam-top">
+      <div class="cam-left">
+        <div class="live-dot"></div>
+        <div class="cam-name-txt" id="cam-name">—</div>
+      </div>
+      <div class="cam-counter" id="cam-counter">1 / 11</div>
+    </div>
+    <div class="cam-bot">
+      <div class="cam-loc" id="cam-loc">—</div>
+      <div class="cam-sub" id="cam-sub">—</div>
+    </div>
+    <div class="cam-dots" id="cam-dots"></div>
+    <div class="cam-prog" id="cam-prog"></div>
+  </div>
+
+  <!-- ════ SIDEBAR ════ -->
+  <div class="sidebar">
+
+    <!-- Sää -->
+    <div class="panel weather-panel">
+      <div class="panel-lbl">Sää — Levin huippu 531 m</div>
+      <div class="w-main">
+        <div class="w-icon">❄️</div>
+        <div>
+          <div class="w-temp">−12°C</div>
+          <div class="w-desc">Selkeää · Koillinen tuuli</div>
+        </div>
+      </div>
+      <div class="snow-row">
+        <div>
+          <div class="snow-fig">82<span class="snow-unit">cm</span></div>
+          <div class="snow-lbl">Lumikerros / huippu</div>
+        </div>
+        <div class="snow-div"></div>
+        <div>
+          <div class="snow-fig">+14<span class="snow-unit">cm</span></div>
+          <div class="snow-lbl">Uutta lunta / 24h</div>
+        </div>
+      </div>
+      <div class="w-grid">
+        <div class="w-stat"><div class="ws-lbl">Tuuli</div><div class="ws-val">4 m/s KO</div></div>
+        <div class="w-stat"><div class="ws-lbl">Tuntuma</div><div class="ws-val">−18°C</div></div>
+        <div class="w-stat"><div class="ws-lbl">Näkyvyys</div><div class="ws-val">Hyvä</div></div>
+        <div class="w-stat"><div class="ws-lbl">Aurinko</div><div class="ws-val">10:22–14:08</div></div>
+      </div>
+    </div>
+
+    <!-- Rinnetilanne -->
+    <div class="panel slopes-panel">
+      <div class="panel-lbl">Rinne- ja hissitilanne</div>
+      <div class="lifts-wrap">
+        <div class="lift-chip"><div class="l-dot open"></div>Gondoli</div>
+        <div class="lift-chip"><div class="l-dot open"></div>Hissi 3</div>
+        <div class="lift-chip"><div class="l-dot open"></div>Hissi 7</div>
+        <div class="lift-chip"><div class="l-dot closed"></div>Hissi 2</div>
+        <div class="lift-chip"><div class="l-dot open"></div>Lapsirinne</div>
+        <div class="lift-chip"><div class="l-dot open"></div>Hissi 11</div>
+      </div>
+      <div class="slope-list">
+        <div class="slope-row s-open"><div class="diff g">H</div><div class="slope-name">Rinne 1 — Gondolilaskeutuminen</div><div class="slope-st open">Auki</div></div>
+        <div class="slope-row s-open"><div class="diff b">K</div><div class="slope-name">Rinne 4 — Myrskyrinne</div><div class="slope-st open">Auki</div></div>
+        <div class="slope-row s-open"><div class="diff r">V</div><div class="slope-name">Rinne 11 — Etelärinne</div><div class="slope-st open">Auki</div></div>
+        <div class="slope-row s-limited"><div class="diff k">M</div><div class="slope-name">Rinne 14 — Huippu Black</div><div class="slope-st limited">Rajattu</div></div>
+        <div class="slope-row s-closed"><div class="diff b">K</div><div class="slope-name">Rinne 8 — Pohjoinen</div><div class="slope-st closed">Suljettu</div></div>
+        <div class="slope-row s-open"><div class="diff g">H</div><div class="slope-name">Lasten harjoitusrinne</div><div class="slope-st open">Auki</div></div>
+        <div class="slope-row s-open"><div class="diff r">V</div><div class="slope-name">Rinne 6 — Slalomrinne</div><div class="slope-st open">Auki</div></div>
+      </div>
+      <div class="slope-legend">H Helppo · K Keskivaikea · V Vaikea · M Musta</div>
+    </div>
+
+    <!-- Ruokalista -->
+    <div class="panel menu-panel">
+      <div class="panel-lbl">Päivän lista — Sky Restaurant</div>
+      <div class="menu-cat">Pääruuat</div>
+      <div class="menu-row"><div><div class="menu-n">Poronkäristys</div><div class="menu-d">Perunamuusi, puolukkahillo</div></div><div class="menu-p">28 €</div></div>
+      <div class="menu-row"><div><div class="menu-n">Lohikeitto</div><div class="menu-d">Kermainen, tuore leipä</div></div><div class="menu-p">18 €</div></div>
+      <div class="menu-row"><div><div class="menu-n">Hirviburger</div><div class="menu-d">Cheddar, karamellisoitu sipuli</div></div><div class="menu-p">22 €</div></div>
+      <div class="menu-row"><div><div class="menu-n">Kasvisrisotto</div><div class="menu-d">Talvisienikastike, parmesaani</div></div><div class="menu-p">16 €</div></div>
+      <div class="menu-cat">Jälkiruuat</div>
+      <div class="menu-row"><div><div class="menu-n">Lakkabrûlée</div><div class="menu-d">Lappilainen lakkahillo</div></div><div class="menu-p">9 €</div></div>
+      <div class="menu-row"><div><div class="menu-n">Suklaafondantti</div><div class="menu-d">Vaniljajäätelö</div></div><div class="menu-p">9 €</div></div>
+      <div class="menu-cat">Juomat</div>
+      <div class="menu-row"><div class="menu-n">Glögi</div><div class="menu-p">6 €</div></div>
+      <div class="menu-row"><div class="menu-n">Lappi Porter 0,5 l</div><div class="menu-p">8 €</div></div>
+      <div class="menu-row"><div class="menu-n">Viinipullo (oma valinta)</div><div class="menu-p">38 €</div></div>
+    </div>
+
+    <!-- Mainokset + QR -->
+    <div class="panel ad-panel" id="ad-panel">
+
+      <!-- Mainos 1: Varaussivu -->
+      <div class="ad-slide active" id="ad0">
+        <div class="ad-qr" id="qr0"></div>
+        <div class="ad-text">
+          <div class="ad-pre">Varaa majoitus</div>
+          <div class="ad-title">Levi.fi — Majoitushaku</div>
+          <div class="ad-sub">Hotellit, mökit ja huoneistot — kaikki samasta paikasta</div>
+          <div class="ad-cta">Skannaa QR-koodi</div>
+        </div>
+      </div>
+
+      <!-- Mainos 2: Revontuli-ilta -->
+      <div class="ad-slide" id="ad1">
+        <div class="ad-qr" id="qr1"></div>
+        <div class="ad-text">
+          <div class="ad-pre">Tänä viikonloppuna</div>
+          <div class="ad-title">Revontuli-ilta</div>
+          <div class="ad-sub">Opastettu retki la 11.1. klo 21:00 · levi.fi/tapahtumat</div>
+          <div class="ad-cta">Skannaa QR-koodi</div>
+        </div>
+      </div>
+
+      <!-- Mainos 3: Hiihtokoulu -->
+      <div class="ad-slide" id="ad2">
+        <div class="ad-qr" id="qr2"></div>
+        <div class="ad-text">
+          <div class="ad-pre">Levi Ski School</div>
+          <div class="ad-title">Hiihtokoulu</div>
+          <div class="ad-sub">Yksityistunnit ja ryhmät · klo 10:00 &amp; 13:00</div>
+          <div class="ad-cta">Skannaa QR-koodi</div>
+        </div>
+      </div>
+
+      <!-- Mainos 4: Ravintola -->
+      <div class="ad-slide" id="ad3">
+        <div class="ad-qr" id="qr3"></div>
+        <div class="ad-text">
+          <div class="ad-pre">Sky Restaurant</div>
+          <div class="ad-title">Pöytävaraus</div>
+          <div class="ad-sub">Huipulla sijaitseva ravintola · auki klo 11–22</div>
+          <div class="ad-cta">Skannaa QR-koodi</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ════ FOOTER ════ -->
+  <footer>
+    <div class="ticker-lbl">INFO</div>
+    <div class="ticker-track">
+      <div class="ticker-text">
+        Hissit auki tänään klo 9:00–17:00
+        <span class="ticker-sep">·</span>
+        Lasten hiihtokoulu kokoontuu rinteen päässä klo 10:00
+        <span class="ticker-sep">·</span>
+        Sky Restaurant auki klo 11:00–22:00 — pöytävaraukset: levi.fi/ravintola
+        <span class="ticker-sep">·</span>
+        Kelkkaretki lähtee klo 14:00 — ilmoittaudu vastaanotossa tai levi.fi/aktiviteetit
+        <span class="ticker-sep">·</span>
+        Parkkipaikka P2 täynnä — P3 vapaana
+        <span class="ticker-sep">·</span>
+        Hissien viimeinen nousu klo 16:45
+        <span class="ticker-sep">·</span>
+        WiFi: LeviGuest — ei salasanaa
+        <span class="ticker-sep">·</span>
+        SPA &amp; uima-allas auki klo 8–22 · Levitunturi Hotel · levi.fi/spa
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /screen -->
+
+<script>
+/* ════════════════════════════════════════════════
+   KAMERAKONFIGURAATIO
+   type: 'youtube' | 'panomax'
+   videoId: YouTube video ID
+   ════════════════════════════════════════════════ */
+const CAMERAS = [
+  { type:'youtube', videoId:'LwihxyJ4V20', name:'Kamera 1',    loc:'Levi — Live-näkymä',            sub:'YouTube Live · levi.fi' },
+  { type:'youtube', videoId:'89vRm9bb9_c', name:'Kamera 2',    loc:'Levi — Live-näkymä',            sub:'YouTube Live · levi.fi' },
+  { type:'youtube', videoId:'X7tdyNFpp1g', name:'Kamera 3',    loc:'Levi — Live-näkymä',            sub:'YouTube Live · levi.fi' },
+  { type:'youtube', videoId:'gehi4YiVYdY', name:'Kamera 4',    loc:'Levi — Live-näkymä',            sub:'YouTube Live · levi.fi' },
+  { type:'youtube', videoId:'tgCjNC-813A', name:'Kamera 5',    loc:'Levi — Live-näkymä',            sub:'YouTube Live · levi.fi' },
+  { type:'youtube', videoId:'jQrqWYe5Cn4', name:'Kamera 6',    loc:'Levi — Live-näkymä',            sub:'YouTube Live · levi.fi' },
+  { type:'youtube', videoId:'Wr9b5aYA4mI', name:'Kamera 7',    loc:'Levi — Live-näkymä',            sub:'YouTube Live · levi.fi' },
+  { type:'youtube', videoId:'eXDCi75TjM8', name:'Kamera 8',    loc:'Levi — Live-näkymä',            sub:'YouTube Live · levi.fi' },
+  { type:'youtube', videoId:'hWN0iCg8pDY', name:'Kamera 9',    loc:'Levi — Live-näkymä',            sub:'YouTube Live · levi.fi' },
+  { type:'youtube', videoId:'mupuSRKkL_M', name:'Kamera 10',   loc:'Levi — Live-näkymä',            sub:'YouTube Live · levi.fi' },
+  { type:'panomax',                         name:'Tuikku 360°', loc:'Restaurant Tuikku — Panoraama', sub:'Panomax 360° · Live'    },
+];
+
+/* ════ MAINOS + QR KONFIGURAATIO ════ */
+const ADS = [
+  { id:'qr0', url:'https://www.levi.fi/majoitu/' },
+  { id:'qr1', url:'https://www.levi.fi/aktiviteetit/tapahtumat/' },
+  { id:'qr2', url:'https://www.levi.fi/laskettelu-ja-hiihto/hiihtokoulut/' },
+  { id:'qr3', url:'https://www.levi.fi/aktiviteetit/ravintolat/' },
+];
+
+const INTERVAL_CAM = 14000;  /* ms per kamera */
+const INTERVAL_AD  = 8000;   /* ms per mainos */
+
+/* ════ QR-KOODIT ════ */
+function buildQR() {
+  ADS.forEach(ad => {
+    const el = document.getElementById(ad.id);
+    if (!el) return;
+    new QRCode(el, {
+      text: ad.url,
+      width: 82,
+      height: 82,
+      colorDark: '#002B5C',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M,
+    });
+  });
+}
+buildQR();
+
+/* ════ MAINOSROTAATIO ════ */
+const adSlides = document.querySelectorAll('.ad-slide');
+let adCur = 0;
+function nextAd() {
+  adSlides[adCur].classList.remove('active');
+  adCur = (adCur + 1) % adSlides.length;
+  adSlides[adCur].classList.add('active');
+}
+setInterval(nextAd, INTERVAL_AD);
+
+/* ════ KAMERA — YouTube IFrame API ════ */
+let ytPlayer = null;
+let ytReady  = false;
+let pendingVideoId = null;
+let cur      = 0;
+let rotTimer = null;
+
+/* Rakennetaan dotsit */
+const dotsEl = document.getElementById('cam-dots');
+CAMERAS.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  dotsEl.appendChild(d);
+});
+const dots = dotsEl.querySelectorAll('.dot');
+
+const nameEl = document.getElementById('cam-name');
+const cntEl  = document.getElementById('cam-counter');
+const locEl  = document.getElementById('cam-loc');
+const subEl  = document.getElementById('cam-sub');
+const progEl = document.getElementById('cam-prog');
+const panoEl = document.getElementById('panomax-frame');
+const ytEl   = document.getElementById('yt-player');
+
+/* YouTube API valmis */
+window.onYouTubeIframeAPIReady = function() {
+  ytReady = true;
+  const firstCam = CAMERAS[0];
+  ytPlayer = new YT.Player('yt-player', {
+    width:  '100%',
+    height: '100%',
+    videoId: firstCam.videoId,
+    playerVars: {
+      autoplay:        1,
+      mute:            1,
+      controls:        0,
+      rel:             0,
+      modestbranding:  1,
+      loop:            1,
+      playlist:        firstCam.videoId,
+      iv_load_policy:  3,  /* ei annotaatioita */
+      fs:              0,  /* ei fullscreen-nappia */
+    },
+    events: {
+      onReady: function(e) {
+        e.target.mute();
+        e.target.playVideo();
+        if (pendingVideoId) {
+          e.target.loadVideoById({ videoId: pendingVideoId, suggestedQuality: 'hd1080' });
+          pendingVideoId = null;
+        }
+      },
+      onStateChange: function(e) {
+        /* Jos video pysähtyy, käynnistä uudelleen */
+        if (e.data === YT.PlayerState.ENDED || e.data === YT.PlayerState.PAUSED) {
+          e.target.playVideo();
+        }
+      },
+    },
+  });
+  updateOverlay(0);
+  startProgress();
+};
+
+function loadYouTube(videoId) {
+  if (!ytReady || !ytPlayer || typeof ytPlayer.loadVideoById !== 'function') {
+    pendingVideoId = videoId;
+    return;
+  }
+  ytPlayer.loadVideoById({ videoId, suggestedQuality: 'hd1080' });
+  ytPlayer.mute();
+  ytPlayer.playVideo();
+}
+
+function showPanomax() {
+  ytEl.style.display = 'none';
+  panoEl.style.display = 'block';
+  if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
+}
+
+function hidePanomax() {
+  panoEl.style.display = 'none';
+  ytEl.style.display   = 'block';
+  if (ytPlayer && ytPlayer.playVideo) ytPlayer.playVideo();
+}
+
+function updateOverlay(idx) {
+  const cam = CAMERAS[idx];
+  nameEl.textContent = cam.name;
+  cntEl.textContent  = (idx + 1) + ' / ' + CAMERAS.length;
+  locEl.textContent  = cam.loc;
+  subEl.textContent  = cam.sub;
+  dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+}
+
+function startProgress() {
+  progEl.style.transition = 'none';
+  progEl.style.width = '0%';
+  void progEl.offsetWidth;
+  progEl.style.transition = `width ${INTERVAL_CAM}ms linear`;
+  progEl.style.width = '100%';
+  clearTimeout(rotTimer);
+  rotTimer = setTimeout(advance, INTERVAL_CAM);
+}
+
+function goTo(idx) {
+  cur = idx;
+  const cam = CAMERAS[idx];
+  updateOverlay(idx);
+  if (cam.type === 'panomax') {
+    showPanomax();
+  } else {
+    hidePanomax();
+    loadYouTube(cam.videoId);
+  }
+  startProgress();
+}
+
+function advance() {
+  goTo((cur + 1) % CAMERAS.length);
+}
+
+/* ════ KELLO ════ */
+const DAYS   = ['Su','Ma','Ti','Ke','To','Pe','La'];
+const MONTHS = ['tammikuuta','helmikuuta','maaliskuuta','huhtikuuta','toukokuuta','kesäkuuta',
+  'heinäkuuta','elokuuta','syyskuuta','lokakuuta','marraskuuta','joulukuuta'];
+function tick() {
+  const n = new Date();
+  document.getElementById('clock').textContent =
+    String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0');
+  document.getElementById('dateline').textContent =
+    DAYS[n.getDay()] + ' ' + n.getDate() + '. ' + MONTHS[n.getMonth()] + ' ' + n.getFullYear();
+}
+tick(); setInterval(tick, 1000);
+</script>
+</body>
+</html>
