@@ -873,8 +873,8 @@ async function fetchFromClaude(prompt) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
-        max_tokens: 1000,
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 2000,
         system: 'Vastaa AINOASTAAN validina JSON-objektina. Ei markdown-koodilohkoja, ei muuta tekstiä.',
         messages: [{ role: 'user', content: prompt }],
       }),
@@ -924,8 +924,8 @@ async function loadWeather() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
-        max_tokens: 500,
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 800,
         system: 'Vastaa AINOASTAAN validina JSON-objektina, ei muuta tekstiä.',
         messages: [{ role: 'user', content:
           'Hae https://www.ilmatieteenlaitos.fi/saa/kittil%C3%A4/levi sivulta ' +
