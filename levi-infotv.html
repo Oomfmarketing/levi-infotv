@@ -265,16 +265,16 @@ header {
 .ad-content { flex:1; display:flex; flex-direction:column; justify-content:center; gap:6px; }
 .ad-pre {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:.78rem; letter-spacing:.28em; text-transform:uppercase; color:var(--muted);
+  font-size:.82rem; letter-spacing:.26em; text-transform:uppercase; color:rgba(234,244,250,0.65);
 }
 .ad-title {
   font-family:'Cormorant Garamond',serif;
-  font-size:2.4rem; font-weight:700; color:var(--snow);
+  font-size:2.6rem; font-weight:700; color:#ffffff;
   letter-spacing:.02em; line-height:1.05;
 }
 .ad-desc {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:1.1rem; font-weight:400; color:var(--ice);
+  font-size:1.25rem; font-weight:400; color:#8dcfe8;
   letter-spacing:.04em; line-height:1.3;
 }
 
@@ -298,12 +298,12 @@ header {
 }
 
 /* Panel */
-.panel { background:var(--deep); padding:22px 26px; overflow:hidden; }
+.panel { background:var(--deep); padding:20px 24px; overflow:hidden; color:var(--snow); }
 .plbl {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:.72rem; letter-spacing:.28em;
-  text-transform:uppercase; color:var(--muted);
-  margin-bottom:16px;
+  font-size:.78rem; letter-spacing:.26em;
+  text-transform:uppercase; color:rgba(107,184,212,0.75);
+  margin-bottom:14px;
   display:flex; align-items:center; gap:10px;
 }
 .plbl::after { content:''; flex:1; height:1px; background:var(--border); }
@@ -319,7 +319,7 @@ header {
 }
 .w-desc {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:1rem; color:var(--muted); margin-top:6px; letter-spacing:.06em;
+  font-size:1.1rem; color:rgba(234,244,250,0.75); margin-top:6px; letter-spacing:.06em;
 }
 
 .snow-row { display:flex; gap:20px; align-items:baseline; margin-bottom:16px; }
@@ -333,7 +333,7 @@ header {
 }
 .snow-l {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-top:4px;
+  font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:rgba(234,244,250,0.6); margin-top:4px;
 }
 .snow-d { width:1px; height:40px; background:var(--border); }
 
@@ -344,11 +344,11 @@ header {
 }
 .wsl {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:.62rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin-bottom:4px;
+  font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:rgba(234,244,250,0.65); margin-bottom:4px;
 }
 .wsv {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:1.3rem; font-weight:600; color:var(--ice);
+  font-size:1.5rem; font-weight:600; color:#8dcfe8;
 }
 
 /* ── Rinnetilanne ── */
@@ -357,9 +357,9 @@ header {
 .lifts { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
 .lchip {
   display:flex; align-items:center; gap:6px;
-  background:var(--panel); border:1px solid var(--border);
-  border-radius:4px; padding:6px 12px;
-  font-family:'Barlow Condensed',sans-serif; font-size:.85rem;
+  background:var(--panel); border:1px solid rgba(107,184,212,0.2);
+  border-radius:4px; padding:7px 13px;
+  font-family:'Barlow Condensed',sans-serif; font-size:.95rem; color:var(--snow);
 }
 .ld { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
 .ld.o { background:var(--green); box-shadow:0 0 6px var(--green); }
@@ -368,8 +368,8 @@ header {
 .slist { display:flex; flex-direction:column; gap:6px; }
 .srow {
   display:flex; align-items:center; gap:10px;
-  padding:8px 12px;
-  background:var(--panel); border:1px solid var(--border);
+  padding:9px 12px;
+  background:rgba(255,255,255,0.05); border:1px solid rgba(107,184,212,0.15);
   border-radius:4px; border-left:4px solid transparent;
 }
 .srow.so { border-left-color:var(--green); }
@@ -387,18 +387,18 @@ header {
 .sname {
   flex:1;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:1rem; letter-spacing:.02em;
+  font-size:1.1rem; font-weight:500; letter-spacing:.02em; color:var(--snow);
 }
 .sst {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:.82rem; letter-spacing:.12em; text-transform:uppercase; flex-shrink:0;
+  font-size:.95rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; flex-shrink:0;
 }
 .sst.o { color:var(--green); }
 .sst.c { color:var(--red); }
 .sst.l { color:var(--amber); }
 .sleg {
   font-family:'Barlow Condensed',sans-serif;
-  margin-top:10px; font-size:.65rem; color:var(--muted); letter-spacing:.1em;
+  margin-top:10px; font-size:.72rem; color:rgba(234,244,250,0.55); letter-spacing:.1em;
 }
 
 /* ── Tapahtumat ── */
@@ -407,24 +407,24 @@ header {
 .eitem {
   display:flex; flex-direction:column; gap:4px;
   border-left:3px solid var(--gold);
-  padding:8px 14px;
-  background:var(--panel);
+  padding:9px 14px;
+  background:rgba(255,255,255,0.055);
   border-radius:0 4px 4px 0;
 }
 .eitem.f { border-left-color:var(--ice); }
 .edate {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:.75rem; letter-spacing:.16em; text-transform:uppercase;
-  color:var(--gold);
+  font-size:.88rem; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--gold); font-weight:600;
 }
 .eitem.f .edate { color:var(--ice); }
 .ename {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:1.15rem; font-weight:600; color:var(--snow); line-height:1.2;
+  font-size:1.3rem; font-weight:700; color:#ffffff; line-height:1.2; letter-spacing:.02em;
 }
 .eloc {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:.78rem; color:var(--muted);
+  font-size:.85rem; color:rgba(234,244,250,0.6);
 }
 
 /* ── Aukioloajat ── */
@@ -436,11 +436,11 @@ header {
 .hrow:last-child { border-bottom:none; }
 .hname {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:1rem; color:var(--muted);
+  font-size:1.1rem; color:rgba(234,244,250,0.72); font-weight:400;
 }
 .htime {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:1.15rem; font-weight:600; color:var(--snow); white-space:nowrap;
+  font-size:1.3rem; font-weight:700; color:#ffffff; white-space:nowrap;
 }
 
 /* ══ FOOTER 1920 × 56 ══ */
@@ -637,7 +637,7 @@ footer {
     <!-- Tapahtumat -->
     <div class="panel ep">
       <div class="plbl">Tapahtumat</div>
-      <div class="elist">
+      <div class="elist" id="event-list">
         <div class="eitem">
           <div class="edate">La 11.1. · 21:00</div>
           <div class="ename">Revontuli-ilta</div>
@@ -860,6 +860,190 @@ function tick() {
     DAYS[n.getDay()]+' · '+n.getDate()+'. '+MONTHS[n.getMonth()]+' '+n.getFullYear();
 }
 tick(); setInterval(tick,1000);
+
+/* ══════════════════════════════════════════════════════
+   CLAUDE API — hakee levi.fi tapahtumat & rinnetilanne
+   Päivitetään 10 minuutin välein automaattisesti
+   ══════════════════════════════════════════════════════ */
+const REFRESH_MS = 10 * 60 * 1000;
+
+async function fetchFromClaude(prompt) {
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': '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',
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        system: 'Olet avustaja joka hakee tietoa levi.fi-sivustolta. Vastaa AINOASTAAN validina JSON-objektina, ei muuta tekstiä eikä markdown-koodilohkoja.',
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const text = (data.content || [])
+      .filter(b => b.type === 'text')
+      .map(b => b.text)
+      .join('');
+    const clean = text.replace(/```json|```/g, '').trim();
+    return JSON.parse(clean);
+  } catch(e) {
+    console.warn('Claude API:', e.message);
+    return null;
+  }
+}
+
+/* ── Tapahtumat ── */
+async function loadEvents() {
+  const data = await fetchFromClaude(
+    'Hae www.levi.fi/tapahtumat sivulta seuraavat 5 lähintä tulevaa tapahtumaa. ' +
+    'Palauta vain tämä JSON-muoto: {"events":[{"date":"Ma 13.1.","time":"19:00","name":"Tapahtuman nimi","location":"Paikka"}]}'
+  );
+  if (!data?.events?.length) return;
+  const list = document.getElementById('event-list');
+  list.innerHTML = '';
+  data.events.forEach((ev, i) => {
+    list.innerHTML += `
+      <div class="eitem${i > 0 ? ' f' : ''}">
+        <div class="edate">${ev.date}${ev.time ? ' · ' + ev.time : ''}</div>
+        <div class="ename">${ev.name}</div>
+        ${ev.location ? `<div class="eloc">${ev.location}</div>` : ''}
+      </div>`;
+  });
+}
+
+/* ── Sää FMI suorahaku ── */
+async function loadWeather() {
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': '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',
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 500,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        system: 'Vastaa AINOASTAAN validina JSON-objektina, ei muuta tekstiä.',
+        messages: [{ role: 'user', content:
+          'Hae https://www.ilmatieteenlaitos.fi/saa/kittil%C3%A4/levi sivulta ' +
+          'tämänhetkinen sää Levillä. Palauta: ' +
+          '{"temp_c":10,"feels_c":9,"wind_ms":2,"wind_dir":"E","condition":"Selkeää","sun_rise":"06:30","sun_set":"21:45"}'
+        }],
+      }),
+    });
+    const d = await res.json();
+    const txt = (d.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
+    const w = JSON.parse(txt.replace(/```json|```/g,'').trim());
+
+    /* Päivitä UI */
+    const hvs = document.querySelectorAll('.hwv');
+    if (hvs[0] && w.temp_c !== undefined) hvs[0].textContent = (w.temp_c > 0 ? '+' : '') + w.temp_c + '°C';
+    if (hvs[3] && w.wind_ms) hvs[3].textContent = w.wind_ms + ' m/s ' + (w.wind_dir || '');
+
+    const wtemp = document.querySelector('.w-temp');
+    if (wtemp && w.temp_c !== undefined) wtemp.textContent = (w.temp_c > 0 ? '+' : '') + w.temp_c + '°C';
+
+    const wdesc = document.querySelector('.w-desc');
+    if (wdesc) {
+      let desc = w.condition || '';
+      if (w.wind_dir) desc += ' · ' + w.wind_dir + '-tuuli';
+      wdesc.textContent = desc;
+    }
+
+    const wsvs = document.querySelectorAll('.wsv');
+    if (wsvs[0] && w.wind_ms) wsvs[0].textContent = w.wind_ms + ' m/s ' + (w.wind_dir || '');
+    if (wsvs[1] && w.feels_c !== undefined) wsvs[1].textContent = (w.feels_c > 0 ? '+' : '') + w.feels_c + '°C';
+
+    const sun = document.querySelector('.wsv:last-child');
+    if (wsvs[3] && w.sun_rise && w.sun_set)
+      wsvs[3].textContent = w.sun_rise + '–' + w.sun_set;
+
+  } catch(e) { console.warn('FMI weather:', e.message); }
+}
+
+/* ── Rinnetilanne & sää ── */
+async function loadSlopeStatus() {
+  const data = await fetchFromClaude(
+    'Hae www.levi.fi/laskettelu-ja-hiihto/hiihtokeskus-tanaan/ sivulta reaaliaikaiset tiedot. ' +
+    'Palauta vain tämä JSON-muoto: {' +
+    '"open_slopes":40,"total_slopes":43,' +
+    '"snow_depth_cm":82,"new_snow_cm":14,' +
+    '"lifts":[{"name":"Gondoli","open":true}],' +
+    '"slopes":[{"name":"Rinne 1 - Gondolilaskeutuminen","diff":"H","status":"open"}],' +
+    '"hours_lifts":"9:00-17:00","hours_restaurant":"11:00-22:00",' +
+    '"hours_rental":"8:00-18:00","hours_ski_school":"9:00-16:00","hours_spa":"8:00-22:00"}'
+  );
+  if (!data) return;
+
+  /* Lumi & rinteet (lämpötila & tuuli tulevat FMI:stä) */
+  const hvs2 = document.querySelectorAll('.hwv');
+  if (hvs2[1] && data.snow_depth_cm)            hvs2[1].textContent = data.snow_depth_cm + ' cm';
+  if (hvs2[2] && data.new_snow_cm !== undefined) hvs2[2].textContent = (data.new_snow_cm >= 0 ? '+' : '') + data.new_snow_cm + ' cm';
+  if (hvs2[4] && data.open_slopes)              hvs2[4].textContent = data.open_slopes + ' / ' + (data.total_slopes || 43);
+
+  const sfigs = document.querySelectorAll('.snow-fig');
+  if (sfigs[0] && data.snow_depth_cm)            sfigs[0].innerHTML = data.snow_depth_cm + '<span class="snow-u">cm</span>';
+  if (sfigs[1] && data.new_snow_cm !== undefined) sfigs[1].innerHTML = (data.new_snow_cm >= 0 ? '+' : '') + data.new_snow_cm + '<span class="snow-u">cm</span>';
+
+  /* Hissit */
+  if (data.lifts?.length) {
+    document.querySelector('.lifts').innerHTML = data.lifts.map(l =>
+      `<div class="lchip"><div class="ld ${l.open ? 'o' : 'c'}"></div>${l.name}</div>`
+    ).join('');
+  }
+
+  /* Rinteet */
+  if (data.slopes?.length) {
+    const dm = {H:'g',K:'b',V:'r',M:'k'};
+    const sm = {open:'so',closed:'sc',limited:'sl'};
+    const st = {open:'Auki',closed:'Suljettu',limited:'Rajattu'};
+    const sc2 = {open:'o',closed:'c',limited:'l'};
+    document.querySelector('.slist').innerHTML = data.slopes.map(s =>
+      `<div class="srow ${sm[s.status]||'so'}">
+        <div class="diff ${dm[s.diff]||'b'}">${s.diff}</div>
+        <div class="sname">${s.name}</div>
+        <div class="sst ${sc2[s.status]||'o'}">${st[s.status]||'Auki'}</div>
+      </div>`
+    ).join('');
+  }
+
+  /* Aukioloajat */
+  const htimes = document.querySelectorAll('.htime');
+  if (htimes[0] && data.hours_lifts)      htimes[0].textContent = data.hours_lifts;
+  if (htimes[1] && data.hours_restaurant) htimes[1].textContent = data.hours_restaurant;
+  if (htimes[2] && data.hours_rental)     htimes[2].textContent = data.hours_rental;
+  if (htimes[3] && data.hours_ski_school) htimes[3].textContent = data.hours_ski_school;
+  if (htimes[4] && data.hours_spa)        htimes[4].textContent = data.hours_spa;
+
+  /* Ticker */
+  const parts = [
+    data.hours_lifts      ? 'Hissit auki ' + data.hours_lifts : null,
+    data.hours_restaurant ? 'Sky Restaurant auki ' + data.hours_restaurant : null,
+    data.open_slopes      ? 'Rinteit\u00e4 auki t\u00e4n\u00e4\u00e4n ' + data.open_slopes + '/' + (data.total_slopes||43) : null,
+    'WiFi: LeviGuest \u2014 ei salasanaa',
+    'Parkkipaikka P3 vapaana',
+    data.hours_spa ? 'SPA & uima-allas auki ' + data.hours_spa + ' \u00b7 Levitunturi Hotel' : null,
+  ].filter(Boolean);
+  const ttext = document.querySelector('.ttext');
+  if (ttext) ttext.innerHTML = parts.join(' <span class="tsep">\u00b7</span> ');
+}
+
+/* ── Käynnistä & ajoita ── */
+async function refreshAll() {
+  await Promise.all([loadEvents(), loadSlopeStatus(), loadWeather()]);
+}
+refreshAll();
+setInterval(refreshAll, REFRESH_MS);
 </script>
 </body>
 </html>
