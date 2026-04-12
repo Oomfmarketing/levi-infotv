@@ -873,10 +873,10 @@ async function fetchFromClaude(prompt) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 1000,
         tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-        system: 'Olet avustaja joka hakee tietoa levi.fi-sivustolta. Vastaa AINOASTAAN validina JSON-objektina, ei muuta tekstiä eikä markdown-koodilohkoja.',
+        system: 'Vastaa AINOASTAAN validina JSON-objektina. Ei markdown-koodilohkoja, ei muuta tekstiä.',
         messages: [{ role: 'user', content: prompt }],
       }),
     });
@@ -920,7 +920,7 @@ async function loadWeather() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 500,
         tools: [{ type: 'web_search_20250305', name: 'web_search' }],
         system: 'Vastaa AINOASTAAN validina JSON-objektina, ei muuta tekstiä.',
