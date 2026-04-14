@@ -517,9 +517,9 @@ footer {
     <div class="hw">
       <div class="hwi"><div class="hwv">−12°C</div><div class="hwl">Lämpötila</div></div>
       <div class="vsep"></div>
-      <div class="hwi"><div class="hwv">82 cm</div><div class="hwl">Lumi</div></div>
+      <div class="hwi"><div class="hwv" id="hw-snow">– cm</div><div class="hwl">Lumi</div></div>
       <div class="vsep"></div>
-      <div class="hwi"><div class="hwv">+14 cm</div><div class="hwl">Uutta / 24h</div></div>
+      <div class="hwi"><div class="hwv" id="hw-newsnow">– cm</div><div class="hwl">Uutta / 24h</div></div>
       <div class="vsep"></div>
       <div class="hwi"><div class="hwv">4 m/s KO</div><div class="hwl">Tuuli</div></div>
       <div class="vsep"></div>
@@ -627,12 +627,12 @@ footer {
       </div>
       <div class="snow-row">
         <div>
-          <div class="snow-fig">82<span class="snow-u">cm</span></div>
+          <div class="snow-fig" id="snow-depth">–<span class="snow-u">cm</span></div>
           <div class="snow-l">Lumi / huippu</div>
         </div>
         <div class="snow-d"></div>
         <div>
-          <div class="snow-fig">+14<span class="snow-u">cm</span></div>
+          <div class="snow-fig" id="snow-new">–<span class="snow-u">cm</span></div>
           <div class="snow-l">Uutta / 24h</div>
         </div>
       </div>
@@ -954,7 +954,7 @@ async function loadWeather() {
     // FMI WFS API - avoin data, ei autentikaatiota
     const FMIURL = 'https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0' +
       '&request=getFeature&storedquery_id=fmi::observations::weather::simple' +
-      '&fmisid=101886&parameters=temperature,windspeedms,winddirection,weathersymbol3';
+      '&fmisid=101886&parameters=temperature,windspeedms,winddirection,weathersymbol3,snowdepth';
 
     const resp = await fetch(FMIURL);
     if (!resp.ok) throw new Error('FMI HTTP ' + resp.status);
@@ -964,22 +964,40 @@ async function loadWeather() {
     const members = doc.querySelectorAll('BsWfs\\:BsWfsElement, BsWfsElement');
 
     const vals = {};
+    // Kerää kaikki arvot, pidä viimeisin ei-NaN
     members.forEach(m => {
       const param = m.querySelector('ParameterName')?.textContent?.trim();
       const val   = parseFloat(m.querySelector('ParameterValue')?.textContent);
-      if (param && !isNaN(val)) vals[param] = val;
+      if (param && !isNaN(val) && val !== -99 && val !== -9999) vals[param] = val;
     });
 
     const temp  = vals['temperature']    ?? null;
     const wind  = vals['windspeedms']    ?? null;
     const wdir  = vals['winddirection']  ?? null;
     const wsym  = vals['weathersymbol3'] ?? null;
+    const snow  = vals['snowdepth']      ?? null;
+
+    // Päivitä lumiarvot FMI:stä
+    if (snow !== null && snow >= 0) {
+      const snowCm = Math.round(snow) + ' cm';
+      const hwSnow = document.getElementById('hw-snow');
+      if (hwSnow) hwSnow.textContent = snowCm;
+      const sdEl = document.getElementById('snow-depth');
+      if (sdEl) sdEl.innerHTML = Math.round(snow) + '<span class="snow-u">cm</span>';
+    }
+    // Uusi lumi — FMI ei suoraan anna 24h muutosta, näytetään viiva
+    const hwNew = document.getElementById('hw-newsnow');
+    if (hwNew) hwNew.textContent = '–';
+    const snNew = document.getElementById('snow-new');
+    if (snNew) snNew.innerHTML = '–<span class="snow-u">cm</span>';
 
     // Muunna tuulensuunta asteista kompassiin
     const dirStr = wdir !== null ? degToCompass(wdir) : '';
 
-    // Sääkuvaus symbolinumeron perusteella
+    // Sääkuvaus ja ikoni symbolinumeron perusteella
+    // Havainnot palauttavat viimeisimmän arvon — ota uusin jossa sym ei ole NaN
     const condStr = weatherSymbol(wsym);
+    const iconStr = weatherIcon(wsym, temp);
 
     // Päivitä header
     const hvs = document.querySelectorAll('.hwv');
@@ -989,6 +1007,9 @@ async function loadWeather() {
     // Päivitä sää-paneeli
     const wtemp = document.querySelector('.w-temp');
     if (wtemp && temp !== null) wtemp.textContent = (temp > 0 ? '+' : '') + Math.round(temp) + '°C';
+
+    const wicon = document.querySelector('.w-icon');
+    if (wicon) wicon.textContent = iconStr;
 
     const wdesc = document.querySelector('.w-desc');
     if (wdesc) wdesc.textContent = condStr + (dirStr ? ' · ' + dirStr + '-tuuli' : '');
@@ -1009,10 +1030,14 @@ async function loadWeather() {
 /* ── FMI 5 päivän ennuste ── */
 async function loadForecast() {
   try {
+    const now = new Date();
+    const start = new Date(now); start.setUTCHours(12,0,0,0);
+    const end   = new Date(start); end.setUTCDate(end.getUTCDate() + 5);
     const FURL = 'https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0' +
       '&request=getFeature&storedquery_id=fmi::forecast::harmonie::surface::point::simple' +
       '&place=Kittil%C3%A4&parameters=temperature,weathersymbol3' +
-      '&starttime=' + new Date().toISOString().split('T')[0] + 'T06:00:00Z' +
+      '&starttime=' + start.toISOString().replace('.000Z','Z') +
+      '&endtime='   + end.toISOString().replace('.000Z','Z') +
       '&timestep=1440';
 
     const resp = await fetch(FURL);
@@ -1033,7 +1058,7 @@ async function loadForecast() {
       days[date][par] = val;
     });
 
-    const dayKeys = Object.keys(days).sort().slice(1, 6); // Seuraavat 5 päivää
+    const dayKeys = Object.keys(days).sort().slice(0, 6); // Tänään + 5 päivää
     const WDAYS = ['Su','Ma','Ti','Ke','To','Pe','La'];
 
     const foreEl = document.getElementById('forecast-row');
@@ -1076,16 +1101,35 @@ function weatherSymbol(sym) {
   return 'Vaihtelevaa';
 }
 
-function weatherIcon(sym) {
-  if (sym === null || sym === undefined) return '☀️';
+function weatherIcon(sym, temp) {
+  // FMI weathersymbol3: 1=selkeä, 2=lähes selkeä, 21=puolipilv, 22=puolipilv,
+  // 31-32=pilvistä, 41-42=sumua, 51-56=tihkusadetta, 61-66=sadetta, 71-75=lumisadetta
+  // Huomioidaan myös lämpötila
+  const t = temp ?? 0;
+  if (sym === null || sym === undefined || isNaN(sym)) {
+    // Ei symbolia — päättele lämpötilasta
+    if (t > 10) return '☀️';
+    if (t > 3)  return '🌤️';
+    if (t > 0)  return '🌥️';
+    if (t > -5) return '❄️';
+    return '❄️';
+  }
   const s = Math.round(sym);
+  // FMI uudet symbolikoodit (1-99)
+  if (s === 1)  return '☀️';
+  if (s === 2)  return '🌤️';
+  if (s <= 4)   return '⛅';
+  if (s <= 7)   return '☁️';
+  if (s <= 9)   return '🌫️';
+  if (s <= 30)  return t < 1 ? '🌨️' : '🌦️';
+  if (s <= 60)  return t < 1 ? '🌨️' : '🌧️';
+  if (s <= 80)  return '❄️';
+  if (s <= 99)  return '⛈️';
+  // Vanhat koodit 1-10 (havaintoasemat)
   if (s <= 2)  return '☀️';
   if (s <= 4)  return '🌤️';
-  if (s <= 7)  return '☁️';
+  if (s <= 6)  return '☁️';
   if (s <= 9)  return '🌫️';
-  if (s <= 14) return '🌧️';
-  if (s <= 19) return '❄️';
-  if (s <= 26) return '⛈️';
   return '🌥️';
 }
 
