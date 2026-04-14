@@ -160,11 +160,6 @@ header {
   width:100%; height:100%;
   border:none; pointer-events:none;
 }
-#panomax-frame {
-  position:absolute; inset:0;
-  width:100%; height:100%;
-  border:none; display:none; pointer-events:none;
-}
 
 /* Cam overlays */
 .cam-top {
@@ -299,6 +294,44 @@ header {
 
 /* Panel */
 .panel { background:var(--deep); padding:20px 24px; overflow:hidden; color:var(--snow); }
+/* ── Sääennuste ── */
+.forecast-panel { flex:0 0 auto; padding:14px 24px 16px; }
+.fc-row {
+  display:flex; gap:6px; margin-top:4px;
+}
+.fc-day {
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:4px; padding:8px 4px;
+}
+.fc-name {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:.75rem; font-weight:600; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ice);
+}
+.fc-date {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:.6rem; color:var(--muted);
+}
+.fc-icon { font-size:1.4rem; line-height:1; }
+.fc-temp {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.2rem; font-weight:700; color:var(--snow);
+}
+
+/* ── Rinnetilanne sivutus ── */
+.slope-page { display:none; }
+.slope-page.active { display:flex; flex-direction:column; gap:4px; }
+.slope-pager {
+  display:flex; justify-content:center; gap:6px; margin-top:6px;
+}
+.slope-pgdot {
+  width:6px; height:6px; border-radius:50%;
+  background:rgba(255,255,255,.2);
+  transition:background .3s;
+}
+.slope-pgdot.active { background:var(--gold); }
+
 .plbl {
   font-family:'Barlow Condensed',sans-serif;
   font-size:.78rem; letter-spacing:.26em;
@@ -476,7 +509,7 @@ footer {
   <!-- ══ HEADER 1920×72 ══ -->
   <header>
     <div class="wordmark">
-      <span class="wm-levi">Levi</span><span class="wm-dot">.</span><span class="wm-fi">fi</span>
+      <span class="wm-levi">Levi</span><span class="wm-dot">.</span><span class="wm-fi" style="display:none"></span>
     </div>
     <div class="vsep"></div>
     <div class="tagline">Info · Sää · Rinnetilanne · Tapahtumat · Palvelut</div>
@@ -505,7 +538,6 @@ footer {
   <!-- ══ KAMERA 1359×764 ══ -->
   <div class="cam-area">
     <div class="yt-wrap" id="yt-wrap"></div>
-    <iframe id="panomax-frame" src="about:blank" allow="autoplay;encrypted-media" allowfullscreen></iframe>
 
     <div class="cam-top">
       <div class="cam-live">
@@ -533,7 +565,7 @@ footer {
       <div class="ad-divider"></div>
       <div class="ad-content">
         <div class="ad-pre">Varaa majoitus</div>
-        <div class="ad-title">Levi.fi — Majoitushaku</div>
+        <div class="ad-title">Majoitushaku</div>
         <div class="ad-desc">Hotellit, mökit ja loma-asunnot — kaikki samasta paikasta</div>
       </div>
     </div>
@@ -547,7 +579,7 @@ footer {
       <div class="ad-content">
         <div class="ad-pre">Tänä viikonloppuna · La 11.1. klo 21:00</div>
         <div class="ad-title">Revontuli-ilta</div>
-        <div class="ad-desc">Opastettu retki revontuliin — varaa paikka levi.fi/tapahtumat</div>
+        <div class="ad-desc">Opastettu retki revontuliin — varaa paikka tapahtumat</div>
       </div>
     </div>
 
@@ -573,7 +605,7 @@ footer {
       <div class="ad-content">
         <div class="ad-pre">Sky Restaurant — Levin huipulla</div>
         <div class="ad-title">Pöytävaraus</div>
-        <div class="ad-desc">Avoin klo 11:00–22:00 · varaa pöytä levi.fi/ravintolat</div>
+        <div class="ad-desc">Avoin klo 11:00–22:00 · varaa pöytä ravintolat</div>
       </div>
     </div>
 
@@ -612,6 +644,18 @@ footer {
       </div>
     </div>
 
+    <!-- Sääennuste -->
+    <div class="panel forecast-panel" style="padding-top:0;">
+      <div class="plbl">Ennuste</div>
+      <div class="fc-row" id="forecast-row">
+        <div class="fc-day"><div class="fc-name">–</div><div class="fc-icon">–</div><div class="fc-temp">–</div></div>
+        <div class="fc-day"><div class="fc-name">–</div><div class="fc-icon">–</div><div class="fc-temp">–</div></div>
+        <div class="fc-day"><div class="fc-name">–</div><div class="fc-icon">–</div><div class="fc-temp">–</div></div>
+        <div class="fc-day"><div class="fc-name">–</div><div class="fc-icon">–</div><div class="fc-temp">–</div></div>
+        <div class="fc-day"><div class="fc-name">–</div><div class="fc-icon">–</div><div class="fc-temp">–</div></div>
+      </div>
+    </div>
+
     <!-- Rinnetilanne -->
     <div class="panel sp">
       <div class="plbl">Rinne- ja hissitilanne</div>
@@ -623,14 +667,8 @@ footer {
         <div class="lchip"><div class="ld o"></div>Lapsirinne</div>
         <div class="lchip"><div class="ld o"></div>Hissi 11</div>
       </div>
-      <div class="slist">
-        <div class="srow so"><div class="diff g">H</div><div class="sname">Rinne 1 — Gondoli</div><div class="sst o">Auki</div></div>
-        <div class="srow so"><div class="diff b">K</div><div class="sname">Rinne 4 — Myrskyrinne</div><div class="sst o">Auki</div></div>
-        <div class="srow so"><div class="diff r">V</div><div class="sname">Rinne 11 — Etelärinne</div><div class="sst o">Auki</div></div>
-        <div class="srow sl"><div class="diff k">M</div><div class="sname">Rinne 14 — Huippu Black</div><div class="sst l">Rajattu</div></div>
-        <div class="srow sc"><div class="diff b">K</div><div class="sname">Rinne 8 — Pohjoinen</div><div class="sst c">Suljettu</div></div>
-        <div class="srow so"><div class="diff g">H</div><div class="sname">Lasten harjoitusrinne</div><div class="sst o">Auki</div></div>
-      </div>
+      <div id="slope-pages"></div>
+      <div class="slope-pager" id="slope-pager"></div>
       <div class="sleg">H Helppo · K Keskivaikea · V Vaikea · M Musta</div>
     </div>
 
@@ -641,7 +679,7 @@ footer {
         <div class="eitem">
           <div class="edate">La 11.1. · 21:00</div>
           <div class="ename">Revontuli-ilta</div>
-          <div class="eloc">Opastettu retki · levi.fi/tapahtumat</div>
+          <div class="eloc">Opastettu retki/tapahtumat</div>
         </div>
         <div class="eitem f">
           <div class="edate">Su 12.1. · 10:00</div>
@@ -682,7 +720,7 @@ footer {
         <span class="tsep">·</span>
         Lasten hiihtokoulu kokoontuu rinteen päässä klo 10:00
         <span class="tsep">·</span>
-        Sky Restaurant auki klo 11:00–22:00 — varaukset levi.fi/ravintolat
+        Sky Restaurant auki klo 11:00–22:00 — varaukset ravintolat
         <span class="tsep">·</span>
         Kelkkaretki lähtee klo 14:00 — ilmoittaudu vastaanotossa
         <span class="tsep">·</span>
@@ -714,10 +752,10 @@ window.addEventListener('resize', scale);
 
 /* ── QR ── */
 [
-  {id:'qr0', url:'https://www.levi.fi/majoitu/'},
-  {id:'qr1', url:'https://www.levi.fi/aktiviteetit/tapahtumat/'},
-  {id:'qr2', url:'https://www.levi.fi/laskettelu-ja-hiihto/hiihtokoulut/'},
-  {id:'qr3', url:'https://www.levi.fi/aktiviteetit/ravintolat/'},
+  {id:'qr0', url:'https://www.majoitu/'},
+  {id:'qr1', url:'https://www.aktiviteetit/tapahtumat/'},
+  {id:'qr2', url:'https://www.laskettelu-ja-hiihto/hiihtokoulut/'},
+  {id:'qr3', url:'https://www.aktiviteetit/ravintolat/'},
 ].forEach(a => {
   const el = document.getElementById(a.id);
   if (el) new QRCode(el, {text:a.url, width:110, height:110,
@@ -744,17 +782,16 @@ setInterval(() => {
 
 /* ── Kamerat ── */
 const CAMERAS = [
-  {type:'youtube',videoId:'LwihxyJ4V20',name:'Zero Point',          loc:'Levi Center — Zero Point',          sub:'Live · levi.fi'},
-  {type:'youtube',videoId:'89vRm9bb9_c',name:'South Point',         loc:'South Point — Etelärinne',          sub:'Live · levi.fi'},
-  {type:'youtube',videoId:'X7tdyNFpp1g',name:'Village View',        loc:'Village View — Kylänäkymä',         sub:'Live · levi.fi'},
-  {type:'youtube',videoId:'gehi4YiVYdY',name:'Levi Black / Gondola',loc:'Levi Black — Gondola-alue',         sub:'Live · levi.fi'},
-  {type:'youtube',videoId:'tgCjNC-813A',name:'Levi Six',            loc:'Levi Six — Koillisrinne',           sub:'Live · levi.fi'},
-  {type:'youtube',videoId:'jQrqWYe5Cn4',name:'Levi West',           loc:'Levi West — Länsirinne',            sub:'Live · levi.fi'},
-  {type:'youtube',videoId:'Wr9b5aYA4mI',name:'Glacier Express',     loc:'Levi Center — Glacier Express',     sub:'Live · levi.fi'},
-  {type:'youtube',videoId:'eXDCi75TjM8',name:'Top of Levi',         loc:'Top of Levi — Huippu 531 m',        sub:'Live · levi.fi'},
-  {type:'youtube',videoId:'hWN0iCg8pDY',name:'Lifts 13 & 14',       loc:'Lifts 13 & 14 — Pohjoinen',         sub:'Live · levi.fi'},
-  {type:'youtube',videoId:'mupuSRKkL_M',name:'South / Leevilandia', loc:'South Slopes — Leevilandia',        sub:'Live · levi.fi'},
-  {type:'panomax',                        name:'Tuikku Restaurant',  loc:'Restaurant Tuikku — Panoraama 360°',sub:'Panomax Live'},
+  {type:'youtube',videoId:'LwihxyJ4V20',name:'Zero Point',          loc:'Levi Center — Zero Point',          sub:'Live'},
+  {type:'youtube',videoId:'89vRm9bb9_c',name:'South Point',         loc:'South Point — Etelärinne',          sub:'Live'},
+  {type:'youtube',videoId:'X7tdyNFpp1g',name:'Village View',        loc:'Village View — Kylänäkymä',         sub:'Live'},
+  {type:'youtube',videoId:'gehi4YiVYdY',name:'Levi Black / Gondola',loc:'Levi Black — Gondola-alue',         sub:'Live'},
+  {type:'youtube',videoId:'tgCjNC-813A',name:'Levi Six',            loc:'Levi Six — Koillisrinne',           sub:'Live'},
+  {type:'youtube',videoId:'jQrqWYe5Cn4',name:'Levi West',           loc:'Levi West — Länsirinne',            sub:'Live'},
+  {type:'youtube',videoId:'Wr9b5aYA4mI',name:'Glacier Express',     loc:'Levi Center — Glacier Express',     sub:'Live'},
+  {type:'youtube',videoId:'eXDCi75TjM8',name:'Top of Levi',         loc:'Top of Levi — Huippu 531 m',        sub:'Live'},
+  {type:'youtube',videoId:'hWN0iCg8pDY',name:'Lifts 13 & 14',       loc:'Lifts 13 & 14 — Pohjoinen',         sub:'Live'},
+  {type:'youtube',videoId:'mupuSRKkL_M',name:'South / Leevilandia', loc:'South Slopes — Leevilandia',        sub:'Live'},
 ];
 
 const INT = 15000;
@@ -766,7 +803,7 @@ const cntEl  = document.getElementById('cam-cnt');
 const locEl  = document.getElementById('cam-loc');
 const subEl  = document.getElementById('cam-sub');
 const progEl = document.getElementById('cam-prog');
-const panoEl = document.getElementById('panomax-frame');
+const panoEl = null;
 const ytWrap = document.getElementById('yt-wrap');
 
 const dotsEl = document.getElementById('cam-dots');
@@ -808,15 +845,8 @@ function loadYT(id) {
   ytPlayer.loadVideoById({videoId:id, suggestedQuality:'hd1080'});
   ytPlayer.mute(); ytPlayer.playVideo();
 }
-function showPano() {
-  ytWrap.style.display='none';
-  panoEl.src='https://flycam.panomax.com/tuikku';
-  panoEl.style.display='block';
-  if(ytPlayer?.pauseVideo) ytPlayer.pauseVideo();
-}
+function showPano() {}
 function hidePano() {
-  panoEl.style.display='none'; panoEl.src='about:blank';
-  ytWrap.style.display='block';
   if(ytPlayer?.playVideo) ytPlayer.playVideo();
 }
 function updateOverlay(i) {
@@ -838,7 +868,7 @@ function startProg() {
 function goTo(i) {
   cur=i;
   updateOverlay(i);
-  CAMERAS[i].type==='panomax' ? showPano() : (hidePano(), loadYT(CAMERAS[i].videoId));
+  hidePano(); loadYT(CAMERAS[i].videoId);
   startProg();
 }
 function advance() { goTo((cur+1)%CAMERAS.length); }
@@ -862,7 +892,7 @@ function tick() {
 tick(); setInterval(tick,1000);
 
 /* ══════════════════════════════════════════════════════
-   CLAUDE API — hakee levi.fi tapahtumat & rinnetilanne
+   CLAUDE API — hakee tapahtumat & rinnetilanne
    Päivitetään 10 minuutin välein automaattisesti
    ══════════════════════════════════════════════════════ */
 const REFRESH_MS = 10 * 60 * 1000;
@@ -901,7 +931,7 @@ async function fetchFromClaude(prompt) {
 /* ── Tapahtumat ── */
 async function loadEvents() {
   const data = await fetchFromClaude(
-    'Levin seuraavat tapahtumat ovat listattu osoitteessa https://www.levi.fi/tapahtumat/ - ' +
+    'Levin seuraavat tapahtumat ovat listattu osoitteessa https://www.tapahtumat/ - ' +
     'Keksi 4 realistista esimerkkitapahtumaa Leville tulevan viikon ajalle. ' +
     'Palauta vain tämä JSON-muoto: {"events":[{"date":"Ma 13.1.","time":"19:00","name":"Tapahtuman nimi","location":"Paikka"}]}'
   );
@@ -918,58 +948,205 @@ async function loadEvents() {
   });
 }
 
-/* ── Sää FMI suorahaku ── */
+/* ── Sää FMI avoin XML-rajapinta (ei vaadi API-avainta) ── */
 async function loadWeather() {
   try {
-    const res = await fetch('https://levi-proxy.flat-cloud-8d4c.workers.dev', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 800,
-        tools: [{"type":"web_search_20250305","name":"web_search","max_uses":1}],
-        system: 'Vastaa AINOASTAAN validina JSON-objektina, ei muuta tekstiä.',
-        messages: [{ role: 'user', content:
-          'Hae https://www.ilmatieteenlaitos.fi/saa/kittil%C3%A4/levi sivulta ' +
-          'tämänhetkinen sää Levillä. Palauta: ' +
-          '{"temp_c":10,"feels_c":9,"wind_ms":2,"wind_dir":"E","condition":"Selkeää","sun_rise":"06:30","sun_set":"21:45"}'
-        }],
-      }),
+    // FMI WFS API - avoin data, ei autentikaatiota
+    const FMIURL = 'https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0' +
+      '&request=getFeature&storedquery_id=fmi::observations::weather::simple' +
+      '&place=kittila&parameters=temperature,windspeedms,winddirection,weathersymbol3' +
+      '&maxlocations=1';
+
+    const resp = await fetch(FMIURL);
+    if (!resp.ok) throw new Error('FMI HTTP ' + resp.status);
+    const xml = await resp.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xml, 'text/xml');
+    const members = doc.querySelectorAll('BsWfs\\:BsWfsElement, BsWfsElement');
+
+    const vals = {};
+    members.forEach(m => {
+      const param = m.querySelector('ParameterName')?.textContent?.trim();
+      const val   = parseFloat(m.querySelector('ParameterValue')?.textContent);
+      if (param && !isNaN(val)) vals[param] = val;
     });
-    const d = await res.json();
-    const txt = (d.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
-    const w = JSON.parse(txt.replace(/```json|```/g,'').trim());
 
-    /* Päivitä UI */
+    const temp  = vals['temperature']    ?? null;
+    const wind  = vals['windspeedms']    ?? null;
+    const wdir  = vals['winddirection']  ?? null;
+    const wsym  = vals['weathersymbol3'] ?? null;
+
+    // Muunna tuulensuunta asteista kompassiin
+    const dirStr = wdir !== null ? degToCompass(wdir) : '';
+
+    // Sääkuvaus symbolinumeron perusteella
+    const condStr = weatherSymbol(wsym);
+
+    // Päivitä header
     const hvs = document.querySelectorAll('.hwv');
-    if (hvs[0] && w.temp_c !== undefined) hvs[0].textContent = (w.temp_c > 0 ? '+' : '') + w.temp_c + '°C';
-    if (hvs[3] && w.wind_ms) hvs[3].textContent = w.wind_ms + ' m/s ' + (w.wind_dir || '');
+    if (hvs[0] && temp !== null) hvs[0].textContent = (temp > 0 ? '+' : '') + Math.round(temp) + '°C';
+    if (hvs[3] && wind !== null) hvs[3].textContent = Math.round(wind) + ' m/s ' + dirStr;
 
+    // Päivitä sää-paneeli
     const wtemp = document.querySelector('.w-temp');
-    if (wtemp && w.temp_c !== undefined) wtemp.textContent = (w.temp_c > 0 ? '+' : '') + w.temp_c + '°C';
+    if (wtemp && temp !== null) wtemp.textContent = (temp > 0 ? '+' : '') + Math.round(temp) + '°C';
 
     const wdesc = document.querySelector('.w-desc');
-    if (wdesc) {
-      let desc = w.condition || '';
-      if (w.wind_dir) desc += ' · ' + w.wind_dir + '-tuuli';
-      wdesc.textContent = desc;
-    }
+    if (wdesc) wdesc.textContent = condStr + (dirStr ? ' · ' + dirStr + '-tuuli' : '');
 
     const wsvs = document.querySelectorAll('.wsv');
-    if (wsvs[0] && w.wind_ms) wsvs[0].textContent = w.wind_ms + ' m/s ' + (w.wind_dir || '');
-    if (wsvs[1] && w.feels_c !== undefined) wsvs[1].textContent = (w.feels_c > 0 ? '+' : '') + w.feels_c + '°C';
+    if (wsvs[0] && wind !== null) wsvs[0].textContent = Math.round(wind) + ' m/s ' + dirStr;
 
-    const sun = document.querySelector('.wsv:last-child');
-    if (wsvs[3] && w.sun_rise && w.sun_set)
-      wsvs[3].textContent = w.sun_rise + '–' + w.sun_set;
+    // Hae myös ennuste seuraaville päiville
+    loadForecast();
 
-  } catch(e) { console.warn('FMI weather:', e.message); }
+  } catch(e) {
+    console.warn('FMI weather error:', e.message);
+    // Fallback: yritä hakea ennuste silti
+    loadForecast();
+  }
+}
+
+/* ── FMI 5 päivän ennuste ── */
+async function loadForecast() {
+  try {
+    const FURL = 'https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0' +
+      '&request=getFeature&storedquery_id=fmi::forecast::harmonie::surface::point::simple' +
+      '&place=kittila&parameters=temperature,windspeedms,winddirection,weathersymbol3' +
+      '&starttime=' + new Date().toISOString().split('T')[0] + 'T12:00:00Z' +
+      '&timestep=1440&maxlocations=1';  // 1 per day
+
+    const resp = await fetch(FURL);
+    const xml  = await resp.text();
+    const parser = new DOMParser();
+    const doc   = parser.parseFromString(xml, 'text/xml');
+    const members = doc.querySelectorAll('BsWfs\\:BsWfsElement, BsWfsElement');
+
+    // Kerää päiväkohtaiset arvot
+    const days = {};
+    members.forEach(m => {
+      const t   = m.querySelector('Time')?.textContent?.trim();
+      const par = m.querySelector('ParameterName')?.textContent?.trim();
+      const val = parseFloat(m.querySelector('ParameterValue')?.textContent);
+      if (!t || !par || isNaN(val)) return;
+      const date = t.split('T')[0];
+      if (!days[date]) days[date] = {};
+      days[date][par] = val;
+    });
+
+    const dayKeys = Object.keys(days).sort().slice(1, 6); // Seuraavat 5 päivää
+    const WDAYS = ['Su','Ma','Ti','Ke','To','Pe','La'];
+
+    const foreEl = document.getElementById('forecast-row');
+    if (!foreEl || dayKeys.length === 0) return;
+
+    foreEl.innerHTML = dayKeys.map(dk => {
+      const d   = days[dk];
+      const temp = d['temperature'] !== undefined ? Math.round(d['temperature']) : '–';
+      const sym  = d['weathersymbol3'];
+      const icon = weatherIcon(sym);
+      const wd   = new Date(dk + 'T12:00:00Z');
+      const dayName = WDAYS[wd.getUTCDay()];
+      const dayNum  = wd.getUTCDate() + '.' + (wd.getUTCMonth()+1) + '.';
+      return `<div class="fc-day">
+        <div class="fc-name">${dayName}</div>
+        <div class="fc-date">${dayNum}</div>
+        <div class="fc-icon">${icon}</div>
+        <div class="fc-temp">${temp > 0 ? '+' : ''}${temp}°</div>
+      </div>`;
+    }).join('');
+
+  } catch(e) { console.warn('FMI forecast:', e.message); }
+}
+
+function degToCompass(deg) {
+  const dirs = ['N','NE','E','SE','S','SW','W','NW'];
+  return dirs[Math.round(deg / 45) % 8];
+}
+
+function weatherSymbol(sym) {
+  if (sym === null || sym === undefined) return 'Selkeää';
+  const s = Math.round(sym);
+  if (s <= 2)  return 'Selkeää';
+  if (s <= 4)  return 'Puolipilvistä';
+  if (s <= 7)  return 'Pilvistä';
+  if (s <= 9)  return 'Sumua';
+  if (s <= 14) return 'Sadetta';
+  if (s <= 19) return 'Lumisadetta';
+  if (s <= 26) return 'Ukkosta';
+  return 'Vaihtelevaa';
+}
+
+function weatherIcon(sym) {
+  if (sym === null || sym === undefined) return '☀️';
+  const s = Math.round(sym);
+  if (s <= 2)  return '☀️';
+  if (s <= 4)  return '🌤️';
+  if (s <= 7)  return '☁️';
+  if (s <= 9)  return '🌫️';
+  if (s <= 14) return '🌧️';
+  if (s <= 19) return '❄️';
+  if (s <= 26) return '⛈️';
+  return '🌥️';
+}
+
+
+/* ── Rinnetilanne sivutus ── */
+const SLOPES_PER_PAGE = 5;
+let slopePage = 0, slopePages = [], slopeTimer = null;
+
+function renderSlopePages(slopes) {
+  const dm = {H:'g',K:'b',V:'r',M:'k'};
+  const sm = {open:'so',closed:'sc',limited:'sl'};
+  const st = {open:'Auki',closed:'Suljettu',limited:'Rajattu'};
+  const sc = {open:'o',closed:'c',limited:'l'};
+
+  // Jaa sivuihin
+  slopePages = [];
+  for (let i = 0; i < slopes.length; i += SLOPES_PER_PAGE) {
+    slopePages.push(slopes.slice(i, i + SLOPES_PER_PAGE));
+  }
+
+  const pagesEl  = document.getElementById('slope-pages');
+  const pagerEl  = document.getElementById('slope-pager');
+  if (!pagesEl) return;
+
+  pagesEl.innerHTML = slopePages.map((page, pi) => `
+    <div class="slope-page${pi === 0 ? ' active' : ''}" data-page="${pi}">
+      ${page.map(s => `
+        <div class="srow ${sm[s.status]||'so'}">
+          <div class="diff ${dm[s.diff]||'b'}">${s.diff}</div>
+          <div class="sname">${s.name}</div>
+          <div class="sst ${sc[s.status]||'o'}">${st[s.status]||'Auki'}</div>
+        </div>`).join('')}
+    </div>`).join('');
+
+  pagerEl.innerHTML = slopePages.map((_, pi) =>
+    `<div class="slope-pgdot${pi === 0 ? ' active' : ''}"></div>`
+  ).join('');
+
+  slopePage = 0;
+  clearInterval(slopeTimer);
+  if (slopePages.length > 1) {
+    slopeTimer = setInterval(nextSlopePage, 5000);
+  }
+}
+
+function nextSlopePage() {
+  const pages   = document.querySelectorAll('.slope-page');
+  const pgdots  = document.querySelectorAll('.slope-pgdot');
+  if (!pages.length) return;
+  pages[slopePage].classList.remove('active');
+  pgdots[slopePage]?.classList.remove('active');
+  slopePage = (slopePage + 1) % slopePages.length;
+  pages[slopePage].classList.add('active');
+  pgdots[slopePage]?.classList.add('active');
 }
 
 /* ── Rinnetilanne & sää ── */
 async function loadSlopeStatus() {
   const data = await fetchFromClaude(
-    'Hae www.levi.fi/laskettelu-ja-hiihto/hiihtokeskus-tanaan/ sivulta reaaliaikaiset tiedot. ' +
+    'Hae www.laskettelu-ja-hiihto/hiihtokeskus-tanaan/ sivulta reaaliaikaiset tiedot. ' +
     'Palauta vain tämä JSON-muoto: {' +
     '"open_slopes":40,"total_slopes":43,' +
     '"snow_depth_cm":82,"new_snow_cm":14,' +
@@ -997,19 +1174,9 @@ async function loadSlopeStatus() {
     ).join('');
   }
 
-  /* Rinteet */
+  /* Rinteet — sivutus */
   if (data.slopes?.length) {
-    const dm = {H:'g',K:'b',V:'r',M:'k'};
-    const sm = {open:'so',closed:'sc',limited:'sl'};
-    const st = {open:'Auki',closed:'Suljettu',limited:'Rajattu'};
-    const sc2 = {open:'o',closed:'c',limited:'l'};
-    document.querySelector('.slist').innerHTML = data.slopes.map(s =>
-      `<div class="srow ${sm[s.status]||'so'}">
-        <div class="diff ${dm[s.diff]||'b'}">${s.diff}</div>
-        <div class="sname">${s.name}</div>
-        <div class="sst ${sc2[s.status]||'o'}">${st[s.status]||'Auki'}</div>
-      </div>`
-    ).join('');
+    renderSlopePages(data.slopes);
   }
 
   /* Aukioloajat */

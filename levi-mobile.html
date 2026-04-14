@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#030D1A">
+<title>Levi — Info</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --gold:      #D4A843;
+  --gold-dim:  rgba(212,168,67,0.15);
+  --gold-line: rgba(212,168,67,0.30);
+  --ice:       #6BB8D4;
+  --ice-dim:   rgba(107,184,212,0.12);
+  --snow:      #EAF4FA;
+  --muted:     rgba(234,244,250,0.45);
+  --panel:     rgba(255,255,255,0.05);
+  --border:    rgba(107,184,212,0.12);
+  --deep:      #060F1C;
+  --night:     #030D1A;
+  --green:     #4DBF7F;
+  --red:       #D95050;
+  --amber:     #E0A030;
+}
+
+html, body {
+  min-height: 100vh;
+  background: var(--night);
+  color: var(--snow);
+  font-family: 'Barlow', sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Aurora bg */
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(ellipse 100% 30% at 20% 0%, rgba(0,62,126,.28) 0%, transparent 100%),
+    radial-gradient(ellipse 80%  20% at 80% 5%, rgba(0,43,92,.24)  0%, transparent 100%);
+  animation: aurora 20s ease-in-out infinite alternate;
+}
+@keyframes aurora {
+  0%  { opacity:.5; transform:scaleX(1)    translateY(0); }
+  100%{ opacity:.9; transform:scaleX(1.04) translateY(-4px); }
+}
+
+/* ══ HEADER ══ */
+.header {
+  position: sticky; top:0; z-index: 100;
+  background: rgba(3,13,26,.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.wordmark {
+  display: flex; align-items: baseline; gap:0;
+}
+.wm-levi {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700; font-size: 1.6rem;
+  color: var(--snow); letter-spacing: .06em; line-height:1;
+}
+.wm-dot { color: var(--gold); font-family:'Cormorant Garamond',serif; font-size:1.6rem; }
+.wm-fi  {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 300; font-size: .65rem; letter-spacing: .3em;
+  text-transform: uppercase; color: var(--gold);
+  margin-left: 8px; align-self: center;
+}
+
+/* Kielivalitsin */
+.lang-bar {
+  display: flex; gap: 4px; align-items: center;
+}
+.lang-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .65rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted); background: none; border: none;
+  cursor: pointer; padding: 4px 6px; border-radius: 3px;
+  transition: color .2s, background .2s;
+}
+.lang-btn.active {
+  color: var(--gold);
+  background: var(--gold-dim);
+}
+
+/* ══ HERO TEMP ══ */
+.hero {
+  position: relative; z-index:1;
+  padding: 20px 16px 16px;
+  background: linear-gradient(180deg, rgba(0,43,92,.15) 0%, transparent 100%);
+}
+
+.hero-top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+}
+
+.hero-temp-block {}
+.hero-temp {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 5rem; font-weight: 300;
+  color: var(--snow); line-height: 1; letter-spacing: -.01em;
+}
+.hero-desc {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .9rem; color: var(--muted); letter-spacing: .06em;
+  margin-top: 2px;
+}
+
+.hero-clock {
+  text-align: right;
+}
+.clock-big {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.4rem; font-weight: 300;
+  color: var(--snow); letter-spacing: .04em; line-height: 1;
+}
+.clock-blink { animation: sep-blink .9s ease-in-out infinite; }
+@keyframes sep-blink { 0%,49%{opacity:1} 50%,100%{opacity:.15} }
+.clock-date {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .7rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--gold); margin-top: 3px; text-align: right;
+}
+.clock-day {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .6rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--muted); text-align: right;
+}
+
+/* Säärivit */
+.weather-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px; margin-top: 14px;
+}
+.w-chip {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 14px;
+}
+.w-chip-lbl {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .58rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 3px;
+}
+.w-chip-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.25rem; font-weight: 600; color: var(--ice);
+}
+
+/* ══ ENNUSTE ══ */
+.section { position:relative; z-index:1; padding: 0 16px 16px; }
+.section-lbl {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .65rem; letter-spacing: .26em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-lbl::after { content:''; flex:1; height:1px; background:var(--border); }
+
+.forecast-row {
+  display: flex; gap: 8px; overflow-x: auto;
+  padding-bottom: 4px; scrollbar-width: none;
+}
+.forecast-row::-webkit-scrollbar { display:none; }
+.fc-card {
+  flex: 0 0 auto; min-width: 64px;
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px 8px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  text-align: center;
+}
+.fc-card.today { border-color: var(--gold-line); background: var(--gold-dim); }
+.fc-day-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .72rem; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ice);
+}
+.fc-card.today .fc-day-name { color: var(--gold); }
+.fc-day-date { font-size: .6rem; color: var(--muted); }
+.fc-icon { font-size: 1.6rem; line-height: 1; }
+.fc-tmp {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem; font-weight: 700; color: var(--snow);
+}
+
+/* ══ KAMERA ══ */
+.cam-section { position:relative; z-index:1; padding: 0 16px 16px; }
+.cam-wrap {
+  position: relative; border-radius: 12px; overflow: hidden;
+  background: #000; aspect-ratio: 16/9;
+}
+.cam-wrap iframe {
+  width: 100%; height: 100%; border: none; display: block;
+  pointer-events: none;
+}
+.cam-label {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 8px 14px 10px;
+  background: linear-gradient(transparent, rgba(3,8,18,.88));
+  display: flex; justify-content: space-between; align-items: flex-end;
+}
+.cam-name-m {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; font-weight: 600; color: var(--snow);
+}
+.cam-cnt-m {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .65rem; color: var(--muted); letter-spacing: .1em;
+}
+.cam-live-badge {
+  position: absolute; top: 10px; left: 12px;
+  display: flex; align-items: center; gap: 5px;
+}
+.live-dot-m {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--red); animation: blink 1.3s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.12} }
+.live-lbl {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .65rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--snow);
+}
+.cam-dots-m {
+  display: flex; justify-content: center; gap: 7px; margin-top: 10px;
+}
+.cam-dot-m {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(255,255,255,.18);
+  transition: background .3s, transform .3s;
+}
+.cam-dot-m.active { background: var(--gold); transform: scale(1.35); }
+.cam-prog-m {
+  height: 2px; background: var(--gold); margin-top: 6px;
+  border-radius: 2px; width: 0%;
+  transition: width linear;
+}
+
+/* ══ RINNETILANNE ══ */
+.lift-chips {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px;
+}
+.lchip-m {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 6px; padding: 5px 10px;
+  font-family: 'Barlow Condensed', sans-serif; font-size: .78rem;
+  color: var(--snow);
+}
+.ld-m { width: 8px; height: 8px; border-radius: 50%; flex-shrink:0; }
+.ld-m.o { background: var(--green); box-shadow: 0 0 5px var(--green); }
+.ld-m.c { background: var(--red); }
+
+.slope-row-m {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 8px; border-left: 3px solid transparent;
+  margin-bottom: 6px;
+}
+.slope-row-m.so { border-left-color: var(--green); }
+.slope-row-m.sc { border-left-color: var(--red); opacity: .5; }
+.slope-row-m.sl { border-left-color: var(--amber); }
+
+.diff-m {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink:0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Barlow Condensed', sans-serif; font-size: .6rem; font-weight: 700;
+}
+.diff-m.g { background: var(--green); color: #000; }
+.diff-m.b { background: #3d88cc; color: #fff; }
+.diff-m.r { background: var(--red); color: #fff; }
+.diff-m.k { background: #eee; color: #000; }
+
+.slope-name-m { flex:1; font-size: .88rem; color: var(--snow); }
+.slope-st-m {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 600;
+}
+.slope-st-m.o { color: var(--green); }
+.slope-st-m.c { color: var(--red); }
+.slope-st-m.l { color: var(--amber); }
+.slope-legend-m {
+  font-size: .65rem; color: var(--muted); margin-top: 6px;
+  font-family: 'Barlow Condensed', sans-serif; letter-spacing: .08em;
+}
+
+/* ══ TAPAHTUMAT ══ */
+.event-card {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 10px; border-left: 3px solid var(--gold);
+  padding: 12px 14px; margin-bottom: 8px;
+}
+.event-card.f { border-left-color: var(--ice); }
+.ev-date {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .72rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 3px;
+}
+.event-card.f .ev-date { color: var(--ice); }
+.ev-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.1rem; font-weight: 600; color: var(--snow); line-height: 1.2;
+}
+.ev-loc {
+  font-size: .78rem; color: var(--muted); margin-top: 2px;
+}
+
+/* ══ AUKIOLOAJAT ══ */
+.hours-grid {
+  display: flex; flex-direction: column; gap: 0;
+}
+.hour-row-m {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.05); gap: 8px;
+}
+.hour-row-m:last-child { border-bottom: none; }
+.hour-name-m { font-size: .9rem; color: var(--muted); }
+.hour-time-m {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.05rem; font-weight: 600; color: var(--snow); white-space: nowrap;
+}
+
+/* ══ BOTTOM NAV ══ */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(3,13,26,.97);
+  border-top: 1px solid var(--border);
+  display: flex; backdrop-filter: blur(12px);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.nav-btn {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 3px; padding: 10px 4px;
+  background: none; border: none; cursor: pointer;
+  color: var(--muted); transition: color .2s;
+}
+.nav-btn.active { color: var(--gold); }
+.nav-icon { font-size: 1.2rem; line-height: 1; }
+.nav-lbl {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .56rem; letter-spacing: .12em; text-transform: uppercase;
+}
+
+/* ══ SISÄLTÖ-OSIOT ══ */
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Tyhjä tila bottom nav:in yli */
+.bottom-spacer { height: 72px; }
+
+/* Loading spinner */
+.loading {
+  text-align: center; padding: 40px 16px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .8rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Pull-to-refresh visuaali */
+.last-updated {
+  text-align: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .6rem; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--muted); padding: 8px 0 0;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="wordmark">
+    <span class="wm-levi">Levi</span><span class="wm-dot">.</span><span class="wm-fi" style="display:none"></span>
+  </div>
+  <div class="lang-bar">
+    <button class="lang-btn active" onclick="setLang('fi')">FI</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('sv')">SV</button>
+    <button class="lang-btn" onclick="setLang('no')">NO</button>
+    <button class="lang-btn" onclick="setLang('de')">DE</button>
+    <button class="lang-btn" onclick="setLang('fr')">FR</button>
+    <button class="lang-btn" onclick="setLang('it')">IT</button>
+    <button class="lang-btn" onclick="setLang('es')">ES</button>
+  </div>
+</div>
+
+<!-- ══ TAB: SÄÄ ══ -->
+<div class="tab-content active" id="tab-weather">
+
+  <div class="hero">
+    <div class="hero-top">
+      <div class="hero-temp-block">
+        <div class="hero-temp" id="m-temp">–°C</div>
+        <div class="hero-desc" id="m-desc">–</div>
+      </div>
+      <div class="hero-clock">
+        <div class="clock-big">
+          <span id="m-hh">--</span><span class="clock-blink">:</span><span id="m-mm">--</span>
+        </div>
+        <div class="clock-date" id="m-date">–</div>
+        <div class="clock-day" id="m-day">–</div>
+      </div>
+    </div>
+
+    <div class="weather-grid">
+      <div class="w-chip">
+        <div class="w-chip-lbl" data-t="wind">Tuuli</div>
+        <div class="w-chip-val" id="m-wind">– m/s</div>
+      </div>
+      <div class="w-chip">
+        <div class="w-chip-lbl" data-t="feels">Tuntuma</div>
+        <div class="w-chip-val" id="m-feels">–°C</div>
+      </div>
+      <div class="w-chip">
+        <div class="w-chip-lbl" data-t="snow">Lumi / huippu</div>
+        <div class="w-chip-val" id="m-snow">– cm</div>
+      </div>
+      <div class="w-chip">
+        <div class="w-chip-lbl" data-t="newsnow">Uutta / 24h</div>
+        <div class="w-chip-val" id="m-newsnow">– cm</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-lbl" data-t="forecast">Ennuste</div>
+    <div class="forecast-row" id="m-forecast">
+      <div class="loading">Ladataan...</div>
+    </div>
+  </div>
+
+  <div class="bottom-spacer"></div>
+</div>
+
+<!-- ══ TAB: KAMERAT ══ -->
+<div class="tab-content" id="tab-cams">
+  <div class="cam-section" style="padding-top:16px;">
+    <div class="section-lbl" data-t="cameras">Kamerat</div>
+    <div class="cam-wrap">
+      <div id="m-yt-wrap"></div>
+    </div>
+    <div class="cam-live-badge" style="position:relative;padding:10px 0 0;">
+      <div class="live-dot-m"></div>
+      <div class="live-lbl" id="m-cam-name">–</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:2px 0 8px;">
+      <div style="font-size:.7rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;" id="m-cam-loc">–</div>
+      <div style="font-size:.65rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;" id="m-cam-cnt">1/10</div>
+    </div>
+    <div class="cam-dots-m" id="m-cam-dots"></div>
+    <div class="cam-prog-m" id="m-cam-prog"></div>
+  </div>
+  <div class="bottom-spacer"></div>
+</div>
+
+<!-- ══ TAB: RINTEET ══ -->
+<div class="tab-content" id="tab-slopes">
+  <div class="section" style="padding-top:16px;">
+    <div class="section-lbl" data-t="lifts">Hissit</div>
+    <div class="lift-chips" id="m-lifts">
+      <div class="loading">Ladataan...</div>
+    </div>
+    <div class="section-lbl" data-t="slopes">Rinteet</div>
+    <div id="m-slopes">
+      <div class="loading">Ladataan...</div>
+    </div>
+    <div class="slope-legend-m" data-t="legend">H Helppo · K Keskivaikea · V Vaikea · M Musta</div>
+  </div>
+  <div class="bottom-spacer"></div>
+</div>
+
+<!-- ══ TAB: TAPAHTUMAT ══ -->
+<div class="tab-content" id="tab-events">
+  <div class="section" style="padding-top:16px;">
+    <div class="section-lbl" data-t="events">Tapahtumat</div>
+    <div id="m-events">
+      <div class="loading">Ladataan...</div>
+    </div>
+  </div>
+  <div class="bottom-spacer"></div>
+</div>
+
+<!-- ══ TAB: AUKIOLOAJAT ══ -->
+<div class="tab-content" id="tab-hours">
+  <div class="section" style="padding-top:16px;">
+    <div class="section-lbl" data-t="hours_title">Aukioloajat tänään</div>
+    <div class="hours-grid" id="m-hours">
+      <div class="loading">Ladataan...</div>
+    </div>
+    <div class="last-updated" id="m-updated"></div>
+  </div>
+  <div class="bottom-spacer"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" onclick="showTab('weather',this)">
+    <div class="nav-icon">❄️</div>
+    <div class="nav-lbl" data-t="nav_weather">Sää</div>
+  </button>
+  <button class="nav-btn" onclick="showTab('cams',this)">
+    <div class="nav-icon">📹</div>
+    <div class="nav-lbl" data-t="nav_cams">Kamerat</div>
+  </button>
+  <button class="nav-btn" onclick="showTab('slopes',this)">
+    <div class="nav-icon">⛷️</div>
+    <div class="nav-lbl" data-t="nav_slopes">Rinteet</div>
+  </button>
+  <button class="nav-btn" onclick="showTab('events',this)">
+    <div class="nav-icon">📅</div>
+    <div class="nav-lbl" data-t="nav_events">Tapahtumat</div>
+  </button>
+  <button class="nav-btn" onclick="showTab('hours',this)">
+    <div class="nav-icon">🕐</div>
+    <div class="nav-lbl" data-t="nav_hours">Aukiolo</div>
+  </button>
+</nav>
+
+<script>
+/* ════════════════════════════════════════
+   KÄÄNNÖKSET
+   ════════════════════════════════════════ */
+const LANGS = {
+  fi: {
+    forecast:'Ennuste', cameras:'Kamerat', lifts:'Hissit', slopes:'Rinteet',
+    events:'Tapahtumat', hours_title:'Aukioloajat tänään',
+    nav_weather:'Sää', nav_cams:'Kamerat', nav_slopes:'Rinteet',
+    nav_events:'Tapahtumat', nav_hours:'Aukiolo',
+    wind:'Tuuli', feels:'Tuntuma', snow:'Lumi / huippu', newsnow:'Uutta / 24h',
+    legend:'H Helppo · K Keskivaikea · V Vaikea · M Musta',
+    open:'Auki', closed:'Suljettu', limited:'Rajattu',
+    loading:'Ladataan...', updated:'Päivitetty',
+    days:['Su','Ma','Ti','Ke','To','Pe','La'],
+    months:['tammikuuta','helmikuuta','maaliskuuta','huhtikuuta','toukokuuta',
+      'kesäkuuta','heinäkuuta','elokuuta','syyskuuta','lokakuuta','marraskuuta','joulukuuta'],
+  },
+  en: {
+    forecast:'Forecast', cameras:'Cameras', lifts:'Lifts', slopes:'Slopes',
+    events:'Events', hours_title:"Today's Hours",
+    nav_weather:'Weather', nav_cams:'Cameras', nav_slopes:'Slopes',
+    nav_events:'Events', nav_hours:'Hours',
+    wind:'Wind', feels:'Feels like', snow:'Snow / summit', newsnow:'New / 24h',
+    legend:'G Easy · B Medium · R Hard · K Black',
+    open:'Open', closed:'Closed', limited:'Limited',
+    loading:'Loading...', updated:'Updated',
+    days:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+    months:['January','February','March','April','May','June',
+      'July','August','September','October','November','December'],
+  },
+  sv: {
+    forecast:'Prognos', cameras:'Kameror', lifts:'Liftar', slopes:'Pister',
+    events:'Evenemang', hours_title:'Öppettider idag',
+    nav_weather:'Väder', nav_cams:'Kameror', nav_slopes:'Pister',
+    nav_events:'Evenemang', nav_hours:'Öppet',
+    wind:'Vind', feels:'Känns som', snow:'Snö / topp', newsnow:'Nytt / 24h',
+    legend:'G Lätt · B Medel · R Svår · K Svart',
+    open:'Öppen', closed:'Stängd', limited:'Begränsad',
+    loading:'Laddar...', updated:'Uppdaterad',
+    days:['Sö','Må','Ti','On','To','Fr','Lö'],
+    months:['januari','februari','mars','april','maj','juni',
+      'juli','augusti','september','oktober','november','december'],
+  },
+  no: {
+    forecast:'Prognose', cameras:'Kameraer', lifts:'Heiser', slopes:'Bakker',
+    events:'Arrangementer', hours_title:'Åpningstider i dag',
+    nav_weather:'Vær', nav_cams:'Kamera', nav_slopes:'Bakker',
+    nav_events:'Arrangement', nav_hours:'Åpent',
+    wind:'Vind', feels:'Føles som', snow:'Snø / topp', newsnow:'Nytt / 24t',
+    legend:'G Lett · B Middels · R Vanskelig · K Svart',
+    open:'Åpen', closed:'Stengt', limited:'Begrenset',
+    loading:'Laster...', updated:'Oppdatert',
+    days:['Sø','Ma','Ti','On','To','Fr','Lø'],
+    months:['januar','februar','mars','april','mai','juni',
+      'juli','august','september','oktober','november','desember'],
+  },
+  de: {
+    forecast:'Vorhersage', cameras:'Kameras', lifts:'Lifte', slopes:'Pisten',
+    events:'Veranstaltungen', hours_title:'Öffnungszeiten heute',
+    nav_weather:'Wetter', nav_cams:'Kameras', nav_slopes:'Pisten',
+    nav_events:'Events', nav_hours:'Zeiten',
+    wind:'Wind', feels:'Gefühlt', snow:'Schnee / Gipfel', newsnow:'Neu / 24h',
+    legend:'G Leicht · B Mittel · R Schwer · K Schwarz',
+    open:'Offen', closed:'Geschlossen', limited:'Eingeschränkt',
+    loading:'Laden...', updated:'Aktualisiert',
+    days:['So','Mo','Di','Mi','Do','Fr','Sa'],
+    months:['Januar','Februar','März','April','Mai','Juni',
+      'Juli','August','September','Oktober','November','Dezember'],
+  },
+  fr: {
+    forecast:'Prévisions', cameras:'Caméras', lifts:'Remontées', slopes:'Pistes',
+    events:'Événements', hours_title:"Horaires d'aujourd'hui",
+    nav_weather:'Météo', nav_cams:'Caméras', nav_slopes:'Pistes',
+    nav_events:'Événements', nav_hours:'Horaires',
+    wind:'Vent', feels:'Ressenti', snow:'Neige / sommet', newsnow:'Nouveau / 24h',
+    legend:'V Facile · B Moyen · R Difficile · N Noir',
+    open:'Ouvert', closed:'Fermé', limited:'Limité',
+    loading:'Chargement...', updated:'Mis à jour',
+    days:['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'],
+    months:['janvier','février','mars','avril','mai','juin',
+      'juillet','août','septembre','octobre','novembre','décembre'],
+  },
+  it: {
+    forecast:'Previsioni', cameras:'Telecamere', lifts:'Impianti', slopes:'Piste',
+    events:'Eventi', hours_title:'Orari di oggi',
+    nav_weather:'Meteo', nav_cams:'Camere', nav_slopes:'Piste',
+    nav_events:'Eventi', nav_hours:'Orari',
+    wind:'Vento', feels:'Percepita', snow:'Neve / vetta', newsnow:'Nuova / 24h',
+    legend:'V Facile · B Media · R Difficile · N Nera',
+    open:'Aperto', closed:'Chiuso', limited:'Limitato',
+    loading:'Caricamento...', updated:'Aggiornato',
+    days:['Dom','Lun','Mar','Mer','Gio','Ven','Sab'],
+    months:['gennaio','febbraio','marzo','aprile','maggio','giugno',
+      'luglio','agosto','settembre','ottobre','novembre','dicembre'],
+  },
+  es: {
+    forecast:'Pronóstico', cameras:'Cámaras', lifts:'Remontes', slopes:'Pistas',
+    events:'Eventos', hours_title:'Horarios de hoy',
+    nav_weather:'Tiempo', nav_cams:'Cámaras', nav_slopes:'Pistas',
+    nav_events:'Eventos', nav_hours:'Horarios',
+    wind:'Viento', feels:'Sensación', snow:'Nieve / cima', newsnow:'Nueva / 24h',
+    legend:'V Fácil · A Medio · R Difícil · N Negro',
+    open:'Abierto', closed:'Cerrado', limited:'Limitado',
+    loading:'Cargando...', updated:'Actualizado',
+    days:['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],
+    months:['enero','febrero','marzo','abril','mayo','junio',
+      'julio','agosto','septiembre','octubre','noviembre','diciembre'],
+  },
+};
+
+let lang = 'fi';
+
+function setLang(l) {
+  lang = l;
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.toLowerCase() === l);
+  });
+  // Päivitä kaikki data-t elementit
+  const t = LANGS[l];
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    if (t[key]) el.textContent = t[key];
+  });
+  // Päivitä kello
+  updateClock();
+  // Päivitä rinne/event-tekstit
+  renderSlopes(cachedSlopes);
+  renderEvents(cachedEvents);
+  renderHours(cachedHours);
+}
+
+/* ════════════════════════════════════════
+   NAVIGAATIO
+   ════════════════════════════════════════ */
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'cams' && !ytReady) initYT();
+}
+
+/* ════════════════════════════════════════
+   KELLO
+   ════════════════════════════════════════ */
+function updateClock() {
+  const n = new Date();
+  const t = LANGS[lang];
+  document.getElementById('m-hh').textContent = String(n.getHours()).padStart(2,'0');
+  document.getElementById('m-mm').textContent = String(n.getMinutes()).padStart(2,'0');
+  document.getElementById('m-date').textContent =
+    n.getDate() + '. ' + t.months[n.getMonth()] + ' ' + n.getFullYear();
+  document.getElementById('m-day').textContent = t.days[n.getDay()];
+}
+updateClock(); setInterval(updateClock, 1000);
+
+/* ════════════════════════════════════════
+   KAMERAT — YouTube IFrame API
+   ════════════════════════════════════════ */
+const CAMERAS = [
+  {videoId:'LwihxyJ4V20', name:'Zero Point',           loc:'Levi Center — Zero Point'},
+  {videoId:'89vRm9bb9_c', name:'South Point',          loc:'South Point — South Slopes'},
+  {videoId:'X7tdyNFpp1g', name:'Village View',         loc:'Village View — Kylänäkymä'},
+  {videoId:'gehi4YiVYdY', name:'Levi Black / Gondola', loc:'Levi Black — Gondola'},
+  {videoId:'tgCjNC-813A', name:'Levi Six',             loc:'Levi Six — NE Slopes'},
+  {videoId:'jQrqWYe5Cn4', name:'Levi West',            loc:'Levi West — West Slopes'},
+  {videoId:'Wr9b5aYA4mI', name:'Glacier Express',      loc:'Levi Center — Glacier Express'},
+  {videoId:'eXDCi75TjM8', name:'Top of Levi',          loc:'Top of Levi — 531 m'},
+  {videoId:'hWN0iCg8pDY', name:'Lifts 13 & 14',        loc:'Lifts 13 & 14 — North'},
+  {videoId:'mupuSRKkL_M', name:'South / Leevilandia',  loc:'South Slopes — Leevilandia'},
+];
+
+const CAM_INT = 12000;
+let curCam = 0, camTimer = null, ytPlayer = null, ytReady = false, pendingVid = null;
+
+/* Rakenna dotsit */
+const mDotsEl = document.getElementById('m-cam-dots');
+CAMERAS.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'm-dot-wrap';
+  d.innerHTML = `<div class="cam-dot-m${i===0?' active':''}"></div>`;
+  mDotsEl.appendChild(d.firstChild);
+});
+const mDots = mDotsEl.querySelectorAll('.cam-dot-m');
+
+function initYT() {
+  if (ytReady) return;
+  const s = document.createElement('script');
+  s.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(s);
+}
+
+window.onYouTubeIframeAPIReady = function() {
+  ytReady = true;
+  ytPlayer = new YT.Player('m-yt-wrap', {
+    width:'100%', height:'100%',
+    videoId: CAMERAS[0].videoId,
+    playerVars: {
+      autoplay:1, mute:1, controls:0, rel:0,
+      modestbranding:1, loop:1, playlist:CAMERAS[0].videoId,
+      iv_load_policy:3, fs:0,
+      origin: window.location.origin || 'https://oomfmarketing.github.io',
+    },
+    events: {
+      onReady: e => { e.target.mute(); e.target.playVideo(); if(pendingVid){e.target.loadVideoById({videoId:pendingVid});pendingVid=null;} },
+      onStateChange: e => { if(e.data===YT.PlayerState.ENDED||e.data===YT.PlayerState.PAUSED) e.target.playVideo(); },
+    },
+  });
+  updateCamOverlay(0);
+  startCamProg();
+};
+
+function updateCamOverlay(i) {
+  document.getElementById('m-cam-name').textContent = CAMERAS[i].name;
+  document.getElementById('m-cam-loc').textContent  = CAMERAS[i].loc;
+  document.getElementById('m-cam-cnt').textContent  = (i+1) + ' / ' + CAMERAS.length;
+  mDots.forEach((d,j) => d.classList.toggle('active', j===i));
+}
+
+function startCamProg() {
+  const p = document.getElementById('m-cam-prog');
+  p.style.transition = 'none'; p.style.width = '0%';
+  void p.offsetWidth;
+  p.style.transition = `width ${CAM_INT}ms linear`;
+  p.style.width = '100%';
+  clearTimeout(camTimer);
+  camTimer = setTimeout(advanceCam, CAM_INT);
+}
+
+function advanceCam() {
+  curCam = (curCam + 1) % CAMERAS.length;
+  if (ytPlayer?.loadVideoById) {
+    ytPlayer.loadVideoById({videoId:CAMERAS[curCam].videoId, suggestedQuality:'hd720'});
+    ytPlayer.mute(); ytPlayer.playVideo();
+  } else { pendingVid = CAMERAS[curCam].videoId; }
+  updateCamOverlay(curCam);
+  startCamProg();
+}
+
+/* ════════════════════════════════════════
+   DATA — FMI + Proxy
+   ════════════════════════════════════════ */
+const PROXY = 'https://levi-proxy.flat-cloud-8d4c.workers.dev';
+let cachedSlopes = [], cachedEvents = [], cachedHours = {};
+
+/* Sää FMI */
+async function loadWeather() {
+  try {
+    const url = 'https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0' +
+      '&request=getFeature&storedquery_id=fmi::observations::weather::simple' +
+      '&place=kittila&parameters=temperature,windspeedms,winddirection,weathersymbol3&maxlocations=1';
+    const r = await fetch(url);
+    const xml = await r.text();
+    const doc = new DOMParser().parseFromString(xml, 'text/xml');
+    const members = doc.querySelectorAll('BsWfs\\:BsWfsElement, BsWfsElement');
+    const vals = {};
+    members.forEach(m => {
+      const p = m.querySelector('ParameterName')?.textContent?.trim();
+      const v = parseFloat(m.querySelector('ParameterValue')?.textContent);
+      if (p && !isNaN(v)) vals[p] = v;
+    });
+    const temp = vals['temperature'] ?? null;
+    const wind = vals['windspeedms'] ?? null;
+    const wdir = vals['winddirection'] ?? null;
+    const sym  = vals['weathersymbol3'] ?? null;
+    const dir  = wdir !== null ? degToCompass(wdir) : '';
+
+    if (temp !== null) document.getElementById('m-temp').textContent = (temp>0?'+':'') + Math.round(temp) + '°C';
+    document.getElementById('m-desc').textContent = weatherSymbolText(sym, lang) + (dir ? ' · ' + dir : '');
+    if (wind !== null) document.getElementById('m-wind').textContent = Math.round(wind) + ' m/s ' + dir;
+  } catch(e) { console.warn('FMI obs:', e.message); }
+  loadForecast();
+}
+
+async function loadForecast() {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const url = 'https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0' +
+      '&request=getFeature&storedquery_id=fmi::forecast::harmonie::surface::point::simple' +
+      '&place=kittila&parameters=temperature,weathersymbol3' +
+      '&starttime=' + today + 'T09:00:00Z&timestep=1440&maxlocations=1';
+    const r   = await fetch(url);
+    const xml = await r.text();
+    const doc = new DOMParser().parseFromString(xml, 'text/xml');
+    const members = doc.querySelectorAll('BsWfs\\:BsWfsElement, BsWfsElement');
+    const days = {};
+    members.forEach(m => {
+      const time  = m.querySelector('Time')?.textContent?.trim();
+      const param = m.querySelector('ParameterName')?.textContent?.trim();
+      const val   = parseFloat(m.querySelector('ParameterValue')?.textContent);
+      if (!time||!param||isNaN(val)) return;
+      const date = time.split('T')[0];
+      if (!days[date]) days[date] = {};
+      days[date][param] = val;
+    });
+    const keys = Object.keys(days).sort().slice(0, 6);
+    const t = LANGS[lang];
+    const el = document.getElementById('m-forecast');
+    if (!el || !keys.length) return;
+    el.innerHTML = keys.map((dk, idx) => {
+      const d    = days[dk];
+      const temp = d['temperature'] !== undefined ? Math.round(d['temperature']) : '–';
+      const sym  = d['weathersymbol3'];
+      const wd   = new Date(dk + 'T12:00:00Z');
+      const dayN = t.days[wd.getUTCDay()];
+      const dayD = wd.getUTCDate() + '.' + (wd.getUTCMonth()+1) + '.';
+      return `<div class="fc-card${idx===0?' today':''}">
+        <div class="fc-day-name">${dayN}</div>
+        <div class="fc-day-date">${dayD}</div>
+        <div class="fc-icon">${weatherIcon(sym)}</div>
+        <div class="fc-tmp">${temp>0?'+':''}${temp}°</div>
+      </div>`;
+    }).join('');
+  } catch(e) { console.warn('FMI forecast:', e.message); }
+}
+
+/* Rinnetilanne & aukioloajat Claude API:n kautta */
+async function loadSlopeData() {
+  try {
+    const res = await fetch(PROXY, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-haiku-4-5-20251001', max_tokens:2000,
+        tools:[{"type":"web_search_20250305","name":"web_search","max_uses":1}],
+        system:'Vastaa AINOASTAAN validina JSON-objektina.',
+        messages:[{role:'user', content:
+          'Hae laskettelu-ja-hiihto/hiihtokeskus-tanaan/ sivulta tiedot. ' +
+          'Palauta JSON: {"open_slopes":40,"total_slopes":43,"snow_depth_cm":82,"new_snow_cm":0,' +
+          '"lifts":[{"name":"Gondoli","open":true}],' +
+          '"slopes":[{"name":"Rinne 1","diff":"H","status":"open"}],' +
+          '"hours_lifts":"9:00-17:00","hours_restaurant":"11:00-22:00",' +
+          '"hours_rental":"8:00-18:00","hours_ski_school":"9:00-16:00","hours_spa":"8:00-22:00"}'
+        }]
+      })
+    });
+    const d = await res.json();
+    const txt = (d.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
+    const data = JSON.parse(txt.replace(/```json|```/g,'').trim());
+
+    // Päivitä lumi header
+    if (data.snow_depth_cm) document.getElementById('m-snow').textContent = data.snow_depth_cm + ' cm';
+    if (data.new_snow_cm !== undefined) document.getElementById('m-newsnow').textContent = (data.new_snow_cm>=0?'+':'') + data.new_snow_cm + ' cm';
+
+    cachedSlopes = data.slopes || [];
+    cachedHours  = data;
+    renderSlopes(cachedSlopes);
+    renderHours(data);
+  } catch(e) { console.warn('Slope data:', e.message); }
+}
+
+/* Tapahtumat */
+async function loadEvents() {
+  try {
+    const res = await fetch(PROXY, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-haiku-4-5-20251001', max_tokens:1000,
+        tools:[{"type":"web_search_20250305","name":"web_search","max_uses":1}],
+        system:'Vastaa AINOASTAAN validina JSON-objektina.',
+        messages:[{role:'user', content:
+          'Hae tapahtumat sivulta seuraavat 6 tapahtumaa. ' +
+          'Palauta JSON: {"events":[{"date":"Ma 14.4.","time":"19:00","name":"Nimi","location":"Paikka"}]}'
+        }]
+      })
+    });
+    const d   = await res.json();
+    const txt = (d.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
+    const data = JSON.parse(txt.replace(/```json|```/g,'').trim());
+    cachedEvents = data.events || [];
+    renderEvents(cachedEvents);
+  } catch(e) { console.warn('Events:', e.message); }
+}
+
+function renderSlopes(slopes) {
+  const t  = LANGS[lang];
+  const dm = {H:'g',K:'b',V:'r',M:'k'};
+  const sm = {open:'so',closed:'sc',limited:'sl'};
+  const sc = {open:'o',closed:'c',limited:'l'};
+
+  const liftsEl  = document.getElementById('m-lifts');
+  const slopesEl = document.getElementById('m-slopes');
+  if (!liftsEl || !slopesEl || !slopes.length) return;
+
+  slopesEl.innerHTML = slopes.map(s => `
+    <div class="slope-row-m ${sm[s.status]||'so'}">
+      <div class="diff-m ${dm[s.diff]||'b'}">${s.diff}</div>
+      <div class="slope-name-m">${s.name}</div>
+      <div class="slope-st-m ${sc[s.status]||'o'}">${t[s.status]||t.open}</div>
+    </div>`).join('');
+}
+
+function renderEvents(events) {
+  const el = document.getElementById('m-events');
+  if (!el) return;
+  if (!events?.length) { el.innerHTML = `<div class="loading">${LANGS[lang].loading}</div>`; return; }
+  el.innerHTML = events.map((ev,i) => `
+    <div class="event-card${i>0?' f':''}">
+      <div class="ev-date">${ev.date}${ev.time?' · '+ev.time:''}</div>
+      <div class="ev-name">${ev.name}</div>
+      ${ev.location?`<div class="ev-loc">${ev.location}</div>`:''}
+    </div>`).join('');
+}
+
+function renderHours(data) {
+  const el = document.getElementById('m-hours');
+  if (!el || !data) return;
+  const t = LANGS[lang];
+  const rows = [
+    {label:'Hissit / Lifts / Skidliftar', val: data.hours_lifts},
+    {label:'Sky Restaurant',              val: data.hours_restaurant},
+    {label:'Vuokraamo / Rental',          val: data.hours_rental},
+    {label:'Hiihtokoulu / Ski School',    val: data.hours_ski_school},
+    {label:'SPA & Pool',                  val: data.hours_spa},
+  ].filter(r => r.val);
+  if (!rows.length) return;
+  el.innerHTML = rows.map(r => `
+    <div class="hour-row-m">
+      <div class="hour-name-m">${r.label}</div>
+      <div class="hour-time-m">${r.val}</div>
+    </div>`).join('');
+  const upd = document.getElementById('m-updated');
+  const n = new Date();
+  if (upd) upd.textContent = t.updated + ' ' + String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0');
+}
+
+/* Apu */
+function degToCompass(deg) {
+  const dirs = ['N','NE','E','SE','S','SW','W','NW'];
+  return dirs[Math.round(deg/45)%8];
+}
+
+function weatherSymbolText(sym, l) {
+  const fi = ['Selkeää','Puolipilvistä','Pilvistä','Sadetta','Lumisadetta'];
+  const en = ['Clear','Partly cloudy','Cloudy','Rain','Snow'];
+  const sv = ['Klart','Halvmulet','Mulet','Regn','Snö'];
+  const no = ['Klart','Delvis skyet','Overskyet','Regn','Snø'];
+  const de = ['Klar','Teils bewölkt','Bewölkt','Regen','Schnee'];
+  const fr = ['Clair','Partiellement nuageux','Nuageux','Pluie','Neige'];
+  const it = ['Sereno','Parzialmente nuvoloso','Nuvoloso','Pioggia','Neve'];
+  const es = ['Despejado','Parcialmente nublado','Nublado','Lluvia','Nieve'];
+  const map = {fi,en,sv,no,de,fr,it,es};
+  const arr = map[l] || en;
+  if (!sym) return arr[0];
+  const s = Math.round(sym);
+  if (s<=2) return arr[0];
+  if (s<=4) return arr[1];
+  if (s<=7) return arr[2];
+  if (s<=14) return arr[3];
+  return arr[4];
+}
+
+function weatherIcon(sym) {
+  if (!sym) return '☀️';
+  const s = Math.round(sym);
+  if (s<=2) return '☀️';
+  if (s<=4) return '🌤️';
+  if (s<=7) return '☁️';
+  if (s<=9) return '🌫️';
+  if (s<=14) return '🌧️';
+  if (s<=19) return '❄️';
+  return '⛈️';
+}
+
+/* Käynnistä */
+loadWeather();
+loadSlopeData();
+loadEvents();
+</script>
+</body>
+</html>
