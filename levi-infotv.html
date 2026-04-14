@@ -509,7 +509,7 @@ footer {
   <!-- ══ HEADER 1920×72 ══ -->
   <header>
     <div class="wordmark">
-      <span class="wm-levi">Levi</span><span class="wm-dot">.</span><span class="wm-fi" style="display:none"></span>
+      <span class="wm-levi">Levi</span>
     </div>
     <div class="vsep"></div>
     <div class="tagline">Info · Sää · Rinnetilanne · Tapahtumat · Palvelut</div>
@@ -954,8 +954,7 @@ async function loadWeather() {
     // FMI WFS API - avoin data, ei autentikaatiota
     const FMIURL = 'https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0' +
       '&request=getFeature&storedquery_id=fmi::observations::weather::simple' +
-      '&place=kittila&parameters=temperature,windspeedms,winddirection,weathersymbol3' +
-      '&maxlocations=1';
+      '&fmisid=101886&parameters=temperature,windspeedms,winddirection,weathersymbol3';
 
     const resp = await fetch(FMIURL);
     if (!resp.ok) throw new Error('FMI HTTP ' + resp.status);
@@ -1012,9 +1011,9 @@ async function loadForecast() {
   try {
     const FURL = 'https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0' +
       '&request=getFeature&storedquery_id=fmi::forecast::harmonie::surface::point::simple' +
-      '&place=kittila&parameters=temperature,windspeedms,winddirection,weathersymbol3' +
-      '&starttime=' + new Date().toISOString().split('T')[0] + 'T12:00:00Z' +
-      '&timestep=1440&maxlocations=1';  // 1 per day
+      '&place=Kittil%C3%A4&parameters=temperature,weathersymbol3' +
+      '&starttime=' + new Date().toISOString().split('T')[0] + 'T06:00:00Z' +
+      '&timestep=1440';
 
     const resp = await fetch(FURL);
     const xml  = await resp.text();

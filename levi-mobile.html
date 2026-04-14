@@ -774,7 +774,7 @@ async function loadWeather() {
   try {
     const url = 'https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0' +
       '&request=getFeature&storedquery_id=fmi::observations::weather::simple' +
-      '&place=kittila&parameters=temperature,windspeedms,winddirection,weathersymbol3&maxlocations=1';
+      '&fmisid=101886&parameters=temperature,windspeedms,winddirection,weathersymbol3';
     const r = await fetch(url);
     const xml = await r.text();
     const doc = new DOMParser().parseFromString(xml, 'text/xml');
@@ -803,7 +803,7 @@ async function loadForecast() {
     const today = new Date().toISOString().split('T')[0];
     const url = 'https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0' +
       '&request=getFeature&storedquery_id=fmi::forecast::harmonie::surface::point::simple' +
-      '&place=kittila&parameters=temperature,weathersymbol3' +
+      '&place=Kittil%C3%A4&parameters=temperature,weathersymbol3' +
       '&starttime=' + today + 'T09:00:00Z&timestep=1440&maxlocations=1';
     const r   = await fetch(url);
     const xml = await r.text();
