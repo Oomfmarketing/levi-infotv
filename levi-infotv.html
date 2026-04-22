@@ -63,22 +63,22 @@ body::after {
    ┌─────────────────────────────────────────────────────┐
    │  HEADER  1920 × 72                                  │
    ├──────────────────────────────┬──────────────────────┤
-   │  CAM     1359 × 764  (16:9) │  SIDEBAR  560 × 952  │
+   │  CAM     1441 × 810  (16:9) │  SIDEBAR  478 × 952  │
    ├──────────────────────────────┤                      │
-   │  AD-BAR  1359 × 188         │                      │
+   │  AD-BAR  1441 × 142         │                      │
    ├──────────────────────────────┴──────────────────────┤
    │  FOOTER  1920 × 56                                  │
    └─────────────────────────────────────────────────────┘
-   Rows: 72 + 764 + 188 + 56 = 1080 ✓
-   Cols: 1359 + 1 + 560 = 1920 ✓
-   Cam: 1359 ÷ 16 × 9 = 764.4 ≈ 764 ✓
+   Rows: 72 + 810 + 142 + 56 = 1080 ✓
+   Cols: 1441 + 1 + 478 = 1920 ✓
+   Cam: 1441 ÷ 16 × 9 = 810.6 ≈ 810 ✓
    ══════════════════════════════════════════════════════ */
 .screen {
   position:relative; z-index:1;
   width:1920px; height:1080px;
   display:grid;
-  grid-template-columns: 1359px 560px;
-  grid-template-rows: 72px 764px 188px 56px;
+  grid-template-columns: 1441px 478px;
+  grid-template-rows: 72px 810px 142px 56px;
   gap:1px;
   background:var(--border);
 }
@@ -144,10 +144,10 @@ header {
   margin-top:1px;
 }
 
-/* ══ KAMERA 1359 × 764 ══ */
+/* ══ KAMERA 1441 × 810 ══ */
 .cam-area {
   grid-column:1; grid-row:2/3;
-  width:1359px; height:764px;
+  width:1441px; height:810px;
   position:relative; overflow:hidden; background:#000;
 }
 .yt-wrap {
@@ -216,10 +216,10 @@ header {
   height:3px; background:var(--gold); z-index:22; width:0%;
 }
 
-/* ══ MAINOSPALKKI 1359 × 188 ══ */
+/* ══ MAINOSPALKKI 1441 × 142 ══ */
 .ad-bar {
   grid-column:1; grid-row:3/4;
-  width:1359px; height:188px;
+  width:1441px; height:142px;
   position:relative; overflow:hidden;
   background:linear-gradient(135deg,#071E3D,#03111F);
   border-top:1px solid var(--gold-line);
@@ -284,10 +284,10 @@ header {
 }
 .ad-dot.active { background:var(--gold); transform:scale(1.3); }
 
-/* ══ SIDEBAR 560 × 952 ══ */
+/* ══ SIDEBAR 478 × 952 ══ */
 .sidebar {
   grid-column:2; grid-row:2/4;
-  width:560px; height:952px;
+  width:478px; height:952px;
   display:flex; flex-direction:column;
   gap:1px; background:var(--border); overflow:hidden;
 }
@@ -501,6 +501,33 @@ footer {
 }
 @keyframes ticker { 0%{transform:translateX(1920px)}100%{transform:translateX(-100%)} }
 .tsep { color:var(--muted); margin:0 24px; }
+
+/* ── Lennot ── */
+.flight-table { width:100%; border-collapse:collapse; }
+.flight-row {
+  display:flex; align-items:center; gap:8px;
+  padding:6px 0; border-bottom:1px solid rgba(255,255,255,.05);
+  font-family:'Barlow Condensed',sans-serif;
+}
+.flight-row:last-child { border-bottom:none; }
+.f-time { font-size:1.1rem; font-weight:600; color:var(--snow); width:52px; flex-shrink:0; }
+.f-flight { font-size:.85rem; color:var(--ice); width:64px; flex-shrink:0; }
+.f-dest { flex:1; font-size:.95rem; color:var(--snow); }
+.f-status { font-size:.75rem; font-weight:600; letter-spacing:.1em; flex-shrink:0; }
+.f-status.on-time  { color:var(--green); }
+.f-status.delayed  { color:var(--amber); }
+.f-status.departed { color:var(--muted); }
+.f-status.arrived  { color:var(--muted); }
+.f-status.cancelled{ color:var(--red); }
+.flight-tabs { display:flex; gap:1px; margin-bottom:10px; }
+.ftab {
+  flex:1; text-align:center; padding:5px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:.65rem; letter-spacing:.2em; text-transform:uppercase;
+  background:var(--panel); border:1px solid var(--border);
+  cursor:pointer; color:var(--muted); transition:all .2s;
+}
+.ftab.active { background:var(--gold-dim); border-color:var(--gold-line); color:var(--gold); }
 </style>
 </head>
 <body>
@@ -511,22 +538,8 @@ footer {
     <div class="wordmark">
       <span class="wm-levi">Levi</span>
     </div>
-    <div class="vsep"></div>
-    <div class="tagline">Info · Sää · Rinnetilanne · Tapahtumat · Palvelut</div>
 
-    <div class="hw">
-      <div class="hwi"><div class="hwv">−12°C</div><div class="hwl">Lämpötila</div></div>
-      <div class="vsep"></div>
-      <div class="hwi"><div class="hwv" id="hw-snow">– cm</div><div class="hwl">Lumi</div></div>
-      <div class="vsep"></div>
-      <div class="hwi"><div class="hwv" id="hw-newsnow">– cm</div><div class="hwl">Uutta / 24h</div></div>
-      <div class="vsep"></div>
-      <div class="hwi"><div class="hwv">4 m/s KO</div><div class="hwl">Tuuli</div></div>
-      <div class="vsep"></div>
-      <div class="hwi"><div class="hwv">40 / 43</div><div class="hwl">Rinteet</div></div>
-    </div>
-
-    <div class="vsep" style="margin:0 4px 0 24px;"></div>
+    <div class="vsep" style="margin-left:auto;"></div>
     <div class="hdr-clock">
       <div class="hdr-time">
         <span id="hh">--</span><span class="hdr-blink">:</span><span id="mm">--</span>
@@ -554,65 +567,50 @@ footer {
     <div class="cam-prog" id="cam-prog"></div>
   </div>
 
-  <!-- ══ MAINOSPALKKI 1359×188 ══ -->
+  <!-- ══ MAINOSPALKKI 1441×142 ══ -->
   <div class="ad-bar">
 
+    <!-- Slide 1: Myyntimainos -->
     <div class="ad-slide active" id="ad0">
-      <div class="ad-qr-wrap">
-        <div class="ad-qr" id="qr0"></div>
-        <div class="ad-qr-lbl">Skannaa QR</div>
+      <div class="ad-content" style="flex:1;">
+        <div class="ad-pre" style="font-size:.9rem;letter-spacing:.22em;">Kiinnostaako näkyvyys tässä paikassa?</div>
+        <div class="ad-title" style="font-size:2rem;">Ota yhteyttä — varaa paikkasi</div>
+        <div class="ad-desc" style="font-size:1.1rem;">hello@oomf.fi</div>
       </div>
-      <div class="ad-divider"></div>
-      <div class="ad-content">
-        <div class="ad-pre">Varaa majoitus</div>
-        <div class="ad-title">Majoitushaku</div>
-        <div class="ad-desc">Hotellit, mökit ja loma-asunnot — kaikki samasta paikasta</div>
+      <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;">
+        <div id="qr0" class="ad-qr"></div>
+        <div class="ad-qr-lbl">Skannaa QR</div>
       </div>
     </div>
 
+    <!-- Slide 2: Revontuliwidget -->
     <div class="ad-slide" id="ad1">
-      <div class="ad-qr-wrap">
-        <div class="ad-qr" id="qr1"></div>
-        <div class="ad-qr-lbl">Skannaa QR</div>
-      </div>
-      <div class="ad-divider"></div>
-      <div class="ad-content">
-        <div class="ad-pre">Tänä viikonloppuna · La 11.1. klo 21:00</div>
-        <div class="ad-title">Revontuli-ilta</div>
-        <div class="ad-desc">Opastettu retki revontuliin — varaa paikka tapahtumat</div>
-      </div>
-    </div>
-
-    <div class="ad-slide" id="ad2">
-      <div class="ad-qr-wrap">
-        <div class="ad-qr" id="qr2"></div>
-        <div class="ad-qr-lbl">Skannaa QR</div>
-      </div>
-      <div class="ad-divider"></div>
-      <div class="ad-content">
-        <div class="ad-pre">Levi Ski School</div>
-        <div class="ad-title">Hiihtokoulu</div>
-        <div class="ad-desc">Yksityistunnit ja ryhmät · lähdöt klo 10:00 & 13:00 · kaikki tasot</div>
+      <div style="display:flex;align-items:center;gap:32px;width:100%;">
+        <div style="font-size:3.5rem;line-height:1;flex-shrink:0;">🌌</div>
+        <div style="flex:1;">
+          <div class="ad-pre">Revontulet tänä yönä — Kp-indeksi</div>
+          <div style="display:flex;align-items:baseline;gap:16px;margin-top:6px;">
+            <div id="kp-value" style="font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:700;color:var(--snow);line-height:1;">–</div>
+            <div id="kp-desc" style="font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;color:var(--ice);">Ladataan...</div>
+          </div>
+          <div id="kp-advice" style="font-family:'Barlow Condensed',sans-serif;font-size:.88rem;color:var(--muted);margin-top:4px;"></div>
+        </div>
+        <div style="flex-shrink:0;text-align:center;">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">TODENNÄKÖISYYS LEVILLÄ</div>
+          <div id="aurora-prob" style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:700;color:var(--gold);">–%</div>
+          <div id="aurora-bar-wrap" style="width:120px;height:8px;background:rgba(255,255,255,.1);border-radius:4px;margin-top:6px;overflow:hidden;">
+            <div id="aurora-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#4DBF7F,#D4A843,#D95050);border-radius:4px;transition:width 1s ease;"></div>
+          </div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.58rem;color:var(--muted);letter-spacing:.1em;margin-top:4px;">NOAA SWPC</div>
+        </div>
       </div>
     </div>
 
-    <div class="ad-slide" id="ad3">
-      <div class="ad-qr-wrap">
-        <div class="ad-qr" id="qr3"></div>
-        <div class="ad-qr-lbl">Skannaa QR</div>
-      </div>
-      <div class="ad-divider"></div>
-      <div class="ad-content">
-        <div class="ad-pre">Sky Restaurant — Levin huipulla</div>
-        <div class="ad-title">Pöytävaraus</div>
-        <div class="ad-desc">Avoin klo 11:00–22:00 · varaa pöytä ravintolat</div>
-      </div>
-    </div>
 
     <div class="ad-dots" id="ad-dots"></div>
   </div>
 
-  <!-- ══ SIDEBAR 560×952 ══ -->
+    <!-- ══ SIDEBAR 560×952 ══ -->
   <div class="sidebar">
 
     <!-- Sää -->
@@ -625,22 +623,9 @@ footer {
           <div class="w-desc">Selkeää · Koillinen tuuli</div>
         </div>
       </div>
-      <div class="snow-row">
-        <div>
-          <div class="snow-fig" id="snow-depth">–<span class="snow-u">cm</span></div>
-          <div class="snow-l">Lumi / huippu</div>
-        </div>
-        <div class="snow-d"></div>
-        <div>
-          <div class="snow-fig" id="snow-new">–<span class="snow-u">cm</span></div>
-          <div class="snow-l">Uutta / 24h</div>
-        </div>
-      </div>
       <div class="wgrid">
-        <div class="wstat"><div class="wsl">Tuuli</div><div class="wsv">4 m/s KO</div></div>
-        <div class="wstat"><div class="wsl">Tuntuma</div><div class="wsv">−18°C</div></div>
-        <div class="wstat"><div class="wsl">Näkyvyys</div><div class="wsv">Hyvä</div></div>
-        <div class="wstat"><div class="wsl">Aurinko</div><div class="wsv">10–14</div></div>
+        <div class="wstat"><div class="wsl">Tuuli</div><div class="wsv" id="w-wind-panel">– m/s</div></div>
+        <div class="wstat"><div class="wsl">Tuntuma</div><div class="wsv" id="w-feels">–°C</div></div>
       </div>
     </div>
 
@@ -658,15 +643,15 @@ footer {
 
     <!-- Rinnetilanne -->
     <div class="panel sp">
-      <div class="plbl">Rinne- ja hissitilanne</div>
-      <div class="lifts">
-        <div class="lchip"><div class="ld o"></div>Gondoli</div>
-        <div class="lchip"><div class="ld o"></div>Hissi 3</div>
-        <div class="lchip"><div class="ld o"></div>Hissi 7</div>
-        <div class="lchip"><div class="ld c"></div>Hissi 2</div>
-        <div class="lchip"><div class="ld o"></div>Lapsirinne</div>
-        <div class="lchip"><div class="ld o"></div>Hissi 11</div>
-      </div>
+      <div class="plbl">Rinne- ja hissitilanne <span id="lift-status-badge" style="font-size:.7rem;padding:2px 8px;border-radius:3px;margin-left:6px;font-weight:700;letter-spacing:.1em;"></span></div>
+
+      <!-- Kauden info -->
+      <div id="season-info" style="font-family:'Barlow Condensed',sans-serif;font-size:.82rem;color:rgba(234,244,250,.65);margin-bottom:10px;line-height:1.5;"></div>
+
+      <!-- Tänään auki olevat hissit -->
+      <div class="lifts" id="lift-chips-live"></div>
+
+      <!-- Rinneinfo sivutettu -->
       <div id="slope-pages"></div>
       <div class="slope-pager" id="slope-pager"></div>
       <div class="sleg">H Helppo · K Keskivaikea · V Vaikea · M Musta</div>
@@ -676,37 +661,32 @@ footer {
     <div class="panel ep">
       <div class="plbl">Tapahtumat</div>
       <div class="elist" id="event-list">
-        <div class="eitem">
-          <div class="edate">La 11.1. · 21:00</div>
-          <div class="ename">Revontuli-ilta</div>
-          <div class="eloc">Opastettu retki/tapahtumat</div>
-        </div>
-        <div class="eitem f">
-          <div class="edate">Su 12.1. · 10:00</div>
-          <div class="ename">Hiihtokoulu alkaa</div>
-          <div class="eloc">Rinteen päässä · kaikki tasot</div>
-        </div>
-        <div class="eitem f">
-          <div class="edate">Su 12.1. · 14:00</div>
-          <div class="ename">Kelkkaretki</div>
-          <div class="eloc">Ilmoittaudu vastaanotossa</div>
-        </div>
-        <div class="eitem f">
-          <div class="edate">Ma 13.1. · 19:00</div>
-          <div class="ename">Hullu Poro Live</div>
-          <div class="eloc">Hullu Poro Areena</div>
-        </div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.8rem;color:rgba(234,244,250,.4);letter-spacing:.1em;padding:8px 0;">Ladataan tapahtumia...</div>
       </div>
+    </div>
+
+    <!-- Lennot KTT -->
+    <div class="panel" style="flex:0 0 auto; padding:16px 24px;">
+      <div class="plbl">Kittilä Airport — KTT</div>
+      <div class="flight-tabs">
+        <div class="ftab active" id="ftab-arr" onclick="showFlightTab('arr')">Saapuvat</div>
+        <div class="ftab" id="ftab-dep" onclick="showFlightTab('dep')">Lähtevät</div>
+      </div>
+      <div id="flights-arr"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.8rem;color:var(--muted);letter-spacing:.1em;">Ladataan...</div></div>
+      <div id="flights-dep" style="display:none;"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.8rem;color:var(--muted);letter-spacing:.1em;">Ladataan...</div></div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.58rem;color:rgba(234,244,250,.25);letter-spacing:.1em;margin-top:6px;text-align:right;">aviationstack.com</div>
     </div>
 
     <!-- Aukioloajat -->
     <div class="panel hp">
       <div class="plbl">Aukioloajat tänään</div>
-      <div class="hrow"><div class="hname">Hissit</div><div class="htime">9:00 – 17:00</div></div>
-      <div class="hrow"><div class="hname">Sky Restaurant</div><div class="htime">11:00 – 22:00</div></div>
-      <div class="hrow"><div class="hname">Vuokraamo</div><div class="htime">8:00 – 18:00</div></div>
-      <div class="hrow"><div class="hname">Hiihtokoulu</div><div class="htime">9:00 – 16:00</div></div>
-      <div class="hrow"><div class="hname">SPA &amp; uima-allas</div><div class="htime">8:00 – 22:00</div></div>
+      <div id="hours-content">
+        <div class="hrow"><div class="hname">Hissit</div><div class="htime" id="h-lifts">9:00 – 17:00</div></div>
+        <div class="hrow"><div class="hname">Sky Restaurant</div><div class="htime">11:00 – 22:00</div></div>
+        <div class="hrow"><div class="hname">Vuokraamo</div><div class="htime">8:00 – 18:00</div></div>
+        <div class="hrow"><div class="hname">Hiihtokoulu</div><div class="htime" id="h-school">9:00 – 16:00</div></div>
+        <div class="hrow"><div class="hname">SPA &amp; uima-allas</div><div class="htime">8:00 – 22:00</div></div>
+      </div>
     </div>
 
   </div>
@@ -772,13 +752,17 @@ adSlides.forEach((_,i) => {
 });
 const adDots = adDotsEl.querySelectorAll('.ad-dot');
 let adCur = 0;
-setInterval(() => {
+// Revontulidata ladataan ennen rotaation alkua
+const AD_INTERVALS = [12000, 10000]; // Myynti, revontulet
+function advanceAd() {
   adSlides[adCur].classList.remove('active');
-  adDots[adCur].classList.remove('active');
+  adDots[adCur]?.classList.remove('active');
   adCur = (adCur+1) % adSlides.length;
   adSlides[adCur].classList.add('active');
-  adDots[adCur].classList.add('active');
-}, 9000);
+  adDots[adCur]?.classList.add('active');
+  setTimeout(advanceAd, AD_INTERVALS[adCur] || 9000);
+}
+setTimeout(advanceAd, AD_INTERVALS[0]);
 
 /* ── Kamerat ── */
 const CAMERAS = [
@@ -954,7 +938,7 @@ async function loadWeather() {
     // FMI WFS API - avoin data, ei autentikaatiota
     const FMIURL = 'https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0' +
       '&request=getFeature&storedquery_id=fmi::observations::weather::simple' +
-      '&fmisid=101886&parameters=temperature,windspeedms,winddirection,weathersymbol3,snowdepth';
+      '&fmisid=101886&parameters=temperature,windspeedms,winddirection,weathersymbol3,snowdepth,humidity,totalcloudcover';
 
     const resp = await fetch(FMIURL);
     if (!resp.ok) throw new Error('FMI HTTP ' + resp.status);
@@ -977,19 +961,7 @@ async function loadWeather() {
     const wsym  = vals['weathersymbol3'] ?? null;
     const snow  = vals['snowdepth']      ?? null;
 
-    // Päivitä lumiarvot FMI:stä
-    if (snow !== null && snow >= 0) {
-      const snowCm = Math.round(snow) + ' cm';
-      const hwSnow = document.getElementById('hw-snow');
-      if (hwSnow) hwSnow.textContent = snowCm;
-      const sdEl = document.getElementById('snow-depth');
-      if (sdEl) sdEl.innerHTML = Math.round(snow) + '<span class="snow-u">cm</span>';
-    }
-    // Uusi lumi — FMI ei suoraan anna 24h muutosta, näytetään viiva
-    const hwNew = document.getElementById('hw-newsnow');
-    if (hwNew) hwNew.textContent = '–';
-    const snNew = document.getElementById('snow-new');
-    if (snNew) snNew.innerHTML = '–<span class="snow-u">cm</span>';
+    // Lumi ei saatavilla FMI:ltä automaattisesti
 
     // Muunna tuulensuunta asteista kompassiin
     const dirStr = wdir !== null ? degToCompass(wdir) : '';
@@ -1014,6 +986,29 @@ async function loadWeather() {
     const wdesc = document.querySelector('.w-desc');
     if (wdesc) wdesc.textContent = condStr + (dirStr ? ' · ' + dirStr + '-tuuli' : '');
 
+    // Päivitä sääpaneelin arvot id:llä
+    const humidity = vals['humidity'] ?? null;
+    const clouds   = vals['totalcloudcover'] ?? null;
+    
+    // Tuntuma (wind chill) lasketaan kaavalla
+    let feels = temp;
+    if (temp !== null && wind !== null && temp < 10 && wind > 1.3) {
+      feels = Math.round(13.12 + 0.6215*temp - 11.37*Math.pow(wind*3.6,0.16) + 0.3965*temp*Math.pow(wind*3.6,0.16));
+    }
+    
+    const wpEl = document.getElementById('w-wind-panel');
+    if (wpEl && wind !== null) wpEl.textContent = Math.round(wind) + ' m/s ' + dirStr;
+    const wfEl = document.getElementById('w-feels');
+    if (wfEl && feels !== null) wfEl.textContent = (feels > 0 ? '+' : '') + feels + '°C';
+    const whEl = document.getElementById('w-humidity');
+    if (whEl && humidity !== null) whEl.textContent = Math.round(humidity) + '%';
+    const wcEl = document.getElementById('w-clouds');
+    if (wcEl && clouds !== null) {
+      const oktas = Math.round(clouds/12.5);
+      const desc = ['Selkeää','Melkein selkeää','Puolipilvistä','Puolipilvistä','Puolipilvistä','Melko pilvistä','Pilvistä','Pilvistä','Pilvistä'][Math.min(oktas,8)];
+      wcEl.textContent = desc;
+    }
+    
     const wsvs = document.querySelectorAll('.wsv');
     if (wsvs[0] && wind !== null) wsvs[0].textContent = Math.round(wind) + ' m/s ' + dirStr;
 
@@ -1033,9 +1028,10 @@ async function loadForecast() {
     const now = new Date();
     const start = new Date(now); start.setUTCHours(12,0,0,0);
     const end   = new Date(start); end.setUTCDate(end.getUTCDate() + 5);
+    // Käytä ec-mallinnusta joka kattaa pidemmän ajanjakson
     const FURL = 'https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0' +
-      '&request=getFeature&storedquery_id=fmi::forecast::harmonie::surface::point::simple' +
-      '&place=Kittil%C3%A4&parameters=temperature,weathersymbol3' +
+      '&request=getFeature&storedquery_id=fmi::forecast::edited::weather::scandinavia::point::simple' +
+      '&place=Kittil%C3%A4&parameters=Temperature,WeatherSymbol3' +
       '&starttime=' + start.toISOString().replace('.000Z','Z') +
       '&endtime='   + end.toISOString().replace('.000Z','Z') +
       '&timestep=1440';
@@ -1050,7 +1046,7 @@ async function loadForecast() {
     const days = {};
     members.forEach(m => {
       const t   = m.querySelector('Time')?.textContent?.trim();
-      const par = m.querySelector('ParameterName')?.textContent?.trim();
+      const par = m.querySelector('ParameterName')?.textContent?.trim()?.toLowerCase();
       const val = parseFloat(m.querySelector('ParameterValue')?.textContent);
       if (!t || !par || isNaN(val)) return;
       const date = t.split('T')[0];
@@ -1067,7 +1063,7 @@ async function loadForecast() {
     foreEl.innerHTML = dayKeys.map(dk => {
       const d   = days[dk];
       const temp = d['temperature'] !== undefined ? Math.round(d['temperature']) : '–';
-      const sym  = d['weathersymbol3'];
+      const sym  = d['weathersymbol3'] ?? d['WeatherSymbol3'];
       const icon = weatherIcon(sym);
       const wd   = new Date(dk + 'T12:00:00Z');
       const dayName = WDAYS[wd.getUTCDay()];
@@ -1243,9 +1239,293 @@ async function loadSlopeStatus() {
   if (ttext) ttext.innerHTML = parts.join(' <span class="tsep">\u00b7</span> ');
 }
 
+
+/* ══════════════════════════════════════════════════════
+   ÄLYKKÄÄT RINNE- JA HISSITIEDOT
+   Perustuu Levin julkaistuun kausitietoon + kelloon
+   ══════════════════════════════════════════════════════ */
+
+/* Kausidata — päivitetään manuaalisesti kauden mukaan */
+const SEASON = {
+  open: true,           // Onko kausi auki
+  liftOpen:  { h: 9,  m: 0 },
+  liftClose: { h: 17, m: 0 },
+  lastRide:  { h: 16, m: 45 },
+
+  // Viikko 4.5–10.5: vain nämä hissit
+  finalWeek: {
+    start: new Date('2026-05-04'),
+    end:   new Date('2026-05-10'),
+    lifts: ['Levi West','Levi Six','Ankkurilift 7','Ankkurilift 9','Gondoli2000'],
+    slopes: [
+      {name:'W.1 — Levi West',    diff:'H', area:'west'},
+      {name:'W.2 — Levi West',    diff:'K', area:'west'},
+      {name:'W.3 — Levi West',    diff:'H', area:'west'},
+      {name:'6.1 — Levi Six',     diff:'K', area:'six'},
+      {name:'6.2 — Levi Six',     diff:'H', area:'six'},
+      {name:'7.1',                diff:'H', area:'front'},
+      {name:'7.3',                diff:'H', area:'front'},
+      {name:'9.1 — Park',         diff:'K', area:'south'},
+      {name:'9.2 — Park',         diff:'K', area:'south'},
+      {name:'G.1 — Gondola',      diff:'K', area:'front'},
+    ]
+  },
+
+  // Normaalit hissit (ennen 3.5.)
+  mainLifts: [
+    {name:'Gondoli2000', open:true},
+    {name:'Levi West',   open:true},
+    {name:'Levi Six',    open:true},
+    {name:'Hissi 3',     open:true},
+    {name:'Hissi 7',     open:true},
+    {name:'Hissi 9',     open:true},
+    {name:'Hissi 11',    open:true},
+    {name:'Lapsirinne',  open:true},
+    {name:'Hissi 2',     open:false, note:'Suljettu rakennustöiden vuoksi'},
+    {name:'Etelähissi',  open:false, note:'Suljettu 3.5. alkaen'},
+  ],
+
+  // Rinteet (normaalikausi, ennen 3.5.)
+  mainSlopes: [
+    {name:'G.1 — Gondola',       diff:'K', area:'front', open:true},
+    {name:'G.2 — Levi Black',    diff:'M', area:'front', open:false, note:'Suljettu 12.4.'},
+    {name:'N.1 — Pohjoinen',     diff:'H', area:'front', open:true},
+    {name:'E.1 — Express',       diff:'K', area:'front', open:true},
+    {name:'W.1 — Levi West',     diff:'H', area:'west',  open:true},
+    {name:'W.2 — Levi West',     diff:'K', area:'west',  open:true},
+    {name:'W.3 — Levi West',     diff:'H', area:'west',  open:true},
+    {name:'6.1 — Levi Six',      diff:'K', area:'six',   open:true},
+    {name:'6.2 — Levi Six',      diff:'H', area:'six',   open:true},
+    {name:'7.1',                 diff:'H', area:'front',  open:true},
+    {name:'7.3',                 diff:'H', area:'front',  open:true},
+    {name:'8.2 — Etelä',         diff:'K', area:'south',  open:false, note:'Suljettu 19.4.'},
+    {name:'8.3 — Etelä',         diff:'V', area:'south',  open:false, note:'Suljettu 19.4.'},
+    {name:'9.1 — Park',          diff:'K', area:'south',  open:true},
+    {name:'9.2 — Park',          diff:'K', area:'south',  open:true},
+    {name:'Lapsirinne',          diff:'H', area:'kids',   open:true},
+  ]
+};
+
+function updateSlopePanel() {
+  const now    = new Date();
+  const fin    = new Date(now.toLocaleString('en-US', {timeZone:'Europe/Helsinki'}));
+  const h      = fin.getHours();
+  const m      = fin.getMinutes();
+  const today  = new Date(fin.getFullYear(), fin.getMonth(), fin.getDate());
+
+  const isOpen = SEASON.open &&
+    (h > SEASON.liftOpen.h || (h === SEASON.liftOpen.h && m >= SEASON.liftOpen.m)) &&
+    (h < SEASON.liftClose.h || (h === SEASON.liftClose.h && m < SEASON.liftClose.m));
+
+  const isFinalWeek = today >= SEASON.finalWeek.start && today <= SEASON.finalWeek.end;
+  const isAfterSeason = today > SEASON.finalWeek.end;
+
+  // Badge
+  const badge = document.getElementById('lift-status-badge');
+  if (badge) {
+    if (isAfterSeason || !SEASON.open) {
+      badge.textContent = 'KAUSI PÄÄTTYNYT';
+      badge.style.background = 'rgba(217,80,80,.2)';
+      badge.style.color = '#D95050';
+    } else if (isOpen) {
+      badge.textContent = 'AUKI';
+      badge.style.background = 'rgba(77,191,127,.18)';
+      badge.style.color = '#4DBF7F';
+    } else if (h < SEASON.liftOpen.h) {
+      badge.textContent = 'AVAUTUU ' + SEASON.liftOpen.h + ':00';
+      badge.style.background = 'rgba(224,160,48,.15)';
+      badge.style.color = '#E0A030';
+    } else {
+      badge.textContent = 'SULJETTU';
+      badge.style.background = 'rgba(217,80,80,.15)';
+      badge.style.color = '#D95050';
+    }
+  }
+
+  // Kauden info
+  const info = document.getElementById('season-info');
+  if (info) {
+    if (isAfterSeason) {
+      info.textContent = 'Kausi 2025–2026 on päättynyt. Kiitos kaudesta!';
+    } else if (isFinalWeek) {
+      info.textContent = 'Viimeinen viikko 4.–10.5. · Levi West, Levi Six, Gondoli2000';
+    } else if (today >= new Date('2026-05-03')) {
+      info.textContent = 'Etelärinteet suljettu 3.5. · Viimeinen viikko alkaa 4.5.';
+    } else if (today >= new Date('2026-04-19')) {
+      info.textContent = 'Hissi 8 + rinteet 8.2–8.3 suljettu 19.4. (rakennustyöt)';
+    } else {
+      info.textContent = 'Hissit ' + SEASON.liftOpen.h + ':00–' + SEASON.liftClose.h + ':00 · Viimeinen nousu ' + SEASON.lastRide.h + ':' + String(SEASON.lastRide.m).padStart(2,'0');
+    }
+  }
+  // Päivitä aukioloajat kauden mukaan
+  const hLifts = document.getElementById('h-lifts');
+  const hSchool = document.getElementById('h-school');
+  if (isAfterSeason) {
+    if (hLifts) hLifts.textContent = 'Suljettu';
+    if (hSchool) hSchool.textContent = 'Suljettu';
+  } else if (isFinalWeek) {
+    if (hLifts) hLifts.textContent = '9:00 – 17:00';
+    if (hSchool) hSchool.textContent = 'Suljettu';
+  }
+
+  // Hissichipsit
+  const lifts = isFinalWeek ? SEASON.finalWeek.lifts.map(n => ({name:n, open:isOpen}))
+                            : SEASON.mainLifts.map(l => ({...l, open: l.open && isOpen}));
+  const chipsEl = document.getElementById('lift-chips-live');
+  if (chipsEl) {
+    chipsEl.innerHTML = lifts.map(l =>
+      `<div class="lchip"><div class="ld ${l.open ? 'o' : 'c'}"></div>${l.name}</div>`
+    ).join('');
+  }
+
+  // Rinteet sivutettuna
+  const slopes = isFinalWeek ? SEASON.finalWeek.slopes.map(s => ({...s, status:'open'}))
+                             : SEASON.mainSlopes.map(s => ({
+                                 name:   s.name,
+                                 diff:   s.diff,
+                                 status: s.open ? (isOpen ? 'open' : 'limited') : 'closed',
+                                 note:   s.note
+                               }));
+  renderSlopePages(slopes);
+}
+
+/* Päivitä heti ja sitten kerran minuutissa */
+updateSlopePanel();
+setInterval(updateSlopePanel, 60000);
+
+
+/* ── Revontulidata NOAA SWPC ── */
+async function loadAurora() {
+  try {
+    // Kp-indeksi — viimeisin arvo
+    const kpRes  = await fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json');
+    const kpData = await kpRes.json();
+    // Viimeisin rivi: [aika, Kp]
+    const latest = kpData[kpData.length - 1];
+    const kp = parseFloat(latest[1]);
+
+    const kpEl   = document.getElementById('kp-value');
+    const descEl = document.getElementById('kp-desc');
+    const advEl  = document.getElementById('aurora-advice') || document.getElementById('kp-advice');
+
+    if (kpEl) kpEl.textContent = kp.toFixed(1);
+
+    // Kp-tulkinta Levin leveysasteella (67.8°N) — revontulet näkyy yleensä Kp ≥ 3
+    let color = '#6BB8D4', desc = '', advice = '';
+    if (kp >= 7)      { color='#D95050'; desc='Erittäin voimakas'; advice='Harvinainen revontulimyrsky — mene ulos nyt!'; }
+    else if (kp >= 5) { color='#E0A030'; desc='Voimakas';          advice='Erinomaiset revontulet todennäköisiä pilvettömällä säällä'; }
+    else if (kp >= 4) { color='#D4A843'; desc='Aktiivinen';        advice='Hyvä revontuliyö — suosittelemme ulkona käyntiä'; }
+    else if (kp >= 3) { color='#4DBF7F'; desc='Kohtalainen';       advice='Revontulet mahdollisia Levin leveysasteella'; }
+    else if (kp >= 2) { color='#6BB8D4'; desc='Hiljainen';         advice='Heikko revontuliaktiivisuus, mutta mahdollista pohjoisessa'; }
+    else              { color='#6BB8D4'; desc='Erittäin hiljainen'; advice='Revontulet epätodennäköisiä tänä yönä'; }
+
+    if (descEl) { descEl.textContent = desc; descEl.style.color = color; }
+    if (advEl)  advEl.textContent = advice;
+
+    // Kp → todennäköisyys Levillä (67.8°N) — karkea arvio
+    const prob = Math.min(100, Math.round(Math.max(0, (kp - 1.5) / 7.5 * 100)));
+    const probEl = document.getElementById('aurora-prob');
+    const barEl  = document.getElementById('aurora-bar');
+    if (probEl) { probEl.textContent = prob + '%'; probEl.style.color = color; }
+    if (barEl)  barEl.style.width = prob + '%';
+
+  } catch(e) { console.warn('Aurora:', e.message); }
+}
+
+
+/* ── Kittilä Airport lennot (AviationStack) ── */
+const AVIATION_KEY = 'f0bb8265a062aa22fed0561d147891c0'; // Lisää avain tähän
+let flightCache = null, flightCacheTime = 0;
+
+function showFlightTab(tab) {
+  document.getElementById('flights-arr').style.display = tab === 'arr' ? '' : 'none';
+  document.getElementById('flights-dep').style.display = tab === 'dep' ? '' : 'none';
+  document.getElementById('ftab-arr').classList.toggle('active', tab === 'arr');
+  document.getElementById('ftab-dep').classList.toggle('active', tab === 'dep');
+}
+
+function renderFlights(flights, elId, type) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  if (!flights?.length) {
+    el.innerHTML = '<div style="font-family:'Barlow Condensed',sans-serif;font-size:.8rem;color:var(--muted);padding:8px 0;">Ei lentoja tänään</div>';
+    return;
+  }
+  const fin = (iso) => {
+    if (!iso) return '–';
+    const d = new Date(iso);
+    return d.toLocaleTimeString('fi-FI', {hour:'2-digit',minute:'2-digit',timeZone:'Europe/Helsinki'});
+  };
+  el.innerHTML = flights.slice(0, 6).map(f => {
+    const isArr = type === 'arr';
+    const airport = isArr
+      ? (f.departure?.airport || f.departure?.iata || '–')
+      : (f.arrival?.airport  || f.arrival?.iata  || '–');
+    const time = isArr
+      ? fin(f.arrival?.scheduled)
+      : fin(f.departure?.scheduled);
+    const actual = isArr
+      ? fin(f.arrival?.actual || f.arrival?.estimated)
+      : fin(f.departure?.actual || f.departure?.estimated);
+    const delay = isArr ? f.arrival?.delay : f.departure?.delay;
+    const status = f.flight_status || '';
+    let stClass = 'on-time', stTxt = 'Ajoissa';
+    if (status === 'cancelled')  { stClass='cancelled';  stTxt='Peruttu'; }
+    else if (status === 'landed' || status === 'arrived') { stClass='arrived';  stTxt='Laskeutunut'; }
+    else if (status === 'active') { stClass='on-time';   stTxt='Matkalla'; }
+    else if (delay > 0)           { stClass='delayed';   stTxt='+' + delay + ' min'; }
+    else if (status === 'scheduled') { stClass='on-time'; stTxt='Aikataulussa'; }
+    // Lyhennä lentokenttänimi
+    const dest = airport.replace(' Airport','').replace(' International','').replace(' Intl','');
+    return `<div class="flight-row">
+      <div class="f-time">${time}</div>
+      <div class="f-flight">${f.flight?.iata || '–'}</div>
+      <div class="f-dest">${dest}</div>
+      <div class="f-status ${stClass}">${stTxt}</div>
+    </div>`;
+  }).join('');
+}
+
+async function loadFlights() {
+  // Välimuisti 60 min — säästää kutsut (500/kk ilmaisella)
+  const now = Date.now();
+  if (flightCache && now - flightCacheTime < 3600000) {
+    renderFlights(flightCache.arr, 'flights-arr', 'arr');
+    renderFlights(flightCache.dep, 'flights-dep', 'dep');
+    return;
+  }
+  if (AVIATION_KEY === 'AVIASTACK_API_KEY_HERE') return; // Ei avainta vielä
+
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    // Ilmainen tili: HTTP, filtteröidään arr/dep clientissa
+    const arrRes = await fetch(
+      `http://api.aviationstack.com/v1/flights?access_key=${AVIATION_KEY}&limit=50&arr_icao=EFKT`
+    );
+    const depRes = await fetch(
+      `http://api.aviationstack.com/v1/flights?access_key=${AVIATION_KEY}&limit=50&dep_icao=EFKT`
+    );
+    const arrData = await arrRes.json();
+    const depData = await depRes.json();
+
+    const sort = (d, type) => (d?.data || []).sort((a,b) => {
+      const ta = type==='arr' ? a.arrival?.scheduled : a.departure?.scheduled;
+      const tb = type==='arr' ? b.arrival?.scheduled : b.departure?.scheduled;
+      return new Date(ta) - new Date(tb);
+    });
+
+    flightCache = { arr: sort(arrData,'arr'), dep: sort(depData,'dep') };
+    flightCacheTime = now;
+
+    renderFlights(flightCache.arr, 'flights-arr', 'arr');
+    renderFlights(flightCache.dep, 'flights-dep', 'dep');
+  } catch(e) { console.warn('Flights:', e.message); }
+}
+
 /* ── Käynnistä & ajoita ── */
 async function refreshAll() {
-  await Promise.all([loadEvents(), loadSlopeStatus(), loadWeather()]);
+  await Promise.all([loadEvents(), loadWeather(), loadAurora()]);
+  loadFlights();
 }
 refreshAll();
 setInterval(refreshAll, REFRESH_MS);
