@@ -18,15 +18,83 @@ body{
   --ice:#6BB8D4;--snow:#EAF4FA;--muted:rgba(234,244,250,.45);
   --panel:rgba(255,255,255,.04);--border:rgba(107,184,212,.10);
   --deep:#060D18;--green:#3EBF7A;--red:#D04545;--amber:#D4920A;
+  /* Seasonal overrides (set by JS) */
+  --sky1:rgba(0,50,110,.22);--sky2:rgba(0,35,80,.20);
+  --bg1:#03080F;--bg2:#060D18;
+  --accent:#6BB8D4;
 }
-body::before{
+
+/* ── WINTER (Nov–Mar) ── */
+body.season-winter{background:linear-gradient(180deg,#020810 0%,#030C18 100%);}
+body.season-winter::before{background:
+  radial-gradient(ellipse 1600px 300px at 30% 0,rgba(0,50,120,.28) 0%,transparent 100%),
+  radial-gradient(ellipse 900px 250px at 80% 0,rgba(0,30,90,.24) 0%,transparent 100%),
+  radial-gradient(ellipse 600px 180px at 60% 100%,rgba(0,20,60,.15) 0%,transparent 100%);
+  animation:aur-winter 30s ease-in-out infinite alternate;}
+@keyframes aur-winter{
+  0%{opacity:.5;transform:scaleX(1) translateY(0)}
+  50%{opacity:1;transform:scaleX(1.06) translateY(-6px)}
+  100%{opacity:.6;transform:scaleX(.95) translateY(4px)}
+}
+
+/* ── SPRING (Apr–May) ── */
+body.season-spring{background:linear-gradient(180deg,#050C15 0%,#07121E 100%);}
+body.season-spring::before{background:
+  radial-gradient(ellipse 1800px 220px at 50% 0,rgba(120,180,255,.12) 0%,transparent 100%),
+  radial-gradient(ellipse 800px 400px at 20% 30%,rgba(255,200,100,.05) 0%,transparent 100%),
+  radial-gradient(ellipse 600px 300px at 80% 20%,rgba(100,200,150,.06) 0%,transparent 100%);
+  animation:aur-spring 20s ease-in-out infinite alternate;}
+@keyframes aur-spring{
+  0%{opacity:.6;transform:translateY(0)}
+  100%{opacity:1;transform:translateY(-4px)}
+}
+
+/* ── SUMMER / MIDNIGHT SUN (Jun–Jul) ── */
+body.season-summer{background:linear-gradient(180deg,#050A10 0%,#040810 100%);}
+body.season-summer::before{background:
+  radial-gradient(ellipse 2000px 180px at 50% 0,rgba(255,180,60,.10) 0%,transparent 100%),
+  radial-gradient(ellipse 1000px 300px at 30% 0,rgba(255,140,30,.07) 0%,transparent 100%),
+  radial-gradient(ellipse 1000px 300px at 70% 0,rgba(255,100,40,.06) 0%,transparent 100%);
+  animation:aur-summer 15s ease-in-out infinite alternate;}
+@keyframes aur-summer{
+  0%{opacity:.7}100%{opacity:1}
+}
+
+/* ── AUTUMN (Aug–Oct) ── */
+body.season-autumn{background:linear-gradient(180deg,#060A0F 0%,#080D12 100%);}
+body.season-autumn::before{background:
+  radial-gradient(ellipse 1600px 280px at 40% 0,rgba(180,80,20,.12) 0%,transparent 100%),
+  radial-gradient(ellipse 800px 300px at 80% 0,rgba(120,50,10,.10) 0%,transparent 100%),
+  radial-gradient(ellipse 700px 200px at 20% 0,rgba(60,30,120,.15) 0%,transparent 100%);
+  animation:aur-autumn 25s ease-in-out infinite alternate;}
+@keyframes aur-autumn{
+  0%{opacity:.5;transform:scaleX(1)}
+  100%{opacity:.9;transform:scaleX(1.04)}
+}
+
+/* ── NIGHT MODE (all seasons, 22:00–05:00) ── */
+body.night-mode::after{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background:
-    radial-gradient(ellipse 1600px 300px at 30% 0,rgba(0,50,110,.22) 0%,transparent 100%),
-    radial-gradient(ellipse 800px 200px at 85% 0,rgba(0,35,80,.20) 0%,transparent 100%);
-  animation:aur 28s ease-in-out infinite alternate;
+    radial-gradient(1.5px 1.5px at 150px 60px,rgba(255,255,255,.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 400px 90px,rgba(255,255,255,.35) 0%,transparent 100%),
+    radial-gradient(2px 2px at 700px 40px,rgba(255,255,255,.55) 0%,transparent 100%),
+    radial-gradient(1px 1px at 1000px 80px,rgba(255,255,255,.40) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 1300px 55px,rgba(255,255,255,.45) 0%,transparent 100%),
+    radial-gradient(1px 1px at 1600px 75px,rgba(255,255,255,.30) 0%,transparent 100%),
+    radial-gradient(2px 2px at 220px 200px,rgba(255,255,255,.25) 0%,transparent 100%),
+    radial-gradient(1px 1px at 900px 180px,rgba(255,255,255,.20) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 1500px 160px,rgba(255,255,255,.30) 0%,transparent 100%);
+  animation:stars 8s ease-in-out infinite alternate;
 }
-@keyframes aur{0%{opacity:.5}100%{opacity:.9}}
+@keyframes stars{0%{opacity:.6}100%{opacity:1}}
+
+/* ── GOLDEN HOUR (sun near horizon, ~1h after rise / before set) ── */
+body.golden-hour::before{
+  filter:sepia(.15) hue-rotate(-10deg);
+}
+body.golden-hour .logo,.golden-hour .htemp{color:#FFE4A0!important;}
+body.golden-hour .hdate{color:#FFB347!important;}
 
 .screen{
   position:relative;z-index:1;
@@ -203,6 +271,15 @@ footer{
 .ftx{white-space:nowrap;font-size:.84rem;letter-spacing:.05em;color:var(--snow);animation:ftick 60s linear infinite;}
 @keyframes ftick{0%{transform:translateX(1920px)}100%{transform:translateX(-100%)}}
 .ftsep{color:var(--muted);margin:0 18px;}
+
+.kp-leg{
+  text-align:center;padding:5px 3px;border-radius:4px;
+  background:var(--panel);border:1px solid var(--border);
+  font-size:.6rem;letter-spacing:.06em;color:var(--muted);line-height:1.3;
+}
+.kp-leg span{font-size:.55rem;color:rgba(234,244,250,.35);}
+.kp-leg.active{border-color:var(--gold-line);background:var(--gold-dim);color:var(--gold);}
+.kp-leg.active span{color:rgba(201,150,58,.7);}
 </style>
 </head>
 <body>
@@ -252,6 +329,8 @@ footer{
     <div class="wgrid">
       <div class="wst"><div class="wsl">Wind</div><div class="wsv" id="wwind">–</div></div>
       <div class="wst"><div class="wsl">Feels like</div><div class="wsv" id="wfeel">–</div></div>
+      <div class="wst"><div class="wsl">🌅 Sunrise</div><div class="wsv" id="w-rise" style="font-size:1rem;">–</div></div>
+      <div class="wst"><div class="wsl">🌇 Sunset</div><div class="wsv" id="w-set" style="font-size:1rem;">–</div></div>
     </div>
   </div>
 
@@ -267,14 +346,54 @@ footer{
     </div>
   </div>
 
-  <!-- Hissit & rinteet -->
-  <div class="pan" style="flex:0 0 auto;">
-    <div class="plbl">Slopes &amp; Lifts <span class="lbadge" id="lbadge"></span></div>
-    <div class="snote" id="snote"></div>
-    <div class="lchips" id="lchips"></div>
-    <div id="spages"></div>
-    <div class="spgr" id="spgr"></div>
-    <div class="sleg">G Easy · B Medium · R Hard · K Black</div>
+  <!-- Aurora Widget -->
+  <div class="pan aurora-panel" style="flex:0 0 auto;">
+    <div class="plbl">Northern Lights — Live Kp Index</div>
+
+    <!-- Kp gauge -->
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
+      <div style="position:relative;width:80px;height:80px;flex-shrink:0;">
+        <svg viewBox="0 0 80 80" width="80" height="80">
+          <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="8"/>
+          <circle id="kp-arc" cx="40" cy="40" r="34" fill="none" stroke="var(--green)"
+            stroke-width="8" stroke-linecap="round"
+            stroke-dasharray="213" stroke-dashoffset="213"
+            transform="rotate(-90 40 40)"
+            style="transition:stroke-dashoffset 1.2s ease,stroke 1.2s ease;"/>
+        </svg>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <div id="kp-big" style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;color:var(--snow);line-height:1;">–</div>
+          <div style="font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);">Kp</div>
+        </div>
+      </div>
+      <div style="flex:1;">
+        <div id="kp-status" style="font-size:1.1rem;font-weight:600;color:var(--ice);margin-bottom:4px;">Loading...</div>
+        <div id="kp-advice" style="font-size:.78rem;color:var(--muted);line-height:1.4;"></div>
+        <div style="margin-top:8px;">
+          <div style="font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;">Visibility at Levi (67.8°N)</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="flex:1;height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;">
+              <div id="kp-fill" style="height:100%;width:0%;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--amber),var(--red));transition:width 1.2s ease;"></div>
+            </div>
+            <div id="kp-pct" style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;color:var(--gold);flex-shrink:0;">–%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kp scale legend -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:3px;">
+      <div class="kp-leg" data-kp="0-1">0–1<br><span>Calm</span></div>
+      <div class="kp-leg" data-kp="2-3">2–3<br><span>Possible</span></div>
+      <div class="kp-leg" data-kp="4">4<br><span>Good</span></div>
+      <div class="kp-leg" data-kp="5-6">5–6<br><span>Strong</span></div>
+      <div class="kp-leg" data-kp="7+">7+<br><span>Extreme</span></div>
+    </div>
+
+    <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);">Source: NOAA SWPC · Updates every 10 min</div>
+      <div id="kp-updated" style="font-size:.58rem;color:var(--muted);"></div>
+    </div>
   </div>
 
   <!-- Aukiolo -->
@@ -453,7 +572,11 @@ let bc=0;
 const BINTS=[14000,10000,8000];
 function advB(){
   bsls[bc].classList.remove('on');bds[bc].classList.remove('on');
-  bc=(bc+1)%bsls.length;
+  let next=(bc+1)%bsls.length;
+  // Ohita skipatut slidet (esim. aurora off-season)
+  let tries=0;
+  while(bsls[next].dataset.skip==='1' && tries<bsls.length){next=(next+1)%bsls.length;tries++;}
+  bc=next;
   bsls[bc].classList.add('on');bds[bc].classList.add('on');
   setTimeout(advB,BINTS[bc]||10000);
 }
@@ -661,21 +784,189 @@ async function loadAurora(){
     const r=await fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json');
     const d=await r.json();
     const kp=parseFloat(d[d.length-1][1]);
-    let col='var(--ice)',lbl='',note='';
-    if(kp>=7){col='var(--red)';lbl='Extreme storm';note='Exceptional aurora — go outside now!';}
-    else if(kp>=5){col='var(--amber)';lbl='Strong activity';note='Excellent aurora likely with clear skies';}
-    else if(kp>=4){col='var(--gold)';lbl='Active';note='Good aurora night at Levi';}
-    else if(kp>=3){col='var(--green)';lbl='Moderate';note='Aurora possible at Levi (67.8°N)';}
-    else if(kp>=2){col='var(--ice)';lbl='Quiet';note='Weak activity, possible in far north';}
-    else{col='var(--muted)';lbl='Very quiet';note='Aurora unlikely tonight';}
-    document.getElementById('kpv').textContent=kp.toFixed(1);
-    const lE=document.getElementById('kpl');if(lE){lE.textContent=lbl;lE.style.color=col;}
-    document.getElementById('kpb').style.width=Math.min(100,kp/9*100)+'%';
-    document.getElementById('kpn').textContent=note;
+    let col,lbl,note,legIdx;
+    if(kp>=7){col='var(--red)';lbl='Extreme Storm';note='Exceptional aurora — exceptional visibility all night!';legIdx=4;}
+    else if(kp>=5){col='var(--amber)';lbl='Strong Activity';note='Excellent aurora likely with clear skies at Levi';legIdx=3;}
+    else if(kp>=4){col='var(--gold)';lbl='Active';note='Good aurora night — look north after midnight';legIdx=2;}
+    else if(kp>=3){col='var(--green)';lbl='Moderate';note='Aurora possible at 67.8°N — worth looking tonight';legIdx=1;}
+    else if(kp>=2){col='var(--ice)';lbl='Quiet';note='Weak activity, faint aurora possible in far north';legIdx=0;}
+    else{col='rgba(234,244,250,.35)';lbl='Very Quiet';note='Aurora unlikely tonight';legIdx=0;}
+
+    // Gauge arc (circumference = 2π×34 ≈ 213.6)
+    const CIRC=213.6;
+    const offset=CIRC-(kp/9)*CIRC;
+    const arc=document.getElementById('kp-arc');
+    if(arc){arc.style.strokeDashoffset=Math.max(0,offset);arc.style.stroke=col;}
+
+    const bigEl=document.getElementById('kp-big');
+    if(bigEl){bigEl.textContent=kp.toFixed(1);bigEl.style.color=col;}
+
+    const stEl=document.getElementById('kp-status');
+    if(stEl){stEl.textContent=lbl;stEl.style.color=col;}
+
+    document.getElementById('kp-advice').textContent=note;
+
     const prob=Math.min(100,Math.round(Math.max(0,(kp-1.5)/7.5*100)));
-    const pE=document.getElementById('apct');if(pE){pE.textContent=prob+'%';pE.style.color=col;}
+    const fillEl=document.getElementById('kp-fill');
+    if(fillEl)fillEl.style.width=prob+'%';
+    const pctEl=document.getElementById('kp-pct');
+    if(pctEl){pctEl.textContent=prob+'%';pctEl.style.color=col;}
+
+    // Legend highlight
+    document.querySelectorAll('.kp-leg').forEach((el,i)=>el.classList.toggle('active',i===legIdx));
+
+    // Updated time
+    const upd=document.getElementById('kp-updated');
+    if(upd){const n=new Date();upd.textContent='Updated '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}
+
+    // Banner slide Kp values
+    const bv=document.getElementById('kpv');if(bv)bv.textContent=kp.toFixed(1);
+    const bl=document.getElementById('kpl');if(bl){bl.textContent=lbl;bl.style.color=col;}
+    const bb=document.getElementById('kpb');if(bb)bb.style.width=Math.min(100,kp/9*100)+'%';
+    const bn=document.getElementById('kpn');if(bn)bn.textContent=note;
+    const ba=document.getElementById('apct');if(ba){ba.textContent=prob+'%';ba.style.color=col;}
+
   }catch(e){console.warn('Aurora:',e.message);}
 }
+
+
+
+/* === SEASONAL THEME === */
+function updateSeasonalTheme(){
+  const now = new Date();
+  const fin = new Date(now.toLocaleString('en-US',{timeZone:'Europe/Helsinki'}));
+  const month = fin.getMonth()+1; // 1-12
+  const hour  = fin.getHours();
+
+  // Determine season
+  const body = document.body;
+  body.classList.remove('season-winter','season-spring','season-summer','season-autumn');
+
+  let season, seasonLabel, seasonEmoji;
+  if(month>=11||month<=3){
+    season='winter'; seasonLabel='Winter'; seasonEmoji='❄️';
+  } else if(month>=4&&month<=5){
+    season='spring'; seasonLabel='Spring'; seasonEmoji='🌨️';
+  } else if(month>=6&&month<=7){
+    season='summer'; seasonLabel='Summer · Midnight Sun'; seasonEmoji='🌅';
+  } else {
+    season='autumn'; seasonLabel='Autumn'; seasonEmoji='🍂';
+  }
+  body.classList.add('season-'+season);
+
+  // Night mode & golden hour — tied to actual sunrise/sunset
+  const sun = calcSunTimes(fin);
+  const nowMin = hour*60+fin.getMinutes();
+
+  if(sun.polar==='Polar night — no sunrise today'){
+    // Polaariyö — aina yötila
+    body.classList.add('night-mode');
+    body.classList.remove('golden-hour');
+  } else if(sun.polar==='Midnight sun — sun stays above horizon'){
+    // Keskiyön aurinko — ei koskaan yötila
+    body.classList.remove('night-mode');
+    body.classList.remove('golden-hour');
+  } else if(sun.rise && sun.set){
+    const riseMin = timeToMin(sun.rise);
+    const setMin  = timeToMin(sun.set);
+    // Yötila = auringon alla horisontin (ennen nousua tai jälkeen laskun)
+    const isNight = nowMin < riseMin || nowMin >= setMin;
+    body.classList.toggle('night-mode', isNight);
+    // Kultainen tunti = 45 min ympärillä noususta tai laskusta
+    const isGolden = !isNight && (
+      (nowMin>=riseMin && nowMin<=riseMin+45) ||
+      (nowMin>=setMin-45 && nowMin<setMin)
+    );
+    body.classList.toggle('golden-hour', isGolden);
+  }
+
+  // Show season label in header tag
+  const tag = document.querySelector('.htag');
+  if(tag) tag.textContent = seasonEmoji+' Levi · Lapland · Finland · '+seasonLabel;
+
+  // Aurora visibility — only show when it can actually be dark enough
+  // Season: Aug–Apr (not Jun–Jul midnight sun)
+  // Also need actual darkness: sun below horizon
+  const auroraSeasonOk = month<=4 || month>=8; // May on rajatapaus
+  const isDark = sun ? (sun.polar==='Polar night — no sunrise today' ||
+    (sun.rise && sun.set && (nowMin<timeToMin(sun.rise) || nowMin>=timeToMin(sun.set))))
+    : (hour>=21||hour<5);
+  const showAurora = auroraSeasonOk && (isDark || hour>=20 || hour<=6);
+
+  // Näytä/piilota aurora-paneeli ja bannerin aurora-slide
+  const auroraPanel = document.querySelector('.aurora-panel');
+  if(auroraPanel) auroraPanel.style.display = showAurora ? '' : 'none';
+
+  // Piilota aurora-banneri slide jos ei kautta
+  const auroraSlide = document.getElementById('bs1');
+  if(auroraSlide){
+    auroraSlide.dataset.skip = showAurora ? '' : '1';
+  }
+
+  // Seasonal accent color on certain elements
+  const accentMap = {
+    winter:'#6BB8D4', spring:'#7DC4A0', summer:'#FFB347', autumn:'#D4824A'
+  };
+  document.documentElement.style.setProperty('--accent', accentMap[season]);
+}
+
+function timeToMin(timeStr){
+  // "HH:MM" → minutes since midnight
+  if(!timeStr||!timeStr.includes(':'))return 0;
+  const [h,m]=timeStr.split(':').map(Number);
+  return h*60+m;
+}
+
+updateSeasonalTheme();
+setInterval(updateSeasonalTheme, 5*60*1000); // every 5 min
+
+/* === SUNRISE / SUNSET (astronomical calculation) === */
+/* Levi: lat=67.8009°N, lon=24.8009°E */
+function calcSunTimes(date){
+  const LAT=67.8009, LON=24.8009;
+  const rad=Math.PI/180;
+  const JD=date.getTime()/86400000+2440587.5;
+  const n=Math.round(JD-2451545.0-0.0009-(LON/360));
+  const Js=2451545.0+0.0009+(LON/360)+n;
+  const M=(357.5291+0.98560028*(Js-2451545))*rad;
+  const C=(1.9148*Math.sin(M)+0.0200*Math.sin(2*M)+0.0003*Math.sin(3*M))*rad;
+  const lam=((280.4664+0.98564736*(Js-2451545))*rad+C+Math.PI)%(2*Math.PI);
+  const dec=Math.asin(Math.sin(-23.4559*rad)*Math.cos(lam));
+  const cosH=(Math.sin(-0.8333*rad)-Math.sin(LAT*rad)*Math.sin(dec))/(Math.cos(LAT*rad)*Math.cos(dec));
+
+  // Polar night / midnight sun check
+  if(cosH>1) return {rise:null,set:null,polar:'Polar night — no sunrise today'};
+  if(cosH<-1) return {rise:null,set:null,polar:'Midnight sun — sun stays above horizon'};
+
+  const H=Math.acos(cosH)/(2*Math.PI);
+  const Jtransit=Js+(0.0053*Math.sin(M)-0.0069*Math.sin(2*lam));
+  const Jrise=Jtransit-H;
+  const Jset=Jtransit+H;
+
+  function jdToLocal(jd){
+    const ms=(jd-2440587.5)*86400000;
+    const d=new Date(ms);
+    // Convert to Helsinki time
+    return d.toLocaleTimeString('fi-FI',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Helsinki'});
+  }
+  return {rise:jdToLocal(Jrise),set:jdToLocal(Jset),polar:null};
+}
+
+function updateSunTimes(){
+  const sun=calcSunTimes(new Date());
+  const rEl=document.getElementById('w-rise');
+  const sEl=document.getElementById('w-set');
+  if(sun.polar){
+    if(rEl)rEl.textContent=sun.polar;
+    if(sEl)sEl.textContent='';
+  } else {
+    if(rEl)rEl.textContent=sun.rise||'–';
+    if(sEl)sEl.textContent=sun.set||'–';
+  }
+}
+updateSunTimes();
+// Päivitä kerran tunnissa
+setInterval(updateSunTimes,3600000);
 
 /* === REFRESH === */
 async function refresh(){await Promise.all([loadWeather(),loadAurora()]);}
