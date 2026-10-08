@@ -176,14 +176,31 @@ body.golden::after{
   width:100%;
   height:100%;
   border:none;
+  pointer-events:none;
 }
 
-/* Overlay to block YT UI clicks */
+/* Overlay to block YT UI clicks and hide pause icon */
 #cam-overlay{
   position:absolute;
   inset:0;
   z-index:2;
   cursor:default;
+  background:transparent;
+}
+/* Extra overlay layers to ensure no YT UI bleeds through */
+#cam-overlay::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:1;
+}
+/* Block the center of the video where pause icon appears */
+#cam-overlay::after{
+  content:'';
+  position:absolute;
+  top:30%;left:30%;
+  width:40%;height:40%;
+  z-index:2;
 }
 
 /* Camera label */
@@ -1081,11 +1098,12 @@ async function loadAurora(){
     document.getElementById('aurora-kp-badge').textContent=`Kp ${kp.toFixed(1)}`;
     document.getElementById('aurora-bar-fill').style.width=pct+'%';
     document.getElementById('aurora-bar-fill').style.background=color;
+    document.getElementById('aurora-status').className='';
     document.getElementById('aurora-status').textContent=label;
     document.getElementById('aurora-status').style.color=color;
     document.getElementById('aurora-prob').textContent=`Näkyvyystodennäköisyys ${prob}% (67.8°N)`;
-    document.getElementById('bs1-kp').textContent=kp.toFixed(1);
-    document.getElementById('bs1-kp').style.color=color;
+    const bs1kp=document.getElementById('bs1-kp');
+    if(bs1kp){bs1kp.textContent=kp.toFixed(1);bs1kp.style.color=color;}
   }catch(e){
     document.getElementById('aurora-status').className='data-error';
     document.getElementById('aurora-status').textContent='Ei dataa';
