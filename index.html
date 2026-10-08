@@ -19,39 +19,53 @@ h1{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:34px;lett
 p.lead{color:var(--dim);margin:8px 0 28px;text-align:center}
 .grid{display:grid;gap:12px;width:100%;max-width:720px}
 @media(min-width:640px){.grid{grid-template-columns:repeat(3,1fr)}}
-a.loc{
+div.loc{
   display:block;text-decoration:none;color:inherit;
   border:1px solid var(--line);border-radius:14px;padding:22px 20px;
   background:rgba(255,255,255,.03);transition:border-color .2s,background .2s;
 }
-a.loc:hover{border-color:var(--accent);background:rgba(95,180,255,.07)}
+div.loc:hover{border-color:var(--accent);background:rgba(95,180,255,.07)}
 .n{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:28px;letter-spacing:.14em;text-transform:uppercase}
 .s{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-top:2px}
 .c{font-size:14px;color:var(--dim);margin-top:12px}
-.u{font-family:ui-monospace,monospace;font-size:12px;color:var(--dim);margin-top:10px;word-break:break-all}
+.links{display:flex;gap:8px;margin-top:16px}
+.links a{flex:1;text-align:center;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-weight:600;
+  font-size:14px;letter-spacing:.16em;text-transform:uppercase;padding:9px 6px;border-radius:999px;
+  border:1px solid var(--line);color:var(--text)}
+.links a:hover{border-color:var(--accent)}
+.links a.full{background:rgba(95,180,255,.12);border-color:rgba(95,180,255,.4)}
 footer{margin-top:32px;font-size:13px;color:var(--dim);text-align:center}
 footer a{color:var(--sun);text-decoration:none}
 </style>
 </head>
 <body>
   <h1>INFO TV</h1>
-  <p class="lead">Choose a location. On a TV, open the location's link directly.</p>
+  <p class="lead">Choose a location and layout. On a TV, open the link directly; click or press F for full screen.</p>
   <div class="grid">
-    <a class="loc" href="levi-infotv.html?loc=levi">
+    <div class="loc">
       <div class="n">Levi</div><div class="s">Lapland</div>
       <div class="c">10 live cameras</div>
-      <div class="u">levi-infotv.html?loc=levi</div>
-    </a>
-    <a class="loc" href="levi-infotv.html?loc=yllas">
+      <div class="links">
+        <a href="levi-infotv.html?loc=levi">Info TV</a>
+        <a class="full" href="levi-infotv.html?loc=levi&amp;view=full">Full screen</a>
+      </div>
+    </div>
+    <div class="loc">
       <div class="n">Ylläs</div><div class="s">Lapland</div>
       <div class="c">3 live cameras</div>
-      <div class="u">levi-infotv.html?loc=yllas</div>
-    </a>
-    <a class="loc" href="levi-infotv.html?loc=helsinki">
+      <div class="links">
+        <a href="levi-infotv.html?loc=yllas">Info TV</a>
+        <a class="full" href="levi-infotv.html?loc=yllas&amp;view=full">Full screen</a>
+      </div>
+    </div>
+    <div class="loc">
       <div class="n">Helsinki</div><div class="s">Capital of Finland</div>
       <div class="c">4 live cameras</div>
-      <div class="u">levi-infotv.html?loc=helsinki</div>
-    </a>
+      <div class="links">
+        <a href="levi-infotv.html?loc=helsinki">Info TV</a>
+        <a class="full" href="levi-infotv.html?loc=helsinki&amp;view=full">Full screen</a>
+      </div>
+    </div>
   </div>
   <footer>Advertise on these screens: <a href="mailto:hello@oomf.fi">hello@oomf.fi</a></footer>
 </body>
