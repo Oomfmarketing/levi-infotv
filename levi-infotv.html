@@ -195,7 +195,7 @@ body.night #stars{opacity:1}
   letter-spacing:-.02em;font-variant-numeric:tabular-nums;
 }
 #wx-desc{font-size:19px;color:var(--dim);margin-top:10px}
-#wx-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+#wx-stats{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:10px;margin-top:16px}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
 .stat-l{font-family:var(--cond);font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
 .stat-v{font-family:var(--cond);font-size:26px;font-weight:600;margin-top:2px;font-variant-numeric:tabular-nums}
@@ -210,7 +210,7 @@ body.night #stars{opacity:1}
 .fc-empty{grid-column:1/-1;color:var(--muted);font-size:15px;padding:8px 0}
 
 /* aurora */
-#aur.off{display:none}
+.off{display:none!important}
 #aur-row{display:flex;align-items:flex-end;justify-content:space-between}
 #aur-kp{font-family:var(--cond);font-size:64px;font-weight:600;line-height:.9;color:var(--aurora)}
 #aur-kp small{font-size:22px;color:var(--muted);margin-right:6px;letter-spacing:.1em}
@@ -258,6 +258,7 @@ body.night #stars{opacity:1}
 #bs1-kp{margin-left:auto;font-family:var(--cond);font-size:56px;font-weight:600;color:var(--aurora)}
 #bs2{background:linear-gradient(90deg,rgba(255,195,90,.12),transparent 70%)}
 #bs2 .bs-tag{background:var(--sun)}
+#bs3{background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 10%,transparent),transparent 70%)}
 
 /* ════════ FOOTER TICKER ════════ */
 #foot{
@@ -363,7 +364,7 @@ body.night #stars{opacity:1}
 
   /* aurora + sky side by side */
   #aur,#sky{grid-column:auto;padding:16px}
-  #aur.off+#sky{grid-column:1/-1}
+  #aur.off+#sky,#aur:has(+#sky.off){grid-column:1/-1}
   #aur .kicker,#sky .kicker{font-size:11px;letter-spacing:.18em;margin-bottom:10px}
   #aur-row{flex-direction:column;align-items:flex-start;gap:4px}
   #aur-kp{font-size:46px;font-weight:500}
@@ -447,7 +448,7 @@ body.night #stars{opacity:1}
   </section>
 
   <aside id="side">
-    <section class="sec" id="wx">
+    <section class="sec off" id="wx">
       <div class="kicker">Weather now <b>Kittilä Kenttärova</b></div>
       <div id="wx-row">
         <svg id="wx-icon" viewBox="0 0 24 24"></svg>
@@ -457,18 +458,18 @@ body.night #stars{opacity:1}
         </div>
       </div>
       <div id="wx-stats">
-        <div class="stat"><div class="stat-l">Feels like</div><div class="stat-v" id="wx-feels">--</div></div>
-        <div class="stat"><div class="stat-l">Wind</div><div class="stat-v" id="wx-wind">--</div></div>
-        <div class="stat"><div class="stat-l">Cloud</div><div class="stat-v" id="wx-cloud">--</div></div>
+        <div class="stat off" id="st-feels"><div class="stat-l">Feels like</div><div class="stat-v" id="wx-feels">--</div></div>
+        <div class="stat off" id="st-wind"><div class="stat-l">Wind</div><div class="stat-v" id="wx-wind">--</div></div>
+        <div class="stat off" id="st-cloud"><div class="stat-l">Cloud</div><div class="stat-v" id="wx-cloud">--</div></div>
       </div>
     </section>
 
-    <section class="sec">
+    <section class="sec off" id="fcsec">
       <div class="kicker">5-day forecast <b>FMI</b></div>
       <div id="fc"><div class="fc-empty">Loading forecast…</div></div>
     </section>
 
-    <section class="sec" id="aur">
+    <section class="sec off" id="aur">
       <div class="kicker">Northern lights <b>NOAA Kp</b></div>
       <div id="aur-row">
         <div id="aur-kp"><small>KP</small><span id="aur-kp-v">--</span></div>
@@ -481,7 +482,7 @@ body.night #stars{opacity:1}
       <div id="aur-foot"><span id="aur-dark">&nbsp;</span><span id="aur-fc">&nbsp;</span></div>
     </section>
 
-    <section class="sec" id="sky">
+    <section class="sec off" id="sky">
       <div class="kicker">Sky tonight</div>
       <div id="sky-v">--</div>
       <div id="sky-l">&nbsp;</div>
@@ -516,11 +517,11 @@ body.night #stars{opacity:1}
   </aside>
 
   <div id="banner">
-    <a class="bs on" id="bs0" href="mailto:hello@oomf.fi">
-      <span class="bs-tag">Mainospaikka</span>
+    <a class="bs on" id="bs0" href="https://laplandwinteractivities.com">
+      <span class="bs-tag">Activities</span>
       <div>
-        <div class="bs-h">Kiinnostaako näkyvyys tässä paikassa?</div>
-        <div class="bs-p">Voit varata tämän paikan — ota yhteyttä <b>hello@oomf.fi</b></div>
+        <div class="bs-h">Husky safaris, northern lights &amp; snowmobile tours</div>
+        <div class="bs-p">Find, compare and book activities in Levi — <b>laplandwinteractivities.com</b></div>
       </div>
       <div class="bs-qr" id="bq0"></div>
     </a>
@@ -530,17 +531,25 @@ body.night #stars{opacity:1}
         <div class="bs-h">Northern lights season is on</div>
         <div class="bs-p">Look north on clear, dark evenings — away from city lights</div>
       </div>
-      <div id="bs1-kp">Kp --</div>
+      <div id="bs1-kp"></div>
     </div>
-    <div id="b-prog"></div>
-    <a class="bs" id="bs2" href="https://www.levi.fi/majoitu/">
-      <span class="bs-tag">Stay</span>
+    <a class="bs" id="bs2" href="https://elamysdmc.com">
+      <span class="bs-tag">Groups &amp; companies</span>
       <div>
-        <div class="bs-h">Majoitu Levillä</div>
-        <div class="bs-p">Hotels, cabins and apartments — <b>levi.fi</b></div>
+        <div class="bs-h">Bring your group to Lapland</div>
+        <div class="bs-p">Incentives, meetings &amp; events in Levi and across Finland — <b>elamysdmc.com</b></div>
       </div>
       <div class="bs-qr" id="bq2"></div>
     </a>
+    <a class="bs" id="bs3" href="mailto:hello@oomf.fi">
+      <span class="bs-tag">Advertise here</span>
+      <div>
+        <div class="bs-h">Interested in visibility on this screen?</div>
+        <div class="bs-p">Book this spot — contact <b>hello@oomf.fi</b></div>
+      </div>
+      <div class="bs-qr" id="bq3"></div>
+    </a>
+    <div id="b-prog"></div>
   </div>
 
   <a id="m-site" href="https://www.levi.fi/">
@@ -708,7 +717,8 @@ function drawSun(S){
 /* ══════════════════════════════════════════════════════════
    THEME — season by month, night/golden by real sun elevation
 ══════════════════════════════════════════════════════════ */
-let SUN=sunDay();
+let SUN=sunDay(), AUR_SEASON=false;
+const A={kp:null,fcMax:null};   // aurora state
 function auroraSeason(m){return m>=8||m<=4;}   // no aurora in bright summer nights
 function updateTheme(){
   SUN=sunDay();
@@ -720,8 +730,9 @@ function updateTheme(){
 
   const inSeason=auroraSeason(m);
   const dark=SUN.elev<-6;                       // past civil twilight
-  $('aur').classList.toggle('off',!inSeason);
-  $('bs1').dataset.skip=(inSeason&&dark)?'':'1';
+  AUR_SEASON=inSeason;
+  $('aur').classList.toggle('off',!inSeason||A.kp===null);
+  $('bs1').dataset.skip=(inSeason&&dark&&A.kp!==null)?'':'1';
   if(inSeason){
     if(dark){$('aur-dark').textContent='Dark enough now';$('sky-dark').textContent='Dark now';}
     else{
@@ -809,7 +820,9 @@ async function loadObs(){
 
 async function loadForecast(){
   try{
-    const q='fmi::forecast::edited::weather::scandinavia::point::simple&parameters=Temperature,WeatherSymbol3,TotalCloudCover&timestep=60';
+    const q='fmi::forecast::edited::weather::scandinavia::point::simple&parameters=Temperature,WeatherSymbol3,TotalCloudCover&timestep=60'
+      +'&starttime='+new Date(Math.floor(Date.now()/3600e3)*3600e3).toISOString().slice(0,19)+'Z'
+      +'&endtime='+new Date(Date.now()+6*86400e3).toISOString().slice(0,19)+'Z';
     let r=await fetch(`${FMI}${q}&latlon=${LAT},${LON}`);
     let rows=r.ok?parseFmi(await r.text()):[];
     if(!rows.length){ r=await fetch(`${FMI}${q}&place=Kittil%C3%A4`); rows=r.ok?parseFmi(await r.text()):[]; }
@@ -833,7 +846,9 @@ async function loadForecast(){
     const keys=Object.keys(days).sort();
     const today=hel();
     const todayKey=`${today.y}-${pad(today.mo)}-${pad(today.d)}`;
-    const list=keys.filter(k=>k>todayKey||(k===todayKey&&today.h<15)).slice(0,5);
+    const list=keys.filter(k=>(k>todayKey||(k===todayKey&&today.h<15))&&days[k].max>-99&&days[k].sym!==null).slice(0,5);
+    if(!list.length) throw new Error('no days');
+    $('fc').style.gridTemplateColumns=`repeat(${list.length},1fr)`;
     $('fc').innerHTML=list.map((k,i)=>{
       const d=days[k];
       const name=(k===todayKey)?'Today':d.wd.slice(0,3);
@@ -842,33 +857,42 @@ async function loadForecast(){
         <div class="fc-t">${Math.round(d.max)}°<small>${Math.round(d.min)}°</small></div></div>`;
     }).join('');
     $('fc').querySelectorAll('svg').forEach(s=>setIcon(s,s.dataset.k));
+    $('fcsec').classList.remove('off');
   }catch(e){
     console.warn('forecast',e);
-    if(!W.hours) $('fc').innerHTML='<div class="fc-empty">Forecast unavailable</div>';
+    if(!W.hours) $('fcsec').classList.add('off');
   }
   renderNow();
 }
 
 function renderNow(){
   const o=W.obs, f=W.now;
-  const t=o?.temperature ?? f?.Temperature;
+  const ok=v=>v!==undefined&&v!==null&&!isNaN(v);
+  const t=ok(o?.temperature)?o.temperature:f?.Temperature;
+  if(!ok(t)){$('wx').classList.add('off');renderSky();return;}
+  $('wx').classList.remove('off');
   const night=SUN.elev<H0;
-  if(t!==undefined&&!isNaN(t)){
-    $('wx-temp').textContent=(Math.round(t)===0?'0':(t>0?'+':'−')+Math.abs(Math.round(t)))+'°';
-  }
-  const [kind,desc]=wxKind(f?.WeatherSymbol3??NaN,night);
-  setIcon($('wx-icon'),f?kind:'cloud');
+  $('wx-temp').textContent=(Math.round(t)===0?'0':(t>0?'+':'−')+Math.abs(Math.round(t)))+'°';
+  const hasSym=ok(f?.WeatherSymbol3);
+  const [kind,desc]=hasSym?wxKind(f.WeatherSymbol3,night):['',''];
+  $('wx-icon').classList.toggle('off',!hasSym);
+  if(hasSym) setIcon($('wx-icon'),kind);
   const ws=o?.windspeedms, wd=o?.winddirection;
-  const dir=isNaN(wd)||wd===undefined?'':['N','NE','E','SE','S','SW','W','NW'][Math.round(wd/45)%8];
-  $('wx-desc').textContent=[desc,ws!==undefined?`${dir} wind`.trim():''].filter(Boolean).join(' · ')||(o?'':'Weather unavailable');
-  $('wx-wind').textContent=ws!==undefined?`${ws.toFixed(0)} m/s`:'--';
-  if(t!==undefined&&ws!==undefined){
+  const dir=ok(wd)?['N','NE','E','SE','S','SW','W','NW'][Math.round(wd/45)%8]:'';
+  const descTxt=[desc,ok(ws)&&dir?`${dir} wind`:''].filter(Boolean).join(' · ');
+  $('wx-desc').textContent=descTxt;
+  $('wx-desc').classList.toggle('off',!descTxt);
+  $('st-wind').classList.toggle('off',!ok(ws));
+  $('st-feels').classList.toggle('off',!ok(ws));
+  if(ok(ws)){
+    $('wx-wind').textContent=`${ws<10?ws.toFixed(1):Math.round(ws)} m/s`;
     const v=ws*3.6;
     const fl=(t<=10&&v>4.8)?13.12+0.6215*t-11.37*v**0.16+0.3965*t*v**0.16:t;
     $('wx-feels').textContent=Math.round(fl)+'°';
   }
   const cc=f?.TotalCloudCover;
-  $('wx-cloud').textContent=(cc!==undefined&&!isNaN(cc))?Math.round(cc)+'%':'--';
+  $('st-cloud').classList.toggle('off',!ok(cc));
+  if(ok(cc)) $('wx-cloud').textContent=Math.round(cc)+'%';
   updateAuroraNote();
   renderSky();
 }
@@ -880,7 +904,8 @@ function renderSky(){
     if(h.t.getTime()<now-3600e3||h.t.getTime()>now+24*3600e3) return false;
     const hh=hel(h.t).h; return hh>=21||hh<=2;
   }).map(h=>h.TotalCloudCover).filter(v=>!isNaN(v));
-  if(!night.length) return;
+  if(!night.length){$('sky').classList.add('off');return;}
+  $('sky').classList.remove('off');
   const avg=night.reduce((a,b)=>a+b,0)/night.length;
   $('sky-v').textContent=Math.round(avg)+'%';
   $('sky-l').textContent=avg<30?'Mostly clear':avg<70?'Partly cloudy':'Cloudy';
@@ -889,7 +914,6 @@ function renderSky(){
 /* ══════════════════════════════════════════════════════════
    AURORA — NOAA SWPC planetary Kp (observed + forecast)
 ══════════════════════════════════════════════════════════ */
-const A={kp:null,fcMax:null};
 function rowsOf(d){
   // NOAA has used both [[header],[row]...] and [{...}] formats
   if(!Array.isArray(d)) return [];
@@ -927,7 +951,8 @@ async function loadAurora(){
   renderAurora();
 }
 function renderAurora(){
-  if(A.kp===null){$('aur-level').textContent='No data';return;}
+  $('aur').classList.toggle('off',!AUR_SEASON||A.kp===null);
+  if(A.kp===null){$('bs1').dataset.skip='1';return;}
   const kp=A.kp,[label,color]=kpLevel(kp);
   $('aur-kp-v').textContent=kp.toFixed(1);
   $('aur-level').textContent=label;$('aur-level').style.color=color;
@@ -1032,7 +1057,7 @@ window.onYouTubeIframeAPIReady=()=>{
 /* ══════════════════════════════════════════════════════════
    BANNER
 ══════════════════════════════════════════════════════════ */
-const BS=[...document.querySelectorAll('.bs')], BT=[14000,10000,9000];
+const BS=[...document.querySelectorAll('.bs')], BT=[12000,10000,12000,10000];
 let bi=0;
 (function rot(){
   setTimeout(()=>{
@@ -1049,7 +1074,7 @@ function bprog(){
 }
 bprog();
 try{
-  [['bq0','mailto:hello@oomf.fi'],['bq2','https://www.levi.fi/majoitu/']].forEach(([id,text])=>
+  [['bq0','https://laplandwinteractivities.com'],['bq2','https://elamysdmc.com'],['bq3','mailto:hello@oomf.fi']].forEach(([id,text])=>
     new QRCode($(id),{text,width:64,height:64,colorDark:'#05080f',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}));
 }catch(e){console.warn('qr',e);}
 
