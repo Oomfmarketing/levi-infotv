@@ -86,6 +86,10 @@ body.night #stars{opacity:1}
   position:relative;
 }
 #brand{display:flex;align-items:center;gap:22px}
+#mark{width:46px;height:46px;fill:none;stroke:var(--accent);stroke-width:1.6;stroke-linecap:round;flex-shrink:0}
+#m-pill,#sky,#m-site{display:none}
+#b-prog{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--accent);opacity:.7;z-index:2}
+.k-sun{color:var(--sun)}.k-cold{color:var(--accent)}
 #logo{
   font-family:var(--cond);font-weight:800;font-size:46px;
   letter-spacing:.1em;line-height:1;
@@ -283,70 +287,125 @@ body.night #stars{opacity:1}
 ════════════════════════════════════════════════════════════ */
 @media (max-width:900px){
   html,body{width:auto;height:auto;overflow-x:hidden;overflow-y:auto}
-  body{position:static;transform:none!important;min-height:100vh}
-  #stars{position:fixed}
-  #app{
-    width:auto;height:auto;display:flex;flex-direction:column;
-    padding-bottom:calc(56px + env(safe-area-inset-bottom));
-  }
-  #header{
-    position:sticky;top:0;z-index:20;
-    padding:calc(10px + env(safe-area-inset-top)) 16px 10px;
-    background:rgba(5,8,15,.86);
-    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
-  }
-  #brand{gap:12px}
-  #logo{font-size:28px}
-  #brand-meta{padding-left:12px}
-  #brand-sub{font-size:11px;letter-spacing:.18em;white-space:nowrap}
-  #coords{font-size:11px;letter-spacing:.04em;white-space:nowrap}
-  #live-pill{display:none}
-  #clock-time{font-size:28px}
-  #clock-sec{font-size:15px}
-  #clock-date{display:none}
+  body,body.winter,body.spring,body.summer,body.autumn{position:static;transform:none!important;min-height:100vh;--accent:#5fb4ff}
+  #app{width:auto;height:auto;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom)}
 
-  #camera{width:100%;aspect-ratio:16/9;height:auto}
+  /* header */
+  #header{
+    padding:calc(18px + env(safe-area-inset-top)) 16px 14px;border:0;
+    align-items:flex-end;
+  }
+  #brand{gap:14px;align-items:center}
+  #mark{width:44px;height:44px}
+  #logo{font-size:30px;letter-spacing:.16em}
+  #brand-meta{border:0;padding:0;gap:0}
+  #brand>#logo{display:none}
+  #brand-meta::before{
+    content:'LEVI';font-family:var(--cond);font-weight:700;font-size:30px;
+    letter-spacing:.18em;line-height:1;color:var(--text);
+  }
+  #brand-sub{font-size:11px;letter-spacing:.2em;color:var(--accent);margin-top:4px;white-space:nowrap}
+  #coords{display:none}
+  #live-pill{display:none}
+  #clock{display:flex;flex-direction:column-reverse;align-items:flex-end}
+  #clock-time{font-size:30px;font-weight:500;white-space:nowrap}
+  #clock-sec{font-size:30px;color:var(--text)}
+  #clock-date{font-size:11px;letter-spacing:.12em;margin:0 0 6px;color:var(--dim);white-space:nowrap}
+
+  #m-pill{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    margin:0 16px 14px;padding:10px 16px;border-radius:999px;
+    border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);
+    background:color-mix(in srgb,var(--accent) 7%,transparent);
+    font-family:var(--cond);font-size:14px;font-weight:600;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--text);
+  }
+  #m-pill svg{width:18px;height:18px;fill:none;stroke:var(--accent);stroke-width:1.8}
+
+  /* camera */
+  #camera{width:100%;aspect-ratio:16/9;height:auto;border-top:1px solid var(--line)}
   #cam-label{left:14px;bottom:12px}
-  #cam-kicker{font-size:10px}
-  #cam-name{font-size:19px}
+  #cam-kicker{font-size:10px;letter-spacing:.24em}
+  #cam-name{font-size:18px}
   #cam-dots{right:14px;bottom:16px;gap:5px}
   .cam-dot{width:5px;height:5px}.cam-dot.on{width:14px}
   #cam-fade{height:80px}
 
-  #banner{order:5;height:auto;min-height:96px;margin:16px 16px 0;border:1px solid var(--line);border-radius:14px}
-  .bs{position:relative;display:none;padding:16px 18px;gap:10px;align-items:flex-start;flex-direction:column;justify-content:center}
-  .bs.on{display:flex}
-  .bs-h{font-size:21px}
-  .bs-p{font-size:14px}
-  .bs-qr{display:none}
-  #bs1-kp{display:none}
+  /* cards */
+  #side{
+    background:none;border:0;padding:0 16px;
+    display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;
+  }
+  .sec{
+    grid-column:1/-1;margin:0;padding:18px;
+    border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);
+  }
+  .kicker{font-size:13px;letter-spacing:.22em;color:var(--dim);margin-bottom:14px}
+  .kicker b{display:none}
 
-  #side{background:none;border:0;padding:0;order:4}
-  .sec{margin:16px 16px 0;padding:18px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
-  .kicker{font-size:12px;margin-bottom:12px}
-  #wx-icon{width:60px;height:60px}
-  #wx-temp{font-size:72px}
-  #wx-desc{font-size:16px}
-  .stat{padding:9px 10px}
+  /* weather */
+  #wx-row{gap:14px;align-items:flex-start}
+  #wx-icon{width:52px;height:52px;margin-top:10px;order:2;margin-left:auto}
+  #wx-temp{font-size:80px;font-weight:400;letter-spacing:-.01em}
+  #wx-desc{font-size:15px;margin-top:8px}
+  #wx-row>div{order:1}
+  #wx-stats{gap:8px;margin-top:14px}
+  .stat{padding:9px 10px;border-radius:10px}
   .stat-l{font-size:11px;letter-spacing:.1em;white-space:nowrap}
-  .stat-v{font-size:22px}
+  .stat-v{font-size:21px;font-weight:500}
+
+  /* forecast */
   #fc{gap:6px}
-  .fc-d{font-size:12px}
-  .fc-t{font-size:19px}.fc-t small{font-size:14px}
-  #aur-kp{font-size:50px}
-  #aur-level{font-size:17px}
-  .sun-v{font-size:22px}
+  .fc{padding:12px 0 10px;border:0;background:rgba(255,255,255,.04)}
+  .fc-d{font-size:13px;font-weight:500;letter-spacing:.14em}
+  .fc-i{width:30px;height:30px;margin:10px auto 8px}
+  .fc-t{font-size:21px;font-weight:500}.fc-t small{display:block;font-size:13px;margin:0}
+
+  /* aurora + sky side by side */
+  #aur,#sky{grid-column:auto;padding:16px}
+  #aur.off+#sky{grid-column:1/-1}
+  #aur .kicker,#sky .kicker{font-size:11px;letter-spacing:.18em;margin-bottom:10px}
+  #aur-row{flex-direction:column;align-items:flex-start;gap:4px}
+  #aur-kp{font-size:46px;font-weight:500}
+  #aur-kp small{display:none}
+  #aur-level{font-size:15px;text-align:left;letter-spacing:.06em;text-transform:uppercase}
+  #aur-note{display:none}
+  #aur-scale{gap:3px;margin-top:10px}
+  #aur-scale i{height:4px}
+  #aur-foot{display:none}
+  #sky{display:block}
+  #sky-v{font-family:var(--cond);font-size:46px;font-weight:500;line-height:1}
+  #sky-l{font-size:14px;color:var(--dim);margin-top:6px;text-transform:uppercase;letter-spacing:.06em;font-family:var(--cond);font-weight:600}
+  #sky-dark{font-size:13px;color:var(--muted);margin-top:6px}
+
+  /* sun */
+  #sun-svg{height:auto;margin:6px 0 2px}
+  .sun-v{font-size:22px;font-weight:500}
+  .sun-l{font-size:11px}
+
   #tag{display:none}
 
-  #foot{
-    position:fixed;left:0;right:0;bottom:0;z-index:20;
-    height:calc(48px + env(safe-area-inset-bottom));
-    padding-bottom:env(safe-area-inset-bottom);
-    background:rgba(5,8,15,.92);
-    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  /* banner */
+  #banner{order:5;height:auto;margin:16px 0 0;border:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden}
+  .bs{position:relative;display:none;padding:18px 16px 20px;gap:14px;background:none!important}
+  .bs.on{display:flex}
+  .bs-tag{display:none}
+  .bs-h{font-size:20px;text-transform:uppercase;letter-spacing:.04em}
+  .bs-p{font-size:14px;margin-top:4px}
+  .bs-qr{padding:4px;border-radius:6px}
+  .bs-qr img,.bs-qr canvas{width:60px!important;height:60px!important}
+  #bs1-kp{font-size:34px}
+
+  #m-site{
+    order:6;display:block;text-align:center;text-decoration:none;
+    padding:26px 16px 22px;border-bottom:1px solid var(--line);
   }
+  #m-site-h{font-family:var(--cond);font-size:34px;font-weight:700;letter-spacing:.14em;color:var(--sun)}
+  #m-site-p{font-family:var(--cond);font-size:14px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);margin-top:6px}
+
+  #foot{order:7;height:52px;background:none;border:0}
   #foot-label{display:none}
-  #ticker span{font-size:16px;padding:0 20px}
+  #ticker span{font-size:17px;padding:0 20px}
 }
 </style>
 </head>
@@ -357,6 +416,7 @@ body.night #stars{opacity:1}
 
   <header id="header">
     <div id="brand">
+      <svg id="mark" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22.5"/><path d="M24 9v30M11 16.5l26 15M11 31.5l26-15M24 9l-3.5 3.5M24 9l3.5 3.5M24 39l-3.5-3.5M24 39l3.5-3.5"/></svg>
       <div id="logo">LEVI</div>
       <div id="brand-meta">
         <div id="brand-sub">Lapland · Finland</div>
@@ -369,6 +429,8 @@ body.night #stars{opacity:1}
       <div id="clock-date">&nbsp;</div>
     </div>
   </header>
+
+  <div id="m-pill"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Levi · Kittilä · Lapland</div>
 
   <section id="camera">
     <div class="yt-slot" id="yt-slot-0"><div id="yt-p0"></div></div>
@@ -419,7 +481,14 @@ body.night #stars{opacity:1}
       <div id="aur-foot"><span id="aur-dark">&nbsp;</span><span id="aur-fc">&nbsp;</span></div>
     </section>
 
-    <section class="sec">
+    <section class="sec" id="sky">
+      <div class="kicker">Sky tonight</div>
+      <div id="sky-v">--</div>
+      <div id="sky-l">&nbsp;</div>
+      <div id="sky-dark">&nbsp;</div>
+    </section>
+
+    <section class="sec" id="sun">
       <div class="kicker">Daylight <b id="sun-state">&nbsp;</b></div>
       <svg id="sun-svg" viewBox="0 0 400 150">
         <defs>
@@ -463,6 +532,7 @@ body.night #stars{opacity:1}
       </div>
       <div id="bs1-kp">Kp --</div>
     </div>
+    <div id="b-prog"></div>
     <a class="bs" id="bs2" href="https://www.levi.fi/majoitu/">
       <span class="bs-tag">Stay</span>
       <div>
@@ -472,6 +542,11 @@ body.night #stars{opacity:1}
       <div class="bs-qr" id="bq2"></div>
     </a>
   </div>
+
+  <a id="m-site" href="https://www.levi.fi/">
+    <div id="m-site-h">LEVI.FI</div>
+    <div id="m-site-p">Tickets · Slopes · Events</div>
+  </a>
 
   <footer id="foot">
     <div id="foot-label">Levi</div>
@@ -648,7 +723,7 @@ function updateTheme(){
   $('aur').classList.toggle('off',!inSeason);
   $('bs1').dataset.skip=(inSeason&&dark)?'':'1';
   if(inSeason){
-    if(dark) $('aur-dark').textContent='Dark enough now';
+    if(dark){$('aur-dark').textContent='Dark enough now';$('sky-dark').textContent='Dark now';}
     else{
       // find when civil twilight ends today
       let darkAt=null;
@@ -656,6 +731,7 @@ function updateTheme(){
         if(sunElev(new Date(Date.now()+(mm-SUN.nowMin)*60000))<-6){darkAt=mm;break;}
       }
       $('aur-dark').textContent=darkAt?`Dark from ${hm(darkAt)}`:'Too bright today';
+      $('sky-dark').textContent=darkAt?`Dark from ${hm(darkAt)}`:'Bright night';
     }
   }
   drawSun(SUN);
@@ -699,6 +775,8 @@ function setIcon(svg,kind){
   svg.setAttribute('fill','none');svg.setAttribute('stroke','currentColor');
   svg.setAttribute('stroke-width','1.5');svg.setAttribute('stroke-linecap','round');svg.setAttribute('stroke-linejoin','round');
   svg.innerHTML=ICONS[kind]||ICONS.cloud;
+  svg.classList.toggle('k-sun',kind==='clear'||kind==='partly');
+  svg.classList.toggle('k-cold',kind==='snow'||kind==='sleet');
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -792,6 +870,20 @@ function renderNow(){
   const cc=f?.TotalCloudCover;
   $('wx-cloud').textContent=(cc!==undefined&&!isNaN(cc))?Math.round(cc)+'%':'--';
   updateAuroraNote();
+  renderSky();
+}
+
+function renderSky(){
+  if(!W.hours) return;
+  const now=Date.now();
+  const night=W.hours.filter(h=>{
+    if(h.t.getTime()<now-3600e3||h.t.getTime()>now+24*3600e3) return false;
+    const hh=hel(h.t).h; return hh>=21||hh<=2;
+  }).map(h=>h.TotalCloudCover).filter(v=>!isNaN(v));
+  if(!night.length) return;
+  const avg=night.reduce((a,b)=>a+b,0)/night.length;
+  $('sky-v').textContent=Math.round(avg)+'%';
+  $('sky-l').textContent=avg<30?'Mostly clear':avg<70?'Partly cloudy':'Cloudy';
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -947,9 +1039,15 @@ let bi=0;
     BS[bi].classList.remove('on');
     let n=(bi+1)%BS.length,k=0;
     while(BS[n].dataset.skip==='1'&&k++<BS.length) n=(n+1)%BS.length;
-    bi=n;BS[bi].classList.add('on');rot();
+    bi=n;BS[bi].classList.add('on');bprog();rot();
   },BT[bi]);
 })();
+function bprog(){
+  const p=$('b-prog');
+  p.style.transition='none';p.style.width='0';p.offsetWidth;
+  p.style.transition=`width ${BT[bi]}ms linear`;p.style.width='100%';
+}
+bprog();
 try{
   [['bq0','mailto:hello@oomf.fi'],['bq2','https://www.levi.fi/majoitu/']].forEach(([id,text])=>
     new QRCode($(id),{text,width:64,height:64,colorDark:'#05080f',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}));
