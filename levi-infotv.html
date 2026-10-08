@@ -131,25 +131,27 @@ body.night #stars{opacity:1}
   container-type:size;
 }
 /* Two stacked 16:9 players (double buffer), oversized to crop
-   YouTube's title bar and logo. Only a player that is truly
-   PLAYING is made visible, so the pause/play icon never shows. */
+   YouTube's title bar and logo. Both stay opaque — browsers (iOS
+   especially) refuse to play an invisible video — the standby one
+   simply sits underneath the one on show. */
 .yt-slot{
-  position:absolute;left:50%;top:50%;
+  position:absolute;left:50%;top:50%;z-index:0;
   width:max(116cqw,calc(116cqh * 16 / 9));
   aspect-ratio:16/9;
   transform:translate(-50%,-50%);
-  pointer-events:none;opacity:0;transition:opacity .9s ease;
+  pointer-events:none;
 }
-.yt-slot.show{opacity:1}
+.yt-slot.show{z-index:1}
+.yt-slot.fading{opacity:0;transition:opacity .9s ease}
 .yt-slot iframe{width:100%;height:100%;border:0;pointer-events:none}
 #cam-cover{
-  position:absolute;inset:0;z-index:1;background:#000;
+  position:absolute;inset:0;z-index:2;background:#000;
   display:flex;align-items:center;justify-content:center;
   font-family:var(--cond);font-size:18px;letter-spacing:.4em;
   text-transform:uppercase;color:var(--muted);transition:opacity .9s;
 }
 #cam-cover.gone{opacity:0}
-#cam-shield{position:absolute;inset:0;z-index:2}
+#cam-shield{position:absolute;inset:0;z-index:3}
 #cam-fade{
   position:absolute;left:0;right:0;bottom:0;height:140px;z-index:3;
   background:linear-gradient(transparent,rgba(0,0,0,.65));pointer-events:none;
@@ -1077,55 +1079,107 @@ setInterval(loadAurora,10*60e3);
 setInterval(loadForecast,60*60e3);
 
 /* ══════════════════════════════════════════════════════════
-   CAMERAS — two YouTube players, double-buffered.
-   The hidden player loads the next camera; we swap only after
-   it reports PLAYING and has settled, so YouTube's play/pause
-   icon and spinner are never on screen.
+   CAMERAS
+   Primary mode — two players, double-buffered: the standby player
+   (underneath) loads the next camera; once it is really PLAYING
+   the top player fades away. YouTube's play/pause icon and spinner
+   are never seen.
+   Fallback mode — if a device will not autoplay the standby player,
+   rotate with a single player and cover the picture while loading.
 ══════════════════════════════════════════════════════════ */
-const SETTLE_MS=1200, PRELOAD_MS=6000, LOAD_TIMEOUT=15000;
+const SETTLE_MS=1200, PRELOAD_MS=7000, LOAD_TIMEOUT=10000;
+const DEBUG=new URLSearchParams(location.search).has('debug');
+const log=(...a)=>{if(DEBUG)console.log('[cam]',...a);};
 const players=[null,null], ready=[false,false], settle=[null,null];
-let vis=0, curCam=0, nextCam=null, hiddenReady=false, swapDue=false, firstShown=false, loadTimer=null;
+let vis=0, curCam=0, nextCam=null, hiddenReady=false, swapDue=false;
+let firstShown=false, single=false, waitVis=false;
+let loadTimer=null, dueTimer=null, preTimer=null, visTimer=null;
 
 $('cam-dots').innerHTML=CAMS.map(()=>'<i class="cam-dot"></i>').join('');
 function markCam(){
-  $('cam-name').textContent=CAMS[curCam].l;
+  $('cam-name').innerHTML=CAMS[curCam].l;
   $('cam-dots').querySelectorAll('.cam-dot').forEach((d,i)=>d.classList.toggle('on',i===curCam));
   const bar=$('cam-progress');
   bar.style.transition='none';bar.style.width='0';bar.offsetWidth;
   bar.style.transition=`width ${CAM_INTERVAL}ms linear`;bar.style.width='100%';
 }
 const slot=i=>$('yt-slot-'+i);
-function show(i){slot(i).classList.add('show');slot(1-i).classList.remove('show');}
+const cover=on=>$('cam-cover').classList.toggle('gone',!on);
+const nextIdx=i=>(i+1)%CAMS.length;
+const state=i=>{try{return players[i].getPlayerState();}catch(_){return -9;}};
 
 function cycle(){
+  clearTimeout(preTimer);clearTimeout(dueTimer);
   swapDue=false;
-  setTimeout(()=>preload(curCam),Math.max(0,CAM_INTERVAL-PRELOAD_MS));
-  setTimeout(()=>{swapDue=true;swap();},CAM_INTERVAL);
+  if(CAMS.length<2) return;
+  if(single){ dueTimer=setTimeout(hardNext,CAM_INTERVAL); return; }
+  preTimer=setTimeout(()=>preload(curCam),Math.max(0,CAM_INTERVAL-PRELOAD_MS));
+  dueTimer=setTimeout(()=>{swapDue=true;swap();},CAM_INTERVAL);
 }
+
+/* ── double-buffer path ── */
 function preload(after){
   const h=1-vis;
-  if(!ready[h]) return setTimeout(()=>preload(after),500);
-  nextCam=(after+1)%CAMS.length;
-  if(nextCam===curCam) nextCam=(nextCam+1)%CAMS.length;
+  if(!ready[h]) return void(preTimer=setTimeout(()=>preload(after),500));
+  nextCam=nextIdx(after);
+  if(nextCam===curCam) nextCam=nextIdx(nextCam);
   hiddenReady=false;clearTimeout(settle[h]);clearTimeout(loadTimer);
+  log('preload',nextCam,'into',h);
   try{players[h].mute();players[h].loadVideoById(CAMS[nextCam].id);}catch(_){}
-  loadTimer=setTimeout(()=>{if(!hiddenReady) preload(nextCam);},LOAD_TIMEOUT); // offline → skip
+  loadTimer=setTimeout(()=>{
+    if(hiddenReady) return;
+    const st=state(h);
+    log('standby timeout, state',st);
+    // never started / paused / cued → autoplay of the standby player is blocked
+    if(st===-1||st===2||st===5||st===-9){ goSingle(); return; }
+    preload(nextCam);                       // buffering forever / offline → skip it
+  },LOAD_TIMEOUT);
 }
 function swap(){
+  if(single){hardNext();return;}
   if(!swapDue||!hiddenReady) return;
-  const old=vis;
-  vis=1-vis;curCam=nextCam;nextCam=null;hiddenReady=false;
-  show(vis);markCam();
-  setTimeout(()=>{try{players[old].stopVideo();}catch(_){}},1500);
+  const old=vis, neu=1-vis;
+  vis=neu;curCam=nextCam;nextCam=null;hiddenReady=false;swapDue=false;
+  log('swap to',curCam);
+  markCam();
+  slot(old).classList.add('fading');        // reveal the playing standby underneath
+  setTimeout(()=>{
+    slot(neu).classList.add('show');
+    slot(old).classList.remove('show','fading');
+    try{players[old].stopVideo();}catch(_){}
+  },950);
   cycle();
 }
+function goSingle(){
+  if(single) return;
+  log('fallback: single player');
+  single=true;clearTimeout(loadTimer);
+  const h=1-vis;
+  try{players[h].stopVideo();}catch(_){}
+  slot(h).style.display='none';
+  if(swapDue) hardNext();                   // otherwise the pending due-timer calls swap()
+}
+
+/* ── single-player path ── */
+function hardNext(skip){
+  clearTimeout(visTimer);clearTimeout(dueTimer);
+  curCam=nextIdx(curCam);
+  log('hard switch to',curCam);
+  waitVis=true;cover(true);
+  try{players[vis].loadVideoById(CAMS[curCam].id);}catch(_){}
+  visTimer=setTimeout(()=>{ if(waitVis) hardNext(); },LOAD_TIMEOUT);   // offline → next
+}
+
 function onPlaying(i){
   try{players[i].mute();}catch(_){}
   clearTimeout(settle[i]);
   settle[i]=setTimeout(()=>{
-    if(!firstShown&&i===vis){
-      firstShown=true;show(vis);$('cam-cover').classList.add('gone');markCam();cycle();
-    }else if(i!==vis&&nextCam!==null){
+    if(state(i)!==1) return;                 // must still be playing after settling
+    if(i===vis&&(!firstShown||waitVis)){
+      firstShown=true;waitVis=false;clearTimeout(visTimer);
+      slot(i).classList.add('show');
+      cover(false);markCam();cycle();
+    }else if(i!==vis&&nextCam!==null&&!single){
       clearTimeout(loadTimer);hiddenReady=true;swap();
     }
   },SETTLE_MS);
@@ -1138,22 +1192,28 @@ function makePlayer(i,videoId){
       onReady:e=>{ready[i]=true;e.target.mute();if(videoId)e.target.playVideo();},
       onStateChange:e=>{
         const S=YT.PlayerState;
+        log('state',i,e.data);
         if(e.data===S.PLAYING) onPlaying(i);
-        if(i===vis&&(e.data===S.PAUSED||e.data===S.ENDED)) setTimeout(()=>{try{players[i].playVideo();}catch(_){}},200);
+        // the player on screen must keep running
+        if(i===vis&&firstShown&&!waitVis&&(e.data===S.PAUSED||e.data===S.ENDED)){
+          // device allows only one video at a time → stop double-buffering
+          if(e.data===S.PAUSED&&nextCam!==null&&!single) goSingle();
+          setTimeout(()=>{try{players[i].playVideo();}catch(_){}},200);
+        }
       },
-      onError:()=>{if(i!==vis&&nextCam!==null) preload(nextCam);}
+      onError:()=>{
+        log('error',i);
+        if(i!==vis&&nextCam!==null&&!single) preload(nextCam);
+        else if(i===vis&&(waitVis||!firstShown)) hardNext();
+      }
     }
   });
 }
 window.onYouTubeIframeAPIReady=()=>{
   players[0]=makePlayer(0,CAMS[0].id);
-  players[1]=makePlayer(1,null);
-  setTimeout(function chk(){              // first camera offline → try next
-    if(firstShown) return;
-    curCam=(curCam+1)%CAMS.length;
-    try{players[0].loadVideoById(CAMS[curCam].id);}catch(_){}
-    setTimeout(chk,LOAD_TIMEOUT);
-  },LOAD_TIMEOUT);
+  players[1]=CAMS.length>1?makePlayer(1,null):null;
+  waitVis=true;                              // first camera: wait for it under the cover
+  visTimer=setTimeout(()=>{ if(waitVis) hardNext(); },LOAD_TIMEOUT);
 };
 (()=>{const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';document.head.appendChild(s);})();
 
