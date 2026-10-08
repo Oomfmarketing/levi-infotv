@@ -1,1246 +1,981 @@
 <!DOCTYPE html>
-<html lang="fi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05080f">
 <title>Levi Info TV</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
+/* ════════════════════════════════════════════════════════════
+   TOKENS
+   One calm navy base for every season; only the accent and the
+   background glow change. Sun = warm gold, aurora = green.
+════════════════════════════════════════════════════════════ */
+:root{
+  --ink:#05080f;
+  --glow:#0b1a33;
+  --panel:rgba(10,16,28,.82);
+  --card:rgba(255,255,255,.035);
+  --line:rgba(255,255,255,.08);
+  --text:#f2f5f9;
+  --dim:rgba(232,240,248,.64);
+  --muted:rgba(232,240,248,.40);
+  --accent:#8fd0ff;
+  --sun:#ffc35a;
+  --aurora:#5cf0a8;
+  --warn:#ffb057;
+  --bad:#ff7a7a;
+  --cond:'Barlow Condensed','Arial Narrow',sans-serif;
+  --sans:'Barlow',system-ui,sans-serif;
+}
+body.winter{--accent:#8fd0ff;--glow:#0b1a33}
+body.spring{--accent:#86e3cf;--glow:#082022}
+body.summer{--accent:#c8e57e;--glow:#0d1d14}
+body.autumn{--accent:#ffb36b;--glow:#1c1220}
+body.night{--glow:#060d1c}
+
 *{margin:0;padding:0;box-sizing:border-box}
 
-:root{
-  --bg:#0a0e1a;
-  --surface:#111828;
-  --surface2:#162033;
-  --border:rgba(255,255,255,0.07);
-  --text:#ffffff;
-  --text-dim:rgba(255,255,255,0.55);
-  --text-muted:rgba(255,255,255,0.35);
-  --accent:#4fa3e0;
-  --accent2:#7ec8e3;
-  --gold:#f5c842;
-  --ice:#a8d8ea;
-  --green:#4ade80;
-  --amber:#fb923c;
-  --red:#f87171;
-}
-
-/* ── Seasonal themes ── */
-body.winter{--bg:#060c18;--surface:#0d1526;--surface2:#111e30;--accent:#5bc0f0;--accent2:#8dd4f0}
-body.spring{--bg:#071210;--surface:#0e1f1c;--surface2:#152922;--accent:#4ecdc4;--accent2:#80e0d8}
-body.summer{--bg:#0a0f05;--surface:#121a08;--surface2:#192310;--accent:#84cc16;--accent2:#a8e063}
-body.autumn{--bg:#140c02;--surface:#221505;--surface2:#2a1c08;--accent:#f59e0b;--accent2:#fbbf24}
-
-html,body{width:1920px;height:1080px;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif}
-
+/* ── TV canvas: fixed 1920×1080, scaled to fit by JS ── */
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--ink)}
 body{
-  position:absolute;
-  transform-origin:top left;
+  position:absolute;transform-origin:top left;
+  color:var(--text);font-family:var(--sans);
+  background:
+    radial-gradient(1200px 700px at 85% -10%,var(--glow) 0%,transparent 70%),
+    radial-gradient(900px 600px at 0% 110%,var(--glow) 0%,transparent 70%),
+    var(--ink);
+  -webkit-font-smoothing:antialiased;
 }
 
-/* ── STARS (night mode) ── */
-body.night::before{
-  content:'';
-  position:fixed;inset:0;
+/* stars, only at night */
+#stars{position:fixed;inset:0;pointer-events:none;opacity:0;transition:opacity 2s}
+body.night #stars{opacity:1}
+#stars{
   background-image:
-    radial-gradient(1px 1px at 15% 20%,rgba(255,255,255,0.8) 0%,transparent 100%),
-    radial-gradient(1px 1px at 30% 8%,rgba(255,255,255,0.6) 0%,transparent 100%),
-    radial-gradient(1px 1px at 55% 15%,rgba(255,255,255,0.7) 0%,transparent 100%),
-    radial-gradient(1px 1px at 72% 5%,rgba(255,255,255,0.5) 0%,transparent 100%),
-    radial-gradient(1px 1px at 85% 18%,rgba(255,255,255,0.8) 0%,transparent 100%),
-    radial-gradient(1px 1px at 10% 40%,rgba(255,255,255,0.4) 0%,transparent 100%),
-    radial-gradient(1px 1px at 42% 35%,rgba(255,255,255,0.6) 0%,transparent 100%),
-    radial-gradient(1px 1px at 65% 28%,rgba(255,255,255,0.5) 0%,transparent 100%),
-    radial-gradient(1px 1px at 90% 32%,rgba(255,255,255,0.7) 0%,transparent 100%),
-    radial-gradient(1.5px 1.5px at 25% 60%,rgba(255,255,255,0.4) 0%,transparent 100%),
-    radial-gradient(1px 1px at 78% 55%,rgba(255,255,255,0.5) 0%,transparent 100%),
-    radial-gradient(1px 1px at 48% 70%,rgba(255,255,255,0.3) 0%,transparent 100%);
-  pointer-events:none;z-index:0;
+    radial-gradient(1px 1px at 12% 18%,#fff8 50%,transparent 51%),
+    radial-gradient(1px 1px at 27% 6%,#fff6 50%,transparent 51%),
+    radial-gradient(1px 1px at 81% 12%,#fff9 50%,transparent 51%),
+    radial-gradient(1px 1px at 92% 34%,#fff6 50%,transparent 51%),
+    radial-gradient(1px 1px at 76% 46%,#fff5 50%,transparent 51%),
+    radial-gradient(1.5px 1.5px at 88% 62%,#fff7 50%,transparent 51%),
+    radial-gradient(1px 1px at 79% 78%,#fff5 50%,transparent 51%),
+    radial-gradient(1px 1px at 95% 88%,#fff6 50%,transparent 51%),
+    radial-gradient(1px 1px at 84% 28%,#fff4 50%,transparent 51%),
+    radial-gradient(1px 1px at 98% 8%,#fff7 50%,transparent 51%);
 }
 
-/* ── GOLDEN HOUR ── */
-body.golden{--bg-glow:rgba(255,160,50,0.06)}
-body.golden::after{
-  content:'';
-  position:fixed;inset:0;
-  background:radial-gradient(ellipse at 50% 80%,rgba(255,140,30,0.12) 0%,transparent 60%);
-  pointer-events:none;z-index:0;
-}
-
-/* ── MAIN GRID ── */
 #app{
-  position:relative;z-index:1;
+  position:relative;
   width:1920px;height:1080px;
   display:grid;
   grid-template-columns:1440px 480px;
-  grid-template-rows:72px 848px 80px 80px;
+  grid-template-rows:80px 832px 96px 72px;
 }
 
-/* ═══════════════════════════════
-   HEADER
-═══════════════════════════════ */
+/* ════════ HEADER ════════ */
 #header{
-  grid-column:1/3;
-  grid-row:1;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 32px 0 36px;
-  background:linear-gradient(180deg,rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.2) 100%);
-  border-bottom:1px solid var(--border);
+  grid-column:1/3;grid-row:1;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 36px;
+  border-bottom:1px solid var(--line);
   position:relative;
-  z-index:10;
 }
-
-#logo-block{
-  display:flex;
-  align-items:baseline;
-  gap:14px;
+#brand{display:flex;align-items:center;gap:22px}
+#logo{
+  font-family:var(--cond);font-weight:800;font-size:46px;
+  letter-spacing:.1em;line-height:1;
 }
-#logo-levi{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:42px;
-  font-weight:800;
-  letter-spacing:0.08em;
-  color:#fff;
-  text-transform:uppercase;
-  line-height:1;
+#brand-meta{display:flex;flex-direction:column;gap:3px;padding-left:22px;border-left:1px solid var(--line)}
+#brand-sub{
+  font-family:var(--cond);font-size:15px;font-weight:600;
+  letter-spacing:.28em;text-transform:uppercase;color:var(--dim);
 }
-#logo-sub{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:14px;
-  font-weight:400;
-  letter-spacing:0.22em;
-  color:var(--text-dim);
-  text-transform:uppercase;
+#coords{
+  font-family:var(--cond);font-size:15px;font-weight:600;
+  letter-spacing:.14em;color:var(--accent);
 }
-
-#location-pill{
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:13px;
-  font-weight:500;
-  letter-spacing:0.28em;
-  color:var(--text-dim);
-  text-transform:uppercase;
-  border:1px solid var(--border);
-  padding:5px 18px;
-  border-radius:20px;
-  background:rgba(255,255,255,0.04);
+#live-pill{
+  position:absolute;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--cond);font-size:15px;font-weight:600;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--dim);
+  padding:7px 18px;border:1px solid var(--line);border-radius:999px;
+  background:var(--card);
 }
-
-#clock-block{
-  text-align:right;
-}
+#live-dot{width:8px;height:8px;border-radius:50%;background:#ff4d4d;box-shadow:0 0 10px #ff4d4d;animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.35}}
+#clock{text-align:right}
 #clock-time{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:38px;
-  font-weight:700;
-  letter-spacing:0.04em;
-  color:#fff;
-  line-height:1;
+  font-family:var(--cond);font-weight:600;font-size:46px;line-height:1;
+  font-variant-numeric:tabular-nums;letter-spacing:.02em;
 }
+#clock-sec{font-size:24px;color:var(--muted);margin-left:2px}
 #clock-date{
-  font-size:11px;
-  font-weight:400;
-  color:var(--text-muted);
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  margin-top:1px;
+  font-family:var(--cond);font-size:14px;font-weight:500;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:4px;
 }
 
-/* ═══════════════════════════════
-   CAMERA AREA
-═══════════════════════════════ */
-#camera-area{
-  grid-column:1;
-  grid-row:2;
-  position:relative;
-  background:#000;
-  overflow:hidden;
+/* ════════ CAMERA ════════ */
+#camera{
+  grid-column:1;grid-row:2;
+  position:relative;overflow:hidden;background:#000;
+  container-type:size;
 }
-
-#yt-player{
-  position:absolute;
-  /* offset to hide YouTube UI: top bar, bottom bar, controls */
-  top:-60px;
-  left:-1px;
-  width:calc(100% + 2px);
-  height:calc(100% + 120px);
-  pointer-events:none;
+/* Two stacked 16:9 players (double buffer), oversized to crop
+   YouTube's title bar and logo. Only a player that is truly
+   PLAYING is made visible, so the pause/play icon never shows. */
+.yt-slot{
+  position:absolute;left:50%;top:50%;
+  width:max(116cqw,calc(116cqh * 16 / 9));
+  aspect-ratio:16/9;
+  transform:translate(-50%,-50%);
+  pointer-events:none;opacity:0;transition:opacity .9s ease;
 }
-#yt-player iframe{
-  width:100%;
-  height:100%;
-  border:none;
-  pointer-events:none;
+.yt-slot.show{opacity:1}
+.yt-slot iframe{width:100%;height:100%;border:0;pointer-events:none}
+#cam-cover{
+  position:absolute;inset:0;z-index:1;background:#000;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--cond);font-size:18px;letter-spacing:.4em;
+  text-transform:uppercase;color:var(--muted);transition:opacity .9s;
 }
-
-/* Overlay to block YT UI clicks and hide pause icon */
-#cam-overlay{
-  position:absolute;
-  inset:0;
-  z-index:2;
-  cursor:default;
-  background:transparent;
+#cam-cover.gone{opacity:0}
+#cam-shield{position:absolute;inset:0;z-index:2}
+#cam-fade{
+  position:absolute;left:0;right:0;bottom:0;height:140px;z-index:3;
+  background:linear-gradient(transparent,rgba(0,0,0,.65));pointer-events:none;
 }
-/* Extra overlay layers to ensure no YT UI bleeds through */
-#cam-overlay::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  z-index:1;
-}
-/* Block the center of the video where pause icon appears */
-#cam-overlay::after{
-  content:'';
-  position:absolute;
-  top:30%;left:30%;
-  width:40%;height:40%;
-  z-index:2;
-}
-
-/* Camera label */
 #cam-label{
-  position:absolute;
-  bottom:16px;
-  left:18px;
-  z-index:3;
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:14px;
-  font-weight:500;
-  letter-spacing:0.14em;
-  text-transform:uppercase;
-  color:rgba(255,255,255,0.7);
-  background:rgba(0,0,0,0.45);
-  padding:4px 12px;
-  border-radius:4px;
-  border-left:2px solid var(--accent);
-}
-
-/* Camera progress bar */
-#cam-progress{
-  position:absolute;
-  bottom:0;left:0;
-  height:2px;
-  background:var(--accent);
-  width:0%;
-  z-index:4;
-  transition:none;
-}
-
-/* Camera dots */
-#cam-dots{
-  position:absolute;
-  bottom:16px;
-  right:18px;
-  z-index:3;
-  display:flex;gap:5px;
-}
-.cam-dot{
-  width:5px;height:5px;
-  border-radius:50%;
-  background:rgba(255,255,255,0.25);
-  transition:background 0.3s;
-}
-.cam-dot.active{background:var(--accent)}
-
-/* ═══════════════════════════════
-   SIDEBAR
-═══════════════════════════════ */
-#sidebar{
-  grid-column:2;
-  grid-row:2;
-  background:var(--surface);
-  border-left:1px solid var(--border);
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-}
-
-/* ─── Weather block ─── */
-#weather-block{
-  padding:22px 24px 18px;
-  border-bottom:1px solid var(--border);
-  flex-shrink:0;
-}
-#wx-station{
-  font-size:10px;
-  font-weight:500;
-  letter-spacing:0.2em;
-  text-transform:uppercase;
-  color:var(--accent);
-  margin-bottom:8px;
-}
-#wx-main{
-  display:flex;
-  align-items:flex-end;
-  gap:12px;
-  margin-bottom:10px;
-}
-#wx-temp{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:76px;
-  font-weight:700;
-  line-height:1;
-  color:#fff;
-  letter-spacing:-0.02em;
-}
-#wx-symbol-col{
-  padding-bottom:6px;
-}
-#wx-symbol{
-  font-size:36px;
-  line-height:1;
-}
-#wx-feels{
-  font-size:13px;
-  color:var(--text-dim);
-  margin-bottom:14px;
-}
-#wx-details{
-  display:flex;
-  gap:18px;
-}
-.wx-detail{
+  position:absolute;left:28px;bottom:24px;z-index:4;
   display:flex;flex-direction:column;gap:2px;
 }
-.wx-detail-label{
-  font-size:9px;
-  letter-spacing:0.18em;
-  text-transform:uppercase;
-  color:var(--text-muted);
+#cam-kicker{
+  font-family:var(--cond);font-size:13px;font-weight:600;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--accent);
 }
-.wx-detail-val{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:20px;
-  font-weight:600;
-  color:#fff;
+#cam-name{
+  font-family:var(--cond);font-size:30px;font-weight:600;letter-spacing:.04em;
+  text-shadow:0 2px 10px rgba(0,0,0,.6);
+}
+#cam-dots{position:absolute;right:28px;bottom:32px;z-index:4;display:flex;gap:7px}
+.cam-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.28);transition:all .3s}
+.cam-dot.on{background:var(--accent);width:22px;border-radius:4px}
+#cam-progress{position:absolute;left:0;bottom:0;height:3px;width:0;z-index:5;background:var(--accent)}
+
+/* ════════ SIDEBAR ════════ */
+#side{
+  grid-column:2;grid-row:2/4;
+  background:var(--panel);
+  border-left:1px solid var(--line);
+  display:flex;flex-direction:column;
+}
+.sec{padding:19px 32px;border-bottom:1px solid var(--line)}
+.kicker{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--cond);font-size:14px;font-weight:600;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--muted);
+  margin-bottom:14px;
+}
+.kicker b{font-weight:600;color:var(--accent);letter-spacing:.14em}
+
+/* weather */
+#wx-row{display:flex;align-items:center;gap:20px}
+#wx-icon{width:76px;height:76px;color:var(--text)}
+#wx-temp{
+  font-family:var(--cond);font-weight:600;font-size:96px;line-height:.9;
+  letter-spacing:-.02em;font-variant-numeric:tabular-nums;
+}
+#wx-desc{font-size:19px;color:var(--dim);margin-top:10px}
+#wx-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.stat-l{font-family:var(--cond);font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.stat-v{font-family:var(--cond);font-size:26px;font-weight:600;margin-top:2px;font-variant-numeric:tabular-nums}
+
+/* forecast */
+#fc{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.fc{text-align:center;padding:10px 0 8px;border-radius:10px;background:var(--card);border:1px solid var(--line)}
+.fc-d{font-family:var(--cond);font-size:14px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.fc-i{width:34px;height:34px;margin:6px auto 4px;display:block;color:var(--text)}
+.fc-t{font-family:var(--cond);font-size:22px;font-weight:600}
+.fc-t small{font-size:16px;color:var(--muted);margin-left:3px}
+.fc-empty{grid-column:1/-1;color:var(--muted);font-size:15px;padding:8px 0}
+
+/* aurora */
+#aur.off{display:none}
+#aur-row{display:flex;align-items:flex-end;justify-content:space-between}
+#aur-kp{font-family:var(--cond);font-size:64px;font-weight:600;line-height:.9;color:var(--aurora)}
+#aur-kp small{font-size:22px;color:var(--muted);margin-right:6px;letter-spacing:.1em}
+#aur-level{font-family:var(--cond);font-size:24px;font-weight:600;text-align:right}
+#aur-note{font-size:15px;color:var(--dim);text-align:right;margin-top:2px}
+#aur-scale{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;margin-top:16px}
+#aur-scale i{height:6px;border-radius:3px;background:rgba(255,255,255,.08)}
+#aur-scale i.on{background:var(--aurora);box-shadow:0 0 8px color-mix(in srgb,var(--aurora) 60%,transparent)}
+#aur-foot{display:flex;justify-content:space-between;margin-top:12px;font-size:14px;color:var(--muted)}
+
+/* sun */
+#sun-svg{width:100%;height:124px;display:block;overflow:visible}
+#sun-row{display:flex;justify-content:space-between;margin-top:6px}
+.sun-c{text-align:center}
+.sun-c:first-child{text-align:left}.sun-c:last-child{text-align:right}
+.sun-l{font-family:var(--cond);font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.sun-v{font-family:var(--cond);font-size:26px;font-weight:600;font-variant-numeric:tabular-nums}
+#sun-mid .sun-v{color:var(--sun)}
+
+#tag{
+  margin-top:auto;padding:14px 32px;text-align:center;
+  font-family:var(--cond);font-size:18px;font-weight:600;
+  letter-spacing:.32em;color:var(--muted);
 }
 
-/* ─── Forecast block ─── */
-#forecast-block{
-  padding:16px 24px;
-  border-bottom:1px solid var(--border);
-  flex-shrink:0;
+/* ════════ BANNER ════════ */
+#banner{grid-column:1;grid-row:3;position:relative;overflow:hidden;border-top:1px solid var(--line)}
+.bs{
+  position:absolute;inset:0;display:flex;align-items:center;gap:28px;
+  padding:0 36px;opacity:0;transition:opacity .8s;text-decoration:none;color:inherit;
 }
-#forecast-label{
-  font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
-  color:var(--text-muted);margin-bottom:10px;
+.bs.on{opacity:1}
+.bs-tag{
+  flex-shrink:0;font-family:var(--cond);font-size:13px;font-weight:700;
+  letter-spacing:.24em;text-transform:uppercase;
+  padding:6px 12px;border-radius:6px;background:var(--accent);color:var(--ink);
 }
-#forecast-days{
-  display:flex;
-  gap:6px;
-}
-.fc-day{
-  flex:1;
-  background:var(--surface2);
-  border-radius:6px;
-  padding:8px 4px;
-  text-align:center;
-}
-.fc-day-name{
-  font-size:9px;letter-spacing:0.12em;text-transform:uppercase;
-  color:var(--text-muted);margin-bottom:4px;
-}
-.fc-day-icon{font-size:18px;margin-bottom:4px;line-height:1}
-.fc-day-temp{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:17px;font-weight:600;color:#fff;
-}
+.bs-h{font-family:var(--cond);font-size:30px;font-weight:700;letter-spacing:.02em;line-height:1.05}
+.bs-p{font-size:17px;color:var(--dim);margin-top:3px}
+.bs-p b{color:var(--text);font-weight:600}
+.bs-qr{margin-left:auto;flex-shrink:0;background:#fff;padding:5px;border-radius:6px;line-height:0}
+#bs0{background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 14%,transparent),transparent 70%)}
+#bs1{background:linear-gradient(90deg,rgba(92,240,168,.14),transparent 70%)}
+#bs1 .bs-tag{background:var(--aurora)}
+#bs1-kp{margin-left:auto;font-family:var(--cond);font-size:56px;font-weight:600;color:var(--aurora)}
+#bs2{background:linear-gradient(90deg,rgba(255,195,90,.12),transparent 70%)}
+#bs2 .bs-tag{background:var(--sun)}
 
-/* ─── Aurora block ─── */
-#aurora-block{
-  padding:14px 24px;
-  border-bottom:1px solid var(--border);
-  flex-shrink:0;
+/* ════════ FOOTER TICKER ════════ */
+#foot{
+  grid-column:1/3;grid-row:4;
+  display:flex;align-items:center;overflow:hidden;
+  border-top:1px solid var(--line);background:rgba(0,0,0,.35);
 }
-#aurora-block.hidden{display:none}
-#aurora-header{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:8px;
+#foot-label{
+  flex-shrink:0;height:100%;display:flex;align-items:center;padding:0 24px 0 36px;
+  font-family:var(--cond);font-size:15px;font-weight:700;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--accent);border-right:1px solid var(--line);
 }
-#aurora-label{
-  font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
-  color:var(--text-muted);
+#foot-track{flex:1;overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 40px,#000 calc(100% - 40px),transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 40px,#000 calc(100% - 40px),transparent)}
+#ticker{display:inline-flex;white-space:nowrap;will-change:transform;animation:tick var(--dur,80s) linear infinite}
+#ticker span{
+  font-family:var(--cond);font-size:22px;font-weight:500;letter-spacing:.05em;
+  color:var(--dim);padding:0 28px;position:relative;
 }
-#aurora-kp-badge{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:13px;font-weight:600;
-  padding:2px 8px;border-radius:12px;
-  background:rgba(255,255,255,0.08);color:#fff;
-}
-#aurora-bar-bg{
-  height:4px;background:rgba(255,255,255,0.08);border-radius:2px;margin-bottom:8px;
-}
-#aurora-bar-fill{
-  height:4px;border-radius:2px;
-  background:linear-gradient(90deg,var(--ice),var(--accent2),var(--accent));
-  transition:width 1s ease;
-}
-#aurora-status{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:16px;font-weight:600;
-}
-#aurora-prob{font-size:11px;color:var(--text-dim);margin-top:2px}
+#ticker span::after{content:'';position:absolute;right:-3px;top:50%;width:5px;height:5px;margin-top:-2px;border-radius:50%;background:var(--accent);opacity:.6}
+#ticker span.live{color:var(--text)}
+@keyframes tick{to{transform:translateX(-50%)}}
 
-/* ─── Sun arc block ─── */
-#sun-block{
-  padding:12px 24px 10px;
-  border-bottom:1px solid var(--border);
-  flex-shrink:0;
-}
-#sun-header{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:4px;
-}
-#sun-label{
-  font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
-  color:var(--text-muted);
-}
-#sun-coords{
-  font-size:10px;font-weight:600;letter-spacing:0.1em;
-  color:var(--accent);
-}
-#sun-svg-wrap{
-  position:relative;
-  height:90px;
-  display:flex;justify-content:center;
-}
-#sun-svg-wrap svg{width:260px;height:90px;overflow:visible}
-#sun-times{
-  display:flex;justify-content:space-between;
-  font-size:11px;color:var(--text-muted);
-  margin-top:2px;
-}
-#sun-daylen{
-  font-size:10px;color:var(--text-dim);
-  text-align:center;margin-top:1px;
-}
+/* ════════════════════════════════════════════════════════════
+   MOBILE — phones and narrow windows get a scrolling layout
+════════════════════════════════════════════════════════════ */
+@media (max-width:900px){
+  html,body{width:auto;height:auto;overflow-x:hidden;overflow-y:auto}
+  body{position:static;transform:none!important;min-height:100vh}
+  #stars{position:fixed}
+  #app{
+    width:auto;height:auto;display:flex;flex-direction:column;
+    padding-bottom:calc(56px + env(safe-area-inset-bottom));
+  }
+  #header{
+    position:sticky;top:0;z-index:20;
+    padding:calc(10px + env(safe-area-inset-top)) 16px 10px;
+    background:rgba(5,8,15,.86);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  }
+  #brand{gap:12px}
+  #logo{font-size:28px}
+  #brand-meta{padding-left:12px}
+  #brand-sub{font-size:11px;letter-spacing:.18em;white-space:nowrap}
+  #coords{font-size:11px;letter-spacing:.04em;white-space:nowrap}
+  #live-pill{display:none}
+  #clock-time{font-size:28px}
+  #clock-sec{font-size:15px}
+  #clock-date{display:none}
 
-/* ─── Hashtag ─── */
-#sidebar-tag{
-  margin-top:auto;
-  padding:10px 24px 12px;
-  text-align:center;
-}
-#sidebar-tag span{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:15px;
-  font-weight:600;
-  letter-spacing:0.2em;
-  text-transform:uppercase;
-  color:var(--text-muted);
-}
+  #camera{width:100%;aspect-ratio:16/9;height:auto}
+  #cam-label{left:14px;bottom:12px}
+  #cam-kicker{font-size:10px}
+  #cam-name{font-size:19px}
+  #cam-dots{right:14px;bottom:16px;gap:5px}
+  .cam-dot{width:5px;height:5px}.cam-dot.on{width:14px}
+  #cam-fade{height:80px}
 
-/* ═══════════════════════════════
-   BANNER
-═══════════════════════════════ */
-#banner-area{
-  grid-column:1;
-  grid-row:3;
-  position:relative;
-  overflow:hidden;
-  background:var(--surface);
-  border-top:1px solid var(--border);
-}
-.bslide{
-  position:absolute;inset:0;
-  display:flex;align-items:center;
-  padding:0 28px;
-  opacity:0;
-  transition:opacity 0.6s ease;
-}
-.bslide.active{opacity:1}
+  #banner{order:5;height:auto;min-height:96px;margin:16px 16px 0;border:1px solid var(--line);border-radius:14px}
+  .bs{position:relative;display:none;padding:16px 18px;gap:10px;align-items:flex-start;flex-direction:column;justify-content:center}
+  .bs.on{display:flex}
+  .bs-h{font-size:21px}
+  .bs-p{font-size:14px}
+  .bs-qr{display:none}
+  #bs1-kp{display:none}
 
-/* Ad slide */
-#bs0{background:linear-gradient(135deg,#0d1a2e 0%,#091424 100%)}
-#bs0 .bs-title{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:24px;font-weight:700;
-  letter-spacing:0.06em;text-transform:uppercase;
-  color:#fff;
-}
-#bs0 .bs-sub{
-  font-size:13px;color:var(--text-dim);margin-top:2px;letter-spacing:0.04em;
-}
-#bs0 .bs-mail{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:18px;font-weight:600;color:var(--accent);
-  margin-top:6px;
-}
-#bq0{margin-left:auto;flex-shrink:0}
+  #side{background:none;border:0;padding:0;order:4}
+  .sec{margin:16px 16px 0;padding:18px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+  .kicker{font-size:12px;margin-bottom:12px}
+  #wx-icon{width:60px;height:60px}
+  #wx-temp{font-size:72px}
+  #wx-desc{font-size:16px}
+  .stat{padding:9px 10px}
+  .stat-l{font-size:11px;letter-spacing:.1em;white-space:nowrap}
+  .stat-v{font-size:22px}
+  #fc{gap:6px}
+  .fc-d{font-size:12px}
+  .fc-t{font-size:19px}.fc-t small{font-size:14px}
+  #aur-kp{font-size:50px}
+  #aur-level{font-size:17px}
+  .sun-v{font-size:22px}
+  #tag{display:none}
 
-/* Aurora banner slide */
-#bs1{background:linear-gradient(135deg,#051a18 0%,#04120f 100%)}
-#bs1 .bs-aurora-title{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:24px;font-weight:700;color:#fff;
-  letter-spacing:0.06em;text-transform:uppercase;
+  #foot{
+    position:fixed;left:0;right:0;bottom:0;z-index:20;
+    height:calc(48px + env(safe-area-inset-bottom));
+    padding-bottom:env(safe-area-inset-bottom);
+    background:rgba(5,8,15,.92);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  }
+  #foot-label{display:none}
+  #ticker span{font-size:16px;padding:0 20px}
 }
-#bs1 .bs-aurora-txt{font-size:13px;color:var(--text-dim);margin-top:4px}
-#bs1 .bs-aurora-kp{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:44px;font-weight:800;color:var(--ice);
-  margin-left:auto;line-height:1;
-}
-#bs1 .bs-aurora-kp-label{font-size:12px;color:var(--text-muted);text-align:center;margin-top:2px}
-
-/* Accommodation slide */
-#bs2{background:linear-gradient(135deg,#0a120a 0%,#071008 100%)}
-#bs2 .bs-title{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:24px;font-weight:700;color:#fff;
-  letter-spacing:0.06em;text-transform:uppercase;
-}
-#bs2 .bs-sub{font-size:13px;color:var(--text-dim);margin-top:2px}
-#bs2 .bs-url{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:17px;color:var(--green);margin-top:5px;
-}
-#bq2{margin-left:auto;flex-shrink:0}
-
-/* sidebar-banner */
-#sidebar-banner{
-  grid-column:2;
-  grid-row:3;
-  background:var(--surface2);
-  border-left:1px solid var(--border);
-  border-top:1px solid var(--border);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-#sb-oomf{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;font-weight:500;
-  letter-spacing:0.22em;text-transform:uppercase;
-  color:var(--text-muted);
-}
-
-/* ═══════════════════════════════
-   FOOTER
-═══════════════════════════════ */
-#footer{
-  grid-column:1/3;
-  grid-row:4;
-  background:rgba(0,0,0,0.5);
-  border-top:1px solid var(--border);
-  display:flex;
-  align-items:center;
-  padding:0 28px;
-  overflow:hidden;
-}
-#footer-ticker{
-  white-space:nowrap;
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:16px;
-  font-weight:500;
-  letter-spacing:0.06em;
-  text-transform:uppercase;
-  color:var(--text-dim);
-  animation:ticker 60s linear infinite;
-}
-@keyframes ticker{
-  0%{transform:translateX(0)}
-  100%{transform:translateX(-50%)}
-}
-
-/* ═══════════════════════════════
-   LOADING / ERROR states
-═══════════════════════════════ */
-.data-loading{color:var(--text-muted)}
-.data-error{color:var(--red)}
 </style>
 </head>
 <body class="winter">
+<div id="stars"></div>
 
 <div id="app">
 
-  <!-- HEADER -->
   <header id="header">
-    <div id="logo-block">
-      <span id="logo-levi">LEVI</span>
-      <span id="logo-sub">Lapland · Finland</span>
+    <div id="brand">
+      <div id="logo">LEVI</div>
+      <div id="brand-meta">
+        <div id="brand-sub">Lapland · Finland</div>
+        <div id="coords">67.8009°N · 24.8009°E</div>
+      </div>
     </div>
-    <div id="location-pill">LEVI · KITTILÄ · LAPLAND · 67.8°N</div>
-    <div id="clock-block">
-      <div id="clock-time">00:00:00</div>
-      <div id="clock-date">—</div>
+    <div id="live-pill"><span id="live-dot"></span>Live from Levi Fell · 531 m</div>
+    <div id="clock">
+      <div id="clock-time">--:--<span id="clock-sec">:--</span></div>
+      <div id="clock-date">&nbsp;</div>
     </div>
   </header>
 
-  <!-- CAMERA -->
-  <section id="camera-area">
-    <div id="yt-player"></div>
-    <div id="cam-overlay"></div>
-    <div id="cam-label">Loading camera…</div>
-    <div id="cam-progress"></div>
+  <section id="camera">
+    <div class="yt-slot" id="yt-slot-0"><div id="yt-p0"></div></div>
+    <div class="yt-slot" id="yt-slot-1"><div id="yt-p1"></div></div>
+    <div id="cam-cover">Levi live</div>
+    <div id="cam-shield"></div>
+    <div id="cam-fade"></div>
+    <div id="cam-label">
+      <div id="cam-kicker">Live camera</div>
+      <div id="cam-name">&nbsp;</div>
+    </div>
     <div id="cam-dots"></div>
+    <div id="cam-progress"></div>
   </section>
 
-  <!-- SIDEBAR -->
-  <aside id="sidebar">
-
-    <!-- Weather -->
-    <div id="weather-block">
-      <div id="wx-station">Kittilä Kenttärova · Summit</div>
-      <div id="wx-main">
-        <div id="wx-temp" class="data-loading">—</div>
-        <div id="wx-symbol-col">
-          <div id="wx-symbol">❄️</div>
+  <aside id="side">
+    <section class="sec" id="wx">
+      <div class="kicker">Weather now <b>Kittilä Kenttärova</b></div>
+      <div id="wx-row">
+        <svg id="wx-icon" viewBox="0 0 24 24"></svg>
+        <div>
+          <div id="wx-temp">--°</div>
+          <div id="wx-desc">Loading…</div>
         </div>
       </div>
-      <div id="wx-feels">Feels like —</div>
-      <div id="wx-details">
-        <div class="wx-detail">
-          <span class="wx-detail-label">Wind</span>
-          <span class="wx-detail-val" id="wx-wind">— m/s</span>
+      <div id="wx-stats">
+        <div class="stat"><div class="stat-l">Feels like</div><div class="stat-v" id="wx-feels">--</div></div>
+        <div class="stat"><div class="stat-l">Wind</div><div class="stat-v" id="wx-wind">--</div></div>
+        <div class="stat"><div class="stat-l">Cloud</div><div class="stat-v" id="wx-cloud">--</div></div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="kicker">5-day forecast <b>FMI</b></div>
+      <div id="fc"><div class="fc-empty">Loading forecast…</div></div>
+    </section>
+
+    <section class="sec" id="aur">
+      <div class="kicker">Northern lights <b>NOAA Kp</b></div>
+      <div id="aur-row">
+        <div id="aur-kp"><small>KP</small><span id="aur-kp-v">--</span></div>
+        <div>
+          <div id="aur-level">--</div>
+          <div id="aur-note">&nbsp;</div>
         </div>
-        <div class="wx-detail">
-          <span class="wx-detail-label">Direction</span>
-          <span class="wx-detail-val" id="wx-dir">—</span>
-        </div>
       </div>
-    </div>
+      <div id="aur-scale"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div id="aur-foot"><span id="aur-dark">&nbsp;</span><span id="aur-fc">&nbsp;</span></div>
+    </section>
 
-    <!-- Forecast -->
-    <div id="forecast-block">
-      <div id="forecast-label">5-day forecast · Kittilä</div>
-      <div id="forecast-days">
-        <!-- JS populated -->
+    <section class="sec">
+      <div class="kicker">Daylight <b id="sun-state">&nbsp;</b></div>
+      <svg id="sun-svg" viewBox="0 0 400 150">
+        <defs>
+          <linearGradient id="arcg" x1="0" x2="1">
+            <stop offset="0" stop-color="#ff9a4a"/><stop offset=".5" stop-color="#ffc35a"/><stop offset="1" stop-color="#ff9a4a"/>
+          </linearGradient>
+          <filter id="sglow" x="-2" y="-2" width="5" height="5"><feGaussianBlur stdDeviation="5"/></filter>
+        </defs>
+        <path id="arc-bg" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="2" stroke-dasharray="3 6"/>
+        <path id="arc-fill" fill="none" stroke="url(#arcg)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="10" y1="140" x2="390" y2="140" stroke="rgba(255,255,255,.18)" stroke-width="1"/>
+        <circle id="sun-halo" r="16" fill="#ffc35a" opacity=".45" filter="url(#sglow)"/>
+        <circle id="sun-dot" r="8" fill="#ffd27a"/>
+        <text id="sun-msg" x="200" y="100" text-anchor="middle" fill="rgba(232,240,248,.5)"
+              font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="600" font-size="16" letter-spacing="3"></text>
+      </svg>
+      <div id="sun-row">
+        <div class="sun-c"><div class="sun-l">Sunrise</div><div class="sun-v" id="sun-rise">--</div></div>
+        <div class="sun-c" id="sun-mid"><div class="sun-l">Day length</div><div class="sun-v" id="sun-len">--</div></div>
+        <div class="sun-c"><div class="sun-l">Sunset</div><div class="sun-v" id="sun-set">--</div></div>
       </div>
-    </div>
+    </section>
 
-    <!-- Aurora -->
-    <div id="aurora-block">
-      <div id="aurora-header">
-        <span id="aurora-label">Aurora Activity · Kp-index</span>
-        <span id="aurora-kp-badge">Kp —</span>
-      </div>
-      <div id="aurora-bar-bg"><div id="aurora-bar-fill" style="width:0%"></div></div>
-      <div id="aurora-status" class="data-loading">Loading…</div>
-      <div id="aurora-prob"></div>
-    </div>
-
-    <!-- Sun arc -->
-    <div id="sun-block">
-      <div id="sun-header">
-        <span id="sun-label">Sun Position</span>
-        <span id="sun-coords">67.8009°N 24.8009°E</span>
-      </div>
-      <div id="sun-svg-wrap">
-        <svg id="sun-svg" viewBox="0 0 280 100">
-          <!-- background arc -->
-          <path id="sun-bg-arc" d="" stroke="rgba(255,255,255,0.08)" stroke-width="2" fill="none"/>
-          <!-- filled arc (elapsed) -->
-          <path id="sun-fill-arc" d="" stroke="var(--gold)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <!-- sun dot -->
-          <circle id="sun-dot" cx="0" cy="0" r="0" fill="var(--gold)" filter="url(#glow)"/>
-          <defs>
-            <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
-              <feGaussianBlur stdDeviation="3" result="blur"/>
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-          </defs>
-          <!-- horizon line -->
-          <line x1="10" y1="95" x2="270" y2="95" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-          <!-- polar night / midnight sun labels -->
-          <text id="sun-polar-txt" x="140" y="60" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="11" font-family="Barlow Condensed" letter-spacing="2" display="none">—</text>
-        </svg>
-      </div>
-      <div id="sun-times">
-        <span id="sun-rise">— sunrise</span>
-        <span id="sun-set">sunset —</span>
-      </div>
-      <div id="sun-daylen"></div>
-    </div>
-
-    <!-- Hashtag -->
-    <div id="sidebar-tag"><span>#VISITLEVI</span></div>
+    <div id="tag">#VISITLEVI</div>
   </aside>
 
-  <!-- BANNER -->
-  <div id="banner-area">
-    <!-- Slide 0: Ad -->
-    <div class="bslide active" id="bs0">
+  <div id="banner">
+    <a class="bs on" id="bs0" href="mailto:hello@oomf.fi">
+      <span class="bs-tag">Mainospaikka</span>
       <div>
-        <div class="bs-title">Kiinnostaako näkyvyys tässä paikassa?</div>
-        <div class="bs-sub">Tavoita Levin vierailijat info-TV-verkostollamme</div>
-        <div class="bs-mail">hello@oomf.fi</div>
+        <div class="bs-h">Kiinnostaako näkyvyys tässä paikassa?</div>
+        <div class="bs-p">Voit varata tämän paikan — ota yhteyttä <b>hello@oomf.fi</b></div>
       </div>
-      <div id="bq0"></div>
-    </div>
-    <!-- Slide 1: Aurora (seasonal) -->
-    <div class="bslide" id="bs1" data-skip="1">
+      <div class="bs-qr" id="bq0"></div>
+    </a>
+    <div class="bs" id="bs1" data-skip="1">
+      <span class="bs-tag">Tonight</span>
       <div>
-        <div class="bs-aurora-title">🌌 Revontulikausi käynnissä</div>
-        <div class="bs-aurora-txt">Tarkkaile taivasta pohjoiseen — paras näkyvyys pimeällä ja hyvällä säällä</div>
+        <div class="bs-h">Northern lights season is on</div>
+        <div class="bs-p">Look north on clear, dark evenings — away from city lights</div>
       </div>
-      <div style="margin-left:auto;text-align:center">
-        <div class="bs-aurora-kp" id="bs1-kp">—</div>
-        <div class="bs-aurora-kp-label">Kp-indeksi</div>
-      </div>
+      <div id="bs1-kp">Kp --</div>
     </div>
-    <!-- Slide 2: Accommodation -->
-    <div class="bslide" id="bs2">
+    <a class="bs" id="bs2" href="https://www.levi.fi/majoitu/">
+      <span class="bs-tag">Stay</span>
       <div>
-        <div class="bs-title">Majoitu Levillä</div>
-        <div class="bs-sub">Hotellit, mökit ja aamiaismajoitukset kaikissa hintaluokissa</div>
-        <div class="bs-url">levi.fi/majoitu</div>
+        <div class="bs-h">Majoitu Levillä</div>
+        <div class="bs-p">Hotels, cabins and apartments — <b>levi.fi</b></div>
       </div>
-      <div id="bq2"></div>
-    </div>
+      <div class="bs-qr" id="bq2"></div>
+    </a>
   </div>
 
-  <!-- SIDEBAR BANNER -->
-  <div id="sidebar-banner">
-    <div id="sb-oomf">OOMF · Info TV Network</div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer id="footer">
-    <div id="footer-ticker"></div>
+  <footer id="foot">
+    <div id="foot-label">Levi</div>
+    <div id="foot-track"><div id="ticker"></div></div>
   </footer>
-
 </div>
 
 <script>
 'use strict';
+/* ══════════════════════════════════════════════════════════
+   EDIT HERE
+══════════════════════════════════════════════════════════ */
 
-/* ══════════════════════════════════════════════
-   CONSTANTS
-══════════════════════════════════════════════ */
-const LAT = 67.8009, LON = 24.8009;
-const CAMS = [
-  {id:'LwihxyJ4V20', n:'Zero Point',   l:'Levi Center — Zero Point'},
-  {id:'89vRm9bb9_c', n:'South Point',  l:'South Point — South Slopes'},
-  {id:'X7tdyNFpp1g', n:'Village View', l:'Village View'},
-  {id:'gehi4YiVYdY', n:'Levi Black',   l:'Levi Black — Gondola Area'},
-  {id:'tgCjNC-813A', n:'Levi Six',     l:'Levi Six — NE Slopes'},
-  {id:'jQrqWYe5Cn4', n:'Levi West',    l:'Levi West — West Slopes'},
-  {id:'Wr9b5aYA4mI', n:'Glacier Exp.', l:'Glacier Express'},
-  {id:'eXDCi75TjM8', n:'Top of Levi',  l:'Top of Levi — Summit 531 m'},
-  {id:'hWN0iCg8pDY', n:'Lifts 13&14',  l:'Lifts 13 & 14 — North'},
-  {id:'mupuSRKkL_M', n:'Leevilandia',  l:'South Slopes — Leevilandia'},
+// Footer ticker — static text, edit freely.
+const TICKER = [
+  'Welcome to Levi · Tervetuloa Leviin',
+  'Live cameras from around Levi Fell',
+  'Slope & lift status: levi.fi',
+  'Northern lights: look north on clear, dark evenings',
+  'Emergency number 112',
+  'Share your day: #visitlevi',
+  'Advertise on this screen: hello@oomf.fi',
 ];
-const CAM_INTERVAL = 15000; // ms
 
-// FOOTER — edit manually:
-const FOOTER_TEXT = [
-  'Hissit auki päivittäin 9:00–17:00  ·  Viimeinen nousu 16:45',
-  'Sky Restaurant 11:00–22:00  ·  Huippu 531 m',
-  'WiFi: LeviGuest — ei salasanaa',
-  'Vuokraamo 8:00–18:00  ·  Spa & Pool 8:00–22:00',
-  'Levi Ski Marathon 25.2.2027  ·  Levi Ice Fishing 15.–16.3.2027',
-  'Napapiirin hiihtokeskus — 44 rinnettä · 26 hissiä',
-  'Hätänumero: 112',
-].join('   ··   ');
+// Optional live slope/lift feed (see README). Leave empty to disable.
+// Expected JSON: {"slopesOpen":12,"slopesTotal":43,"liftsOpen":8,"liftsTotal":26}
+const SLOPE_FEED_URL = '';
 
-/* ══════════════════════════════════════════════
-   SCALE
-══════════════════════════════════════════════ */
-function scale(){
-  const s = Math.min(innerWidth/1920, innerHeight/1080);
-  document.body.style.transform = `scale(${s})`;
-  document.body.style.left = (innerWidth - 1920*s)/2 + 'px';
-  document.body.style.top  = (innerHeight - 1080*s)/2 + 'px';
+const LAT = 67.8009, LON = 24.8009;
+const CAM_INTERVAL = 15000;
+const CAMS = [
+  {id:'LwihxyJ4V20', l:'Levi Center — Zero Point'},
+  {id:'89vRm9bb9_c', l:'South Point — South Slopes'},
+  {id:'X7tdyNFpp1g', l:'Village View'},
+  {id:'gehi4YiVYdY', l:'Levi Black — Gondola Area'},
+  {id:'tgCjNC-813A', l:'Levi Six — NE Slopes'},
+  {id:'jQrqWYe5Cn4', l:'Levi West — West Slopes'},
+  {id:'Wr9b5aYA4mI', l:'Glacier Express'},
+  {id:'eXDCi75TjM8', l:'Top of Levi — Summit 531 m'},
+  {id:'hWN0iCg8pDY', l:'Lifts 13 & 14 — North'},
+  {id:'mupuSRKkL_M', l:'South Slopes — Leevilandia'},
+];
+
+/* ══════════════════════════════════════════════════════════
+   LAYOUT: scale TV canvas, or leave it fluid on phones
+══════════════════════════════════════════════════════════ */
+const mobileMQ = matchMedia('(max-width:900px)');
+function layout(){
+  const b=document.body;
+  if(mobileMQ.matches){ b.style.transform=''; b.style.left=''; b.style.top=''; return; }
+  const s=Math.min(innerWidth/1920, innerHeight/1080);
+  b.style.transform=`scale(${s})`;
+  b.style.left=(innerWidth-1920*s)/2+'px';
+  b.style.top =(innerHeight-1080*s)/2+'px';
 }
-scale();
-addEventListener('resize', scale);
+layout();
+addEventListener('resize',layout);
+mobileMQ.addEventListener?.('change',layout);
 
-/* ══════════════════════════════════════════════
-   CLOCK
-══════════════════════════════════════════════ */
-const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(2,'0');
+
+/* ══════════════════════════════════════════════════════════
+   TIME — everything in Europe/Helsinki
+══════════════════════════════════════════════════════════ */
+const HEL_FMT=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Helsinki',hour12:false,
+  year:'numeric',month:'numeric',day:'numeric',hour:'numeric',minute:'numeric',second:'numeric',weekday:'long'});
+function hel(d=new Date()){
+  const p={};HEL_FMT.formatToParts(d).forEach(x=>p[x.type]=x.value);
+  return {y:+p.year,mo:+p.month,d:+p.day,h:(+p.hour)%24,mi:+p.minute,s:+p.second,wd:p.weekday};
+}
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const hm=min=>{min=((Math.round(min)%1440)+1440)%1440;return pad(Math.floor(min/60))+':'+pad(min%60);};
 
 function tickClock(){
-  const now = new Date();
-  const h = String(now.getHours()).padStart(2,'0');
-  const m = String(now.getMinutes()).padStart(2,'0');
-  const s = String(now.getSeconds()).padStart(2,'0');
-  document.getElementById('clock-time').textContent = `${h}:${m}:${s}`;
-  document.getElementById('clock-date').textContent =
-    `${DAY_NAMES[now.getDay()]} ${now.getDate()} ${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()}`;
+  const t=hel();
+  $('clock-time').firstChild.nodeValue=`${pad(t.h)}:${pad(t.mi)}`;
+  $('clock-sec').textContent=':'+pad(t.s);
+  $('clock-date').textContent=`${t.wd} ${t.d} ${MONTHS[t.mo-1]}`;
 }
-tickClock();
-setInterval(tickClock, 1000);
+tickClock();setInterval(tickClock,1000);
 
-/* ══════════════════════════════════════════════
-   ASTRONOMICAL SUN CALC
-══════════════════════════════════════════════ */
-function calcSun(date){
-  const R = Math.PI/180;
-  const JD = date.getTime()/86400000 + 2440587.5;
-  const n  = Math.round(JD - 2451545 - 0.0009 - (LON/360));
-  const Js = 2451545 + 0.0009 + (LON/360) + n;
-  const M  = (357.5291 + 0.98560028*(Js-2451545)) * R;
-  const C  = (1.9148*Math.sin(M) + 0.02*Math.sin(2*M) + 0.0003*Math.sin(3*M)) * R;
-  const lam = ((280.4664 + 0.98564736*(Js-2451545))*R + C + Math.PI) % (2*Math.PI);
-  const dec = Math.asin(Math.sin(-23.4559*R) * Math.cos(lam));
-  const cosH = (Math.sin(-0.8333*R) - Math.sin(LAT*R)*Math.sin(dec))
-             / (Math.cos(LAT*R) * Math.cos(dec));
-
-  if(cosH >  1) return {polar:'night'};
-  if(cosH < -1) return {polar:'sun'};
-
-  const H   = Math.acos(cosH) / (2*Math.PI);
-  const Jtr = Js + (0.0053*Math.sin(M) - 0.0069*Math.sin(2*lam));
-  const toL = jd => new Date((jd-2440587.5)*86400000)
-    .toLocaleTimeString('fi-FI',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Helsinki'});
-
-  return {rise:toL(Jtr-H), set:toL(Jtr+H), polar:null};
+/* ══════════════════════════════════════════════════════════
+   SUN — solar elevation (USNO approximation), scanned over the
+   local day to find sunrise/sunset. Handles polar night and
+   midnight sun naturally.
+══════════════════════════════════════════════════════════ */
+const RAD=Math.PI/180, H0=-0.833;
+function sunElev(date){
+  const d=date.getTime()/86400000-10957.5;          // days since J2000.0
+  const g=(357.529+0.98560028*d)*RAD;
+  const q=280.459+0.98564736*d;
+  const L=(q+1.915*Math.sin(g)+0.020*Math.sin(2*g))*RAD;
+  const e=(23.439-0.00000036*d)*RAD;
+  const ra=Math.atan2(Math.cos(e)*Math.sin(L),Math.cos(L));
+  const dec=Math.asin(Math.sin(e)*Math.sin(L));
+  const gmst=((18.697374558+24.06570982441908*d)%24+24)%24;
+  const ha=(gmst*15+LON)*RAD-ra;
+  return Math.asin(Math.sin(LAT*RAD)*Math.sin(dec)+Math.cos(LAT*RAD)*Math.cos(dec)*Math.cos(ha))/RAD;
 }
-
-function toMinutes(timeStr){
-  const [h,m] = timeStr.split(':').map(Number);
-  return h*60+m;
-}
-
-/* ══════════════════════════════════════════════
-   SUN ARC SVG
-══════════════════════════════════════════════ */
-const SVG_CX=140, SVG_CY=95, SVG_R=82;
-
-function arcPoint(frac){
-  const angle = Math.PI - frac*Math.PI;
-  return {x: SVG_CX + SVG_R*Math.cos(angle), y: SVG_CY - SVG_R*Math.sin(angle)};
+function sunDay(now=new Date()){
+  const t=hel(now);
+  const nowMin=t.h*60+t.mi+t.s/60;
+  const mid=now.getTime()-nowMin*60000;
+  let rise=null,set=null,maxE=-90,minE=90,prev=sunElev(new Date(mid));
+  for(let m=2;m<=1440;m+=2){
+    const e=sunElev(new Date(mid+m*60000));
+    maxE=Math.max(maxE,e);minE=Math.min(minE,e);
+    if(prev<H0&&e>=H0&&rise===null) rise=m-2+2*(H0-prev)/(e-prev);
+    if(prev>=H0&&e<H0) set=m-2+2*(H0-prev)/(e-prev);
+    prev=e;
+  }
+  const polar=maxE<H0?'night':(minE>=H0?'sun':null);
+  return {rise,set,polar,nowMin,elev:sunElev(now),month:t.mo,hour:t.h};
 }
 
-function drawSunArc(sunData){
-  const bg   = document.getElementById('sun-bg-arc');
-  const fill = document.getElementById('sun-fill-arc');
-  const dot  = document.getElementById('sun-dot');
-  const ptxt = document.getElementById('sun-polar-txt');
-  const riseEl  = document.getElementById('sun-rise');
-  const setEl   = document.getElementById('sun-set');
-  const daylenEl= document.getElementById('sun-daylen');
+const CX=200,CY=140,R=130;
+const arcPt=f=>{const a=Math.PI-f*Math.PI;return [CX+R*Math.cos(a),CY-R*Math.sin(a)];};
+function arcPath(f0,f1){const [x0,y0]=arcPt(f0),[x1,y1]=arcPt(f1);return `M${x0.toFixed(1)},${y0.toFixed(1)} A${R},${R} 0 0,1 ${x1.toFixed(1)},${y1.toFixed(1)}`;}
 
-  // background semicircle
-  const s0=arcPoint(0), s1=arcPoint(1);
-  const midArc=arcPoint(0.5);
-  bg.setAttribute('d',`M${s0.x},${s0.y} A${SVG_R},${SVG_R} 0 0,1 ${s1.x},${s1.y}`);
-
-  if(sunData.polar==='night'){
-    fill.setAttribute('d','');
-    dot.setAttribute('r','0');
-    ptxt.setAttribute('display','');
-    ptxt.textContent='POLAR NIGHT';
-    riseEl.textContent='— sunrise';
-    setEl.textContent='sunset —';
-    daylenEl.textContent='No sunrise today';
+function drawSun(S){
+  $('arc-bg').setAttribute('d',arcPath(0,1));
+  const dot=$('sun-dot'),halo=$('sun-halo'),msg=$('sun-msg'),fill=$('arc-fill');
+  const hide=()=>{dot.setAttribute('r',0);halo.setAttribute('r',0);};
+  if(S.polar){
+    const night=S.polar==='night';
+    fill.setAttribute('d',night?'':arcPath(0,1));
+    hide(); msg.textContent=night?'POLAR NIGHT · KAAMOS':'MIDNIGHT SUN';
+    $('sun-rise').textContent='—';$('sun-set').textContent='—';
+    $('sun-len').textContent=night?'0h':'24h';
+    $('sun-state').textContent=night?'Polar night':'Midnight sun';
     return;
   }
-  if(sunData.polar==='sun'){
-    fill.setAttribute('d',`M${s0.x},${s0.y} A${SVG_R},${SVG_R} 0 0,1 ${s1.x},${s1.y}`);
-    dot.setAttribute('cx',midArc.x);dot.setAttribute('cy',midArc.y);dot.setAttribute('r','7');
-    ptxt.setAttribute('display','');
-    ptxt.textContent='MIDNIGHT SUN';
-    riseEl.textContent='— no sunrise';
-    setEl.textContent='no sunset —';
-    daylenEl.textContent='24h daylight — midnight sun';
+  const len=S.set-S.rise;
+  $('sun-rise').textContent=hm(S.rise);
+  $('sun-set').textContent=hm(S.set);
+  $('sun-len').textContent=`${Math.floor(len/60)}h ${pad(Math.round(len%60))}m`;
+  const up=S.nowMin>=S.rise&&S.nowMin<S.set;
+  if(up){
+    const f=(S.nowMin-S.rise)/len;
+    fill.setAttribute('d',f>0.002?arcPath(0,f):'');
+    const [x,y]=arcPt(f);
+    dot.setAttribute('cx',x);dot.setAttribute('cy',y);dot.setAttribute('r',8);
+    halo.setAttribute('cx',x);halo.setAttribute('cy',y);halo.setAttribute('r',16);
+    msg.textContent='';
+    const left=S.set-S.nowMin;
+    $('sun-state').textContent=`Sunset in ${Math.floor(left/60)}h ${pad(Math.round(left%60))}m`;
+  }else{
+    fill.setAttribute('d',S.nowMin>=S.set?arcPath(0,1):'');
+    fill.style.opacity=.25;
+    hide();
+    msg.textContent='SUN BELOW HORIZON';
+    $('sun-state').textContent=S.nowMin>=S.set?`Sun rises ${hm(S.rise)}`:`Sunrise ${hm(S.rise)}`;
     return;
   }
-
-  ptxt.setAttribute('display','none');
-  const riseMin = toMinutes(sunData.rise);
-  const setMin  = toMinutes(sunData.set);
-  riseEl.textContent = sunData.rise + ' ↑';
-  setEl.textContent  = '↓ ' + sunData.set;
-
-  const dayLen = setMin > riseMin ? setMin - riseMin : setMin+1440-riseMin;
-  const dh = Math.floor(dayLen/60), dm = dayLen%60;
-  daylenEl.textContent = `${dh}h ${String(dm).padStart(2,'0')}min päivänvaloa`;
-
-  const now = new Date();
-  const tz = now.toLocaleTimeString('fi-FI',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Helsinki'});
-  const nowMin = toMinutes(tz);
-
-  let frac;
-  if(nowMin < riseMin || nowMin >= setMin){
-    // sun below horizon — place at edge
-    frac = nowMin < riseMin ? 0 : 1;
-  } else {
-    frac = (nowMin - riseMin) / dayLen;
-    frac = Math.max(0, Math.min(1, frac));
-  }
-
-  const ps = arcPoint(0);
-  const pe = arcPoint(frac);
-  if(frac > 0.001){
-    const large = frac > 0.5 ? 1:0;
-    fill.setAttribute('d',`M${ps.x},${ps.y} A${SVG_R},${SVG_R} 0 ${large},1 ${pe.x},${pe.y}`);
-  } else {
-    fill.setAttribute('d','');
-  }
-
-  if(nowMin >= riseMin && nowMin < setMin){
-    // sun radius grows toward noon
-    const r = 5 + 3*Math.sin(frac*Math.PI);
-    dot.setAttribute('cx',pe.x);
-    dot.setAttribute('cy',pe.y);
-    dot.setAttribute('r',r);
-  } else {
-    dot.setAttribute('r','0');
-  }
+  fill.style.opacity=1;
 }
 
-/* ══════════════════════════════════════════════
-   THEME ENGINE
-══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════
+   THEME — season by month, night/golden by real sun elevation
+══════════════════════════════════════════════════════════ */
+let SUN=sunDay();
+function auroraSeason(m){return m>=8||m<=4;}   // no aurora in bright summer nights
 function updateTheme(){
-  const now = new Date();
-  const helsinkiStr = now.toLocaleString('fi-FI',{timeZone:'Europe/Helsinki'});
-  const helsinkiDate = new Date(helsinkiStr);
-  const month = helsinkiDate.getMonth()+1;
-  const hour  = helsinkiDate.getHours();
+  SUN=sunDay();
+  const m=SUN.month;
+  const season=(m>=11||m<=3)?'winter':m<=5?'spring':m<=8?'summer':'autumn';
+  const b=document.body.classList;
+  ['winter','spring','summer','autumn'].forEach(s=>b.toggle(s,s===season));
+  b.toggle('night',SUN.elev<H0);
 
-  let season;
-  if(month>=11||month<=3) season='winter';
-  else if(month<=5)       season='spring';
-  else if(month<=7)       season='summer';
-  else                    season='autumn';
-
-  const sun = calcSun(now);
-
-  // Aurora visibility: show in aurora season (Aug-May) + dark
-  const auroraMonth = month<=4||month>=8;
-  let isDark = false;
-  if(sun.polar==='night') isDark=true;
-  else if(sun.polar!=='sun'){
-    const rMin=toMinutes(sun.rise), sMin=toMinutes(sun.set);
-    const tz=now.toLocaleTimeString('fi-FI',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Helsinki'});
-    const nMin=toMinutes(tz);
-    isDark = nMin<rMin||nMin>=sMin;
-  }
-  const showAurora = auroraMonth && (isDark||hour>=20||hour<=6);
-  document.getElementById('aurora-block').classList.toggle('hidden',!showAurora);
-  document.getElementById('bs1').dataset.skip = showAurora?'':'1';
-
-  // Night mode
-  let isNight=false;
-  if(sun.polar==='night') isNight=true;
-  else if(sun.polar!=='sun'){
-    const tz=now.toLocaleTimeString('fi-FI',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Helsinki'});
-    const nMin=toMinutes(tz), rMin=toMinutes(sun.rise), sMin=toMinutes(sun.set);
-    isNight=nMin<rMin||nMin>=sMin;
-  }
-
-  // Golden hour
-  let isGolden=false;
-  if(sun.polar===null&&!isNight){
-    const tz=now.toLocaleTimeString('fi-FI',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Helsinki'});
-    const nMin=toMinutes(tz), rMin=toMinutes(sun.rise), sMin=toMinutes(sun.set);
-    isGolden=(nMin>=rMin&&nMin<=rMin+45)||(nMin>=sMin-45&&nMin<sMin);
-  }
-
-  const classes=[season];
-  if(isNight) classes.push('night');
-  if(isGolden) classes.push('golden');
-  document.body.className=classes.join(' ');
-
-  drawSunArc(sun);
-}
-updateTheme();
-setInterval(updateTheme, 60000);
-
-/* ══════════════════════════════════════════════
-   WEATHER SYMBOL
-══════════════════════════════════════════════ */
-function wxSymbol(code){
-  const c=parseInt(code)||0;
-  if(c<=1) return '☀️';
-  if(c<=2) return '🌤️';
-  if(c<=3) return '⛅';
-  if(c<=6) return '🌥️';
-  if(c<=9) return '☁️';
-  if(c<=11)return '🌧️';
-  if(c<=13)return '🌦️';
-  if(c<=16)return '🌨️';
-  if(c<=19)return '❄️';
-  if(c<=21)return '🌩️';
-  if(c<=23)return '⛈️';
-  if(c<=26)return '🌫️';
-  return '🌡️';
-}
-
-/* ══════════════════════════════════════════════
-   FMI WEATHER
-══════════════════════════════════════════════ */
-async function loadWeather(){
-  try{
-    const r=await fetch('https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::simple&fmisid=101886&parameters=temperature,windspeedms,winddirection,weathersymbol3');
-    if(!r.ok) throw new Error(r.status);
-    const xml=await r.text();
-    const doc=new DOMParser().parseFromString(xml,'application/xml');
-    const els=doc.querySelectorAll('BsWfs\\:BsWfsElement,BsWfsElement');
-    const data={};
-    els.forEach(el=>{
-      const name=el.querySelector('BsWfs\\:ParameterName,ParameterName')?.textContent?.trim();
-      const val =el.querySelector('BsWfs\\:ParameterValue,ParameterValue')?.textContent?.trim();
-      if(name&&val!==undefined) data[name]=parseFloat(val);
-    });
-
-    const t=data['temperature'], ws=data['windspeedms'], wd=data['winddirection'], sym=data['weathersymbol3'];
-
-    document.getElementById('wx-temp').className='';
-    document.getElementById('wx-temp').textContent = isNaN(t)?'—':Math.round(t)+'°';
-    document.getElementById('wx-symbol').textContent = wxSymbol(sym);
-
-    let feels='—';
-    if(!isNaN(t)&&!isNaN(ws)){
-      if(t<10&&ws>1.3){
-        feels=Math.round(13.12+0.6215*t-11.37*(ws*3.6)**0.16+0.3965*t*(ws*3.6)**0.16)+'°C';
-      } else {
-        feels=Math.round(t)+'°C (sama)';
+  const inSeason=auroraSeason(m);
+  const dark=SUN.elev<-6;                       // past civil twilight
+  $('aur').classList.toggle('off',!inSeason);
+  $('bs1').dataset.skip=(inSeason&&dark)?'':'1';
+  if(inSeason){
+    if(dark) $('aur-dark').textContent='Dark enough now';
+    else{
+      // find when civil twilight ends today
+      let darkAt=null;
+      for(let mm=Math.ceil(SUN.nowMin);mm<1440;mm+=5){
+        if(sunElev(new Date(Date.now()+(mm-SUN.nowMin)*60000))<-6){darkAt=mm;break;}
       }
+      $('aur-dark').textContent=darkAt?`Dark from ${hm(darkAt)}`:'Too bright today';
     }
-    document.getElementById('wx-feels').textContent='Tuntuma '+feels;
-    document.getElementById('wx-wind').textContent=isNaN(ws)?'—':ws.toFixed(1)+' m/s';
-
-    if(!isNaN(wd)){
-      const dirs=['N','NE','E','SE','S','SW','W','NW'];
-      document.getElementById('wx-dir').textContent=dirs[Math.round(wd/45)%8];
-    }
-  }catch(e){
-    document.getElementById('wx-temp').className='data-error';
-    document.getElementById('wx-temp').textContent='ERR';
-    console.error('Weather:',e);
   }
+  drawSun(SUN);
+}
+updateTheme();setInterval(updateTheme,60000);
+
+/* ══════════════════════════════════════════════════════════
+   WEATHER ICONS — inline SVG (emoji render poorly on TVs)
+══════════════════════════════════════════════════════════ */
+const CLOUD='<path d="M7 19h10.5a4 4 0 0 0 .4-7.98A6 6 0 0 0 6.3 11.5 3.75 3.75 0 0 0 7 19z"/>';
+const CLOUD_UP='<path d="M7 15.5h10.5a3.6 3.6 0 0 0 .4-7.2A5.5 5.5 0 0 0 6.6 8.6 3.5 3.5 0 0 0 7 15.5z"/>';
+const SUN_SM='<circle cx="8" cy="8" r="3"/><path d="M8 1.8v1.4M8 12.8v1.4M1.8 8h1.4M12.8 8h1.4M3.6 3.6l1 1M11.4 3.6l-1 1M3.6 12.4l1-1"/>';
+const ICONS={
+  clear:'<circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>',
+  moon:'<path d="M19.5 14.6A8 8 0 1 1 9.4 4.5a6.4 6.4 0 0 0 10.1 10.1z"/>',
+  partly:SUN_SM+'<path d="M9 20h9a3.5 3.5 0 0 0 .3-7 5.2 5.2 0 0 0-9.9 1.2A2.9 2.9 0 0 0 9 20z"/>',
+  partlyN:'<path d="M12 6.5A4.5 4.5 0 1 1 5.5 2.6a3.6 3.6 0 0 0 6.5 3.9z"/><path d="M9 20h9a3.5 3.5 0 0 0 .3-7 5.2 5.2 0 0 0-9.9 1.2A2.9 2.9 0 0 0 9 20z"/>',
+  cloud:CLOUD,
+  rain:CLOUD_UP+'<path d="M8 18.5l-1 3M12 18.5l-1 3M16 18.5l-1 3"/>',
+  snow:CLOUD_UP+'<path d="M8 19v.01M12 18.5v.01M16 19v.01M10 21.5v.01M14 21.5v.01" stroke-width="2.4"/>',
+  sleet:CLOUD_UP+'<path d="M8 18.5l-1 3M16 18.5l-1 3"/><path d="M12 19.5v.01" stroke-width="2.4"/>',
+  thunder:CLOUD_UP+'<path d="M12.5 16l-2 3.5h3l-2 3.5"/>',
+  fog:'<path d="M4 9h16M3 13h18M5 17h14"/>',
+};
+function wxKind(code,night){
+  const c=Math.round(code);
+  if(c===1) return [night?'moon':'clear','Clear'];
+  if(c===2) return [night?'partlyN':'partly','Partly cloudy'];
+  if(c===3) return ['cloud','Cloudy'];
+  if(c>=21&&c<=23) return ['rain','Rain showers'];
+  if(c>=31&&c<=33) return ['rain','Rain'];
+  if(c>=41&&c<=43) return ['snow','Snow showers'];
+  if(c>=51&&c<=53) return ['snow','Snowfall'];
+  if(c>=61&&c<=64) return ['thunder','Thunder'];
+  if(c>=71&&c<=73) return ['sleet','Sleet showers'];
+  if(c>=81&&c<=83) return ['sleet','Sleet'];
+  if(c>=91&&c<=92) return ['fog','Fog'];
+  return ['cloud',''];
+}
+function setIcon(svg,kind){
+  svg.setAttribute('fill','none');svg.setAttribute('stroke','currentColor');
+  svg.setAttribute('stroke-width','1.5');svg.setAttribute('stroke-linecap','round');svg.setAttribute('stroke-linejoin','round');
+  svg.innerHTML=ICONS[kind]||ICONS.cloud;
 }
 
-/* ══════════════════════════════════════════════
-   FMI FORECAST
-══════════════════════════════════════════════ */
-const WEEKDAYS=['Su','Ma','Ti','Ke','To','Pe','La'];
+/* ══════════════════════════════════════════════════════════
+   FMI — observations (fmisid 101886) + forecast for Levi
+══════════════════════════════════════════════════════════ */
+const FMI='https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=';
+function parseFmi(xml){
+  const doc=new DOMParser().parseFromString(xml,'application/xml');
+  const out=[];
+  for(const el of doc.getElementsByTagNameNS('*','BsWfsElement')){
+    const g=n=>el.getElementsByTagNameNS('*',n)[0]?.textContent?.trim();
+    out.push({t:g('Time'),p:g('ParameterName'),v:parseFloat(g('ParameterValue'))});
+  }
+  return out;
+}
+const W={obs:null,now:null};   // latest observation, current forecast hour
+
+async function loadObs(){
+  try{
+    const start=new Date(Date.now()-3*3600e3).toISOString().slice(0,19)+'Z';
+    const r=await fetch(`${FMI}fmi::observations::weather::simple&fmisid=101886&parameters=temperature,windspeedms,winddirection&starttime=${start}`);
+    if(!r.ok) throw new Error(r.status);
+    const o={};
+    for(const x of parseFmi(await r.text())) if(!isNaN(x.v)) o[x.p]=x.v;   // ascending → keeps latest valid
+    if(o.temperature===undefined) throw new Error('no data');
+    W.obs=o;
+  }catch(e){console.warn('obs',e);}
+  renderNow();
+}
+
 async function loadForecast(){
   try{
-    const now=new Date();
-    const start=now.toISOString().slice(0,10)+'T12:00:00Z';
-    const endD=new Date(now.getTime()+6*86400000);
-    const end=endD.toISOString().slice(0,10)+'T12:00:00Z';
-    const url=`https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::edited::weather::scandinavia::point::simple&place=Kittil%C3%A4&parameters=Temperature,WeatherSymbol3&starttime=${start}&endtime=${end}&timestep=1440`;
-    const r=await fetch(url);
-    if(!r.ok) throw new Error(r.status);
-    const xml=await r.text();
-    const doc=new DOMParser().parseFromString(xml,'application/xml');
-    const els=doc.querySelectorAll('BsWfs\\:BsWfsElement,BsWfsElement');
+    const q='fmi::forecast::edited::weather::scandinavia::point::simple&parameters=Temperature,WeatherSymbol3,TotalCloudCover&timestep=60';
+    let r=await fetch(`${FMI}${q}&latlon=${LAT},${LON}`);
+    let rows=r.ok?parseFmi(await r.text()):[];
+    if(!rows.length){ r=await fetch(`${FMI}${q}&place=Kittil%C3%A4`); rows=r.ok?parseFmi(await r.text()):[]; }
+    if(!rows.length) throw new Error('no forecast');
 
-    const byDate={};
-    els.forEach(el=>{
-      const timeEl=el.querySelector('BsWfs\\:Time,Time');
-      const name=el.querySelector('BsWfs\\:ParameterName,ParameterName')?.textContent?.trim();
-      const val=el.querySelector('BsWfs\\:ParameterValue,ParameterValue')?.textContent?.trim();
-      if(!timeEl||!name) return;
-      const date=timeEl.textContent.trim().slice(0,10);
-      if(!byDate[date]) byDate[date]={};
-      byDate[date][name]=parseFloat(val);
-    });
+    const hours={};
+    for(const x of rows){(hours[x.t]??={})[x.p]=x.v;}
+    const times=Object.keys(hours).sort();
+    W.now=hours[times[0]];
+    W.hours=times.map(t=>({t:new Date(t),...hours[t]}));
 
-    const dates=Object.keys(byDate).sort().slice(0,5);
-    const wrap=document.getElementById('forecast-days');
-    wrap.innerHTML='';
-    dates.forEach(d=>{
-      const dd=new Date(d+'T12:00:00Z');
-      const dayName=WEEKDAYS[dd.getUTCDay()];
-      const {Temperature:T,WeatherSymbol3:S}=byDate[d];
-      const div=document.createElement('div');
-      div.className='fc-day';
-      div.innerHTML=`<div class="fc-day-name">${dayName}</div><div class="fc-day-icon">${wxSymbol(S)}</div><div class="fc-day-temp">${isNaN(T)?'—':Math.round(T)+'°'}</div>`;
-      wrap.appendChild(div);
-    });
+    // group by Helsinki date
+    const days={};
+    for(const h of W.hours){
+      const t=hel(h.t);const k=`${t.y}-${pad(t.mo)}-${pad(t.d)}`;
+      const d=days[k]??={min:99,max:-99,sym:null,wd:t.wd,best:99};
+      if(!isNaN(h.Temperature)){d.min=Math.min(d.min,h.Temperature);d.max=Math.max(d.max,h.Temperature);}
+      const dist=Math.abs(t.h-13);               // symbol closest to early afternoon
+      if(!isNaN(h.WeatherSymbol3)&&dist<d.best){d.best=dist;d.sym=h.WeatherSymbol3;}
+    }
+    const keys=Object.keys(days).sort();
+    const today=hel();
+    const todayKey=`${today.y}-${pad(today.mo)}-${pad(today.d)}`;
+    const list=keys.filter(k=>k>todayKey||(k===todayKey&&today.h<15)).slice(0,5);
+    $('fc').innerHTML=list.map((k,i)=>{
+      const d=days[k];
+      const name=(k===todayKey)?'Today':d.wd.slice(0,3);
+      return `<div class="fc"><div class="fc-d">${name}</div>
+        <svg class="fc-i" viewBox="0 0 24 24" data-k="${wxKind(d.sym??3,false)[0]}"></svg>
+        <div class="fc-t">${Math.round(d.max)}°<small>${Math.round(d.min)}°</small></div></div>`;
+    }).join('');
+    $('fc').querySelectorAll('svg').forEach(s=>setIcon(s,s.dataset.k));
   }catch(e){
-    console.error('Forecast:',e);
+    console.warn('forecast',e);
+    if(!W.hours) $('fc').innerHTML='<div class="fc-empty">Forecast unavailable</div>';
   }
+  renderNow();
 }
 
-/* ══════════════════════════════════════════════
-   AURORA / NOAA
-══════════════════════════════════════════════ */
-const KP_LABELS=[
-  [0,'Very Quiet','rgba(100,160,200,0.7)'],
-  [1,'Quiet','rgba(120,180,210,0.8)'],
-  [2,'Low','rgba(140,200,220,0.85)'],
-  [3,'Moderate','rgba(100,220,180,0.9)'],
-  [4,'Active','rgba(245,200,66,1)'],
-  [5,'Strong','rgba(251,146,60,1)'],
-  [6,'Intense','rgba(251,146,60,1)'],
-  [7,'Severe','rgba(248,113,113,1)'],
-  [8,'Extreme Storm','rgba(220,50,50,1)'],
-  [9,'Extreme Storm','rgba(200,30,30,1)'],
-];
-
-function kpLabel(kp){
-  const i=Math.min(9,Math.floor(kp));
-  return KP_LABELS[i]||KP_LABELS[0];
+function renderNow(){
+  const o=W.obs, f=W.now;
+  const t=o?.temperature ?? f?.Temperature;
+  const night=SUN.elev<H0;
+  if(t!==undefined&&!isNaN(t)){
+    $('wx-temp').textContent=(Math.round(t)===0?'0':(t>0?'+':'−')+Math.abs(Math.round(t)))+'°';
+  }
+  const [kind,desc]=wxKind(f?.WeatherSymbol3??NaN,night);
+  setIcon($('wx-icon'),f?kind:'cloud');
+  const ws=o?.windspeedms, wd=o?.winddirection;
+  const dir=isNaN(wd)||wd===undefined?'':['N','NE','E','SE','S','SW','W','NW'][Math.round(wd/45)%8];
+  $('wx-desc').textContent=[desc,ws!==undefined?`${dir} wind`.trim():''].filter(Boolean).join(' · ')||(o?'':'Weather unavailable');
+  $('wx-wind').textContent=ws!==undefined?`${ws.toFixed(0)} m/s`:'--';
+  if(t!==undefined&&ws!==undefined){
+    const v=ws*3.6;
+    const fl=(t<=10&&v>4.8)?13.12+0.6215*t-11.37*v**0.16+0.3965*t*v**0.16:t;
+    $('wx-feels').textContent=Math.round(fl)+'°';
+  }
+  const cc=f?.TotalCloudCover;
+  $('wx-cloud').textContent=(cc!==undefined&&!isNaN(cc))?Math.round(cc)+'%':'--';
+  updateAuroraNote();
 }
 
+/* ══════════════════════════════════════════════════════════
+   AURORA — NOAA SWPC planetary Kp (observed + forecast)
+══════════════════════════════════════════════════════════ */
+const A={kp:null,fcMax:null};
+function rowsOf(d){
+  // NOAA has used both [[header],[row]...] and [{...}] formats
+  if(!Array.isArray(d)) return [];
+  if(Array.isArray(d[0])){const h=d[0].map(s=>String(s).toLowerCase());return d.slice(1).map(r=>Object.fromEntries(h.map((k,i)=>[k,r[i]])));}
+  return d.map(o=>Object.fromEntries(Object.entries(o).map(([k,v])=>[k.toLowerCase(),v])));
+}
+function kpLevel(kp){
+  if(kp>=5) return ['Storm — excellent','var(--aurora)'];
+  if(kp>=4) return ['Very active','var(--aurora)'];
+  if(kp>=3) return ['Active — good chance','var(--aurora)'];
+  if(kp>=2) return ['Moderate — possible','var(--text)'];
+  return ['Quiet — low','var(--dim)'];
+}
 async function loadAurora(){
   try{
     const r=await fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json');
-    if(!r.ok) throw new Error(r.status);
-    const d=await r.json();
+    const rows=rowsOf(await r.json());
     let kp=NaN;
-    for(let i=d.length-1;i>=1;i--){
-      const v=parseFloat(d[i][1]);
-      if(!isNaN(v)){kp=v;break;}
+    for(let i=rows.length-1;i>=0;i--){const v=parseFloat(rows[i].kp??rows[i].kp_index);if(!isNaN(v)){kp=v;break;}}
+    if(isNaN(kp)) throw new Error('no Kp');
+    A.kp=kp;
+  }catch(e){console.warn('kp',e);}
+  try{
+    const r=await fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json');
+    const rows=rowsOf(await r.json());
+    const now=Date.now(),end=now+12*3600e3;
+    let mx=NaN;
+    for(const x of rows){
+      const t=Date.parse(String(x.time_tag).replace(' ','T')+(String(x.time_tag).endsWith('Z')?'':'Z'));
+      const v=parseFloat(x.kp);
+      if(t>=now-3*3600e3&&t<=end&&!isNaN(v)) mx=isNaN(mx)?v:Math.max(mx,v);
     }
-    if(isNaN(kp)) throw new Error('No valid Kp data');
-
-    const prob=Math.min(100,Math.round(Math.max(0,(kp-1.5)/7.5*100)));
-    const [,label,color]=kpLabel(kp);
-    const pct=Math.min(100,(kp/9)*100);
-
-    document.getElementById('aurora-kp-badge').textContent=`Kp ${kp.toFixed(1)}`;
-    document.getElementById('aurora-bar-fill').style.width=pct+'%';
-    document.getElementById('aurora-bar-fill').style.background=color;
-    document.getElementById('aurora-status').className='';
-    document.getElementById('aurora-status').textContent=label;
-    document.getElementById('aurora-status').style.color=color;
-    document.getElementById('aurora-prob').textContent=`Näkyvyystodennäköisyys ${prob}% (67.8°N)`;
-    const bs1kp=document.getElementById('bs1-kp');
-    if(bs1kp){bs1kp.textContent=kp.toFixed(1);bs1kp.style.color=color;}
-  }catch(e){
-    document.getElementById('aurora-status').className='data-error';
-    document.getElementById('aurora-status').textContent='Ei dataa';
-    console.error('Aurora:',e);
-  }
+    A.fcMax=isNaN(mx)?null:mx;
+  }catch(e){console.warn('kp fc',e);}
+  renderAurora();
+}
+function renderAurora(){
+  if(A.kp===null){$('aur-level').textContent='No data';return;}
+  const kp=A.kp,[label,color]=kpLevel(kp);
+  $('aur-kp-v').textContent=kp.toFixed(1);
+  $('aur-level').textContent=label;$('aur-level').style.color=color;
+  $('aur-scale').querySelectorAll('i').forEach((el,i)=>el.classList.toggle('on',i<Math.round(kp)));
+  $('aur-fc').textContent=A.fcMax!==null?`Next 12 h: up to Kp ${A.fcMax.toFixed(1)}`:'';
+  $('bs1-kp').textContent='Kp '+kp.toFixed(1);
+  updateAuroraNote();
+}
+function updateAuroraNote(){
+  const cc=W.now?.TotalCloudCover;
+  if(cc===undefined||isNaN(cc)){$('aur-note').textContent='Needs a clear, dark sky';return;}
+  $('aur-note').textContent=cc<30?'Sky mostly clear':cc<70?'Partly cloudy sky':'Cloudy — low visibility';
 }
 
-/* ══════════════════════════════════════════════
-   COMBINED REFRESH
-══════════════════════════════════════════════ */
-async function refresh(){
-  await Promise.all([loadWeather(),loadAurora()]);
+/* refresh schedule */
+loadObs();loadForecast();loadAurora();
+setInterval(loadObs,10*60e3);
+setInterval(loadAurora,10*60e3);
+setInterval(loadForecast,60*60e3);
+
+/* ══════════════════════════════════════════════════════════
+   CAMERAS — two YouTube players, double-buffered.
+   The hidden player loads the next camera; we swap only after
+   it reports PLAYING and has settled, so YouTube's play/pause
+   icon and spinner are never on screen.
+══════════════════════════════════════════════════════════ */
+const SETTLE_MS=1200, PRELOAD_MS=6000, LOAD_TIMEOUT=15000;
+const players=[null,null], ready=[false,false], settle=[null,null];
+let vis=0, curCam=0, nextCam=null, hiddenReady=false, swapDue=false, firstShown=false, loadTimer=null;
+
+$('cam-dots').innerHTML=CAMS.map(()=>'<i class="cam-dot"></i>').join('');
+function markCam(){
+  $('cam-name').textContent=CAMS[curCam].l;
+  $('cam-dots').querySelectorAll('.cam-dot').forEach((d,i)=>d.classList.toggle('on',i===curCam));
+  const bar=$('cam-progress');
+  bar.style.transition='none';bar.style.width='0';bar.offsetWidth;
+  bar.style.transition=`width ${CAM_INTERVAL}ms linear`;bar.style.width='100%';
 }
-refresh();
-loadForecast();
-setInterval(refresh,10*60*1000);
-setInterval(loadForecast,60*60*1000);
+const slot=i=>$('yt-slot-'+i);
+function show(i){slot(i).classList.add('show');slot(1-i).classList.remove('show');}
 
-/* ══════════════════════════════════════════════
-   YOUTUBE CAMERA
-══════════════════════════════════════════════ */
-let player=null, curCam=0, camTimer=null, progressTimer=null, pv=null;
-
-// Build dots
-const dotsWrap=document.getElementById('cam-dots');
-CAMS.forEach((_,i)=>{
-  const d=document.createElement('div');
-  d.className='cam-dot'+(i===0?' active':'');
-  dotsWrap.appendChild(d);
-});
-function updateDots(){
-  document.querySelectorAll('.cam-dot').forEach((d,i)=>d.classList.toggle('active',i===curCam));
+function cycle(){
+  swapDue=false;
+  setTimeout(()=>preload(curCam),Math.max(0,CAM_INTERVAL-PRELOAD_MS));
+  setTimeout(()=>{swapDue=true;swap();},CAM_INTERVAL);
 }
-
-function startProgress(){
-  const bar=document.getElementById('cam-progress');
-  bar.style.transition='none';
-  bar.style.width='0%';
-  // Force reflow
-  bar.offsetHeight;
-  bar.style.transition=`width ${CAM_INTERVAL}ms linear`;
-  bar.style.width='100%';
+function preload(after){
+  const h=1-vis;
+  if(!ready[h]) return setTimeout(()=>preload(after),500);
+  nextCam=(after+1)%CAMS.length;
+  if(nextCam===curCam) nextCam=(nextCam+1)%CAMS.length;
+  hiddenReady=false;clearTimeout(settle[h]);clearTimeout(loadTimer);
+  try{players[h].mute();players[h].loadVideoById(CAMS[nextCam].id);}catch(_){}
+  loadTimer=setTimeout(()=>{if(!hiddenReady) preload(nextCam);},LOAD_TIMEOUT); // offline → skip
 }
-
-function rotateCam(){
-  curCam=(curCam+1)%CAMS.length;
-  const cam=CAMS[curCam];
-  document.getElementById('cam-label').textContent=cam.l;
-  updateDots();
-  startProgress();
-  if(player&&player.loadVideoById){
-    player.loadVideoById(cam.id);
-  } else {
-    pv=cam.id;
-  }
+function swap(){
+  if(!swapDue||!hiddenReady) return;
+  const old=vis;
+  vis=1-vis;curCam=nextCam;nextCam=null;hiddenReady=false;
+  show(vis);markCam();
+  setTimeout(()=>{try{players[old].stopVideo();}catch(_){}},1500);
+  cycle();
 }
-
-window.onYouTubeIframeAPIReady=function(){
-  player=new YT.Player('yt-player',{
-    videoId:CAMS[0].id,
-    playerVars:{
-      autoplay:1,mute:1,controls:0,modestbranding:1,
-      rel:0,iv_load_policy:3,showinfo:0,disablekb:1,
-      playsinline:1,loop:0
-    },
+function onPlaying(i){
+  try{players[i].mute();}catch(_){}
+  clearTimeout(settle[i]);
+  settle[i]=setTimeout(()=>{
+    if(!firstShown&&i===vis){
+      firstShown=true;show(vis);$('cam-cover').classList.add('gone');markCam();cycle();
+    }else if(i!==vis&&nextCam!==null){
+      clearTimeout(loadTimer);hiddenReady=true;swap();
+    }
+  },SETTLE_MS);
+}
+function makePlayer(i,videoId){
+  return new YT.Player('yt-p'+i,{
+    videoId:videoId||undefined,width:'100%',height:'100%',
+    playerVars:{autoplay:videoId?1:0,mute:1,controls:0,modestbranding:1,rel:0,iv_load_policy:3,disablekb:1,fs:0,playsinline:1},
     events:{
-      onReady:function(e){
-        e.target.mute();
-        e.target.playVideo();
-        document.getElementById('cam-label').textContent=CAMS[0].l;
-        startProgress();
-        if(pv){e.target.loadVideoById(pv);pv=null;}
-        camTimer=setInterval(rotateCam,CAM_INTERVAL);
+      onReady:e=>{ready[i]=true;e.target.mute();if(videoId)e.target.playVideo();},
+      onStateChange:e=>{
+        const S=YT.PlayerState;
+        if(e.data===S.PLAYING) onPlaying(i);
+        if(i===vis&&(e.data===S.PAUSED||e.data===S.ENDED)) setTimeout(()=>{try{players[i].playVideo();}catch(_){}},200);
       },
-      onStateChange:function(e){
-        // Keep playing — auto-restart if paused/ended
-        if(e.data===YT.PlayerState.PAUSED||e.data===YT.PlayerState.ENDED){
-          setTimeout(()=>{try{player.playVideo();}catch(_){}},200);
-        }
-        if(e.data===YT.PlayerState.PLAYING){
-          try{player.mute();}catch(_){}
-        }
-      }
+      onError:()=>{if(i!==vis&&nextCam!==null) preload(nextCam);}
     }
   });
-};
-
-// Load YT API
-(function(){
-  const ys=document.createElement('script');
-  ys.src='https://www.youtube.com/iframe_api';
-  document.head.appendChild(ys);
-})();
-
-/* ══════════════════════════════════════════════
-   BANNER ROTATION
-══════════════════════════════════════════════ */
-const BSLIDES=document.querySelectorAll('.bslide');
-const BINTS=[14000,10000,8000];
-let bCur=0, bTimer=null;
-
-function rotateBanner(){
-  BSLIDES[bCur].classList.remove('active');
-  let next=(bCur+1)%BSLIDES.length, tries=0;
-  while(BSLIDES[next].dataset.skip==='1'&&tries++<BSLIDES.length)
-    next=(next+1)%BSLIDES.length;
-  bCur=next;
-  BSLIDES[bCur].classList.add('active');
-  bTimer=setTimeout(rotateBanner,BINTS[bCur]||10000);
 }
-bTimer=setTimeout(rotateBanner,BINTS[0]);
+window.onYouTubeIframeAPIReady=()=>{
+  players[0]=makePlayer(0,CAMS[0].id);
+  players[1]=makePlayer(1,null);
+  setTimeout(function chk(){              // first camera offline → try next
+    if(firstShown) return;
+    curCam=(curCam+1)%CAMS.length;
+    try{players[0].loadVideoById(CAMS[curCam].id);}catch(_){}
+    setTimeout(chk,LOAD_TIMEOUT);
+  },LOAD_TIMEOUT);
+};
+(()=>{const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';document.head.appendChild(s);})();
 
-/* ══════════════════════════════════════════════
-   QR CODES
-══════════════════════════════════════════════ */
-[
-  ['bq0','mailto:hello@oomf.fi'],
-  ['bq2','https://www.levi.fi/majoitu/'],
-].forEach(([id,url])=>{
-  try{
-    new QRCode(document.getElementById(id),{
-      text:url,width:52,height:52,
-      colorDark:'#002B5C',colorLight:'#fff',
-      correctLevel:QRCode.CorrectLevel.M
-    });
-  }catch(e){console.error('QR',id,e);}
-});
-
-/* ══════════════════════════════════════════════
-   FOOTER TICKER
-══════════════════════════════════════════════ */
-(function(){
-  const t=document.getElementById('footer-ticker');
-  // Duplicate for seamless loop
-  const full=FOOTER_TEXT+'   ··   '+FOOTER_TEXT;
-  t.textContent=full;
+/* ══════════════════════════════════════════════════════════
+   BANNER
+══════════════════════════════════════════════════════════ */
+const BS=[...document.querySelectorAll('.bs')], BT=[14000,10000,9000];
+let bi=0;
+(function rot(){
+  setTimeout(()=>{
+    BS[bi].classList.remove('on');
+    let n=(bi+1)%BS.length,k=0;
+    while(BS[n].dataset.skip==='1'&&k++<BS.length) n=(n+1)%BS.length;
+    bi=n;BS[bi].classList.add('on');rot();
+  },BT[bi]);
 })();
+try{
+  [['bq0','mailto:hello@oomf.fi'],['bq2','https://www.levi.fi/majoitu/']].forEach(([id,text])=>
+    new QRCode($(id),{text,width:64,height:64,colorDark:'#05080f',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}));
+}catch(e){console.warn('qr',e);}
+
+/* ══════════════════════════════════════════════════════════
+   TICKER — static items + optional live slope feed
+══════════════════════════════════════════════════════════ */
+let liveItems=[];
+function renderTicker(){
+  const items=[...liveItems.map(t=>`<span class="live">${t}</span>`),...TICKER.map(t=>`<span>${t}</span>`)].join('');
+  const el=$('ticker');
+  el.innerHTML=items+items;                       // duplicated for a seamless loop
+  requestAnimationFrame(()=>el.style.setProperty('--dur',(el.scrollWidth/2/70)+'s')); // ~70 px/s
+}
+async function loadSlopes(){
+  if(!SLOPE_FEED_URL) return;
+  try{
+    const d=await (await fetch(SLOPE_FEED_URL,{cache:'no-store'})).json();
+    const it=[];
+    if(d.slopesTotal) it.push(`Slopes open ${d.slopesOpen}/${d.slopesTotal}`);
+    if(d.liftsTotal)  it.push(`Lifts open ${d.liftsOpen}/${d.liftsTotal}`);
+    liveItems=it;renderTicker();
+  }catch(e){console.warn('slopes',e);}
+}
+renderTicker();loadSlopes();setInterval(loadSlopes,10*60e3);
 </script>
 </body>
 </html>
