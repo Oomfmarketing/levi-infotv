@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#05080f">
-<title>Levi Info TV</title>
+<title>Info TV</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
@@ -252,13 +252,12 @@ body.night #stars{opacity:1}
 .bs-p{font-size:17px;color:var(--dim);margin-top:3px}
 .bs-p b{color:var(--text);font-weight:600}
 .bs-qr{margin-left:auto;flex-shrink:0;background:#fff;padding:5px;border-radius:6px;line-height:0}
-#bs0{background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 14%,transparent),transparent 70%)}
-#bs1{background:linear-gradient(90deg,rgba(92,240,168,.14),transparent 70%)}
-#bs1 .bs-tag{background:var(--aurora)}
-#bs1-kp{margin-left:auto;font-family:var(--cond);font-size:56px;font-weight:600;color:var(--aurora)}
-#bs2{background:linear-gradient(90deg,rgba(255,195,90,.12),transparent 70%)}
-#bs2 .bs-tag{background:var(--sun)}
-#bs3{background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 10%,transparent),transparent 70%)}
+.bs.t-accent{background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 13%,transparent),transparent 70%)}
+.bs.t-aurora{background:linear-gradient(90deg,rgba(92,240,168,.14),transparent 70%)}
+.bs.t-aurora .bs-tag{background:var(--aurora)}
+.bs.t-sun{background:linear-gradient(90deg,rgba(255,195,90,.12),transparent 70%)}
+.bs.t-sun .bs-tag{background:var(--sun)}
+#bsaur-kp{margin-left:auto;font-family:var(--cond);font-size:56px;font-weight:600;color:var(--aurora)}
 
 /* ════════ FOOTER TICKER ════════ */
 #foot{
@@ -302,7 +301,7 @@ body.night #stars{opacity:1}
   #brand-meta{border:0;padding:0;gap:0}
   #brand>#logo{display:none}
   #brand-meta::before{
-    content:'LEVI';font-family:var(--cond);font-weight:700;font-size:30px;
+    content:attr(data-name);font-family:var(--cond);font-weight:700;font-size:30px;
     letter-spacing:.18em;line-height:1;color:var(--text);
   }
   #brand-sub{font-size:11px;letter-spacing:.2em;color:var(--accent);margin-top:4px;white-space:nowrap}
@@ -314,14 +313,18 @@ body.night #stars{opacity:1}
   #clock-date{font-size:11px;letter-spacing:.12em;margin:0 0 6px;color:var(--dim);white-space:nowrap}
 
   #m-pill{
-    display:flex;align-items:center;justify-content:center;gap:10px;
-    margin:0 16px 14px;padding:10px 16px;border-radius:999px;
+    display:flex;gap:6px;margin:0 16px 14px;padding:5px;border-radius:999px;
     border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);
-    background:color-mix(in srgb,var(--accent) 7%,transparent);
-    font-family:var(--cond);font-size:14px;font-weight:600;letter-spacing:.2em;
-    text-transform:uppercase;color:var(--text);
+    background:color-mix(in srgb,var(--accent) 6%,transparent);
   }
-  #m-pill svg{width:18px;height:18px;fill:none;stroke:var(--accent);stroke-width:1.8}
+  #m-pill a{
+    flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
+    padding:8px 10px;border-radius:999px;text-decoration:none;
+    font-family:var(--cond);font-size:13px;font-weight:600;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--dim);white-space:nowrap;
+  }
+  #m-pill a.on{background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--text)}
+  #m-pill svg{width:16px;height:16px;fill:none;stroke:var(--accent);stroke-width:1.8}
 
   /* camera */
   #camera{width:100%;aspect-ratio:16/9;height:auto;border-top:1px solid var(--line)}
@@ -395,7 +398,7 @@ body.night #stars{opacity:1}
   .bs-p{font-size:14px;margin-top:4px}
   .bs-qr{padding:4px;border-radius:6px}
   .bs-qr img,.bs-qr canvas{width:60px!important;height:60px!important}
-  #bs1-kp{font-size:34px}
+  #bsaur-kp{font-size:34px}
 
   #m-site{
     order:6;display:block;text-align:center;text-decoration:none;
@@ -417,26 +420,26 @@ body.night #stars{opacity:1}
 
   <header id="header">
     <div id="brand">
-      <svg id="mark" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22.5"/><path d="M24 9v30M11 16.5l26 15M11 31.5l26-15M24 9l-3.5 3.5M24 9l3.5 3.5M24 39l-3.5-3.5M24 39l3.5-3.5"/></svg>
-      <div id="logo">LEVI</div>
+      <svg id="mark" viewBox="0 0 48 48" aria-hidden="true"></svg>
+      <div id="logo"></div>
       <div id="brand-meta">
-        <div id="brand-sub">Lapland · Finland</div>
-        <div id="coords">67.8009°N · 24.8009°E</div>
+        <div id="brand-sub"></div>
+        <div id="coords"></div>
       </div>
     </div>
-    <div id="live-pill"><span id="live-dot"></span>Live from Levi Fell · 531 m</div>
+    <div id="live-pill"><span id="live-dot"></span><span id="live-txt"></span></div>
     <div id="clock">
       <div id="clock-time">--:--<span id="clock-sec">:--</span></div>
       <div id="clock-date">&nbsp;</div>
     </div>
   </header>
 
-  <div id="m-pill"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Levi · Kittilä · Lapland</div>
+  <nav id="m-pill"></nav>
 
   <section id="camera">
     <div class="yt-slot" id="yt-slot-0"><div id="yt-p0"></div></div>
     <div class="yt-slot" id="yt-slot-1"><div id="yt-p1"></div></div>
-    <div id="cam-cover">Levi live</div>
+    <div id="cam-cover">Live</div>
     <div id="cam-shield"></div>
     <div id="cam-fade"></div>
     <div id="cam-label">
@@ -449,7 +452,7 @@ body.night #stars{opacity:1}
 
   <aside id="side">
     <section class="sec off" id="wx">
-      <div class="kicker">Weather now <b>Kittilä Kenttärova</b></div>
+      <div class="kicker">Weather now <b id="wx-station"></b></div>
       <div id="wx-row">
         <svg id="wx-icon" viewBox="0 0 24 24"></svg>
         <div>
@@ -513,52 +516,20 @@ body.night #stars{opacity:1}
       </div>
     </section>
 
-    <div id="tag">#VISITLEVI</div>
+    <div id="tag"></div>
   </aside>
 
   <div id="banner">
-    <a class="bs on" id="bs0" href="https://laplandwinteractivities.com">
-      <span class="bs-tag">Activities</span>
-      <div>
-        <div class="bs-h">Husky safaris, northern lights &amp; snowmobile tours</div>
-        <div class="bs-p">Find, compare and book activities in Levi — <b>laplandwinteractivities.com</b></div>
-      </div>
-      <div class="bs-qr" id="bq0"></div>
-    </a>
-    <div class="bs" id="bs1" data-skip="1">
-      <span class="bs-tag">Tonight</span>
-      <div>
-        <div class="bs-h">Northern lights season is on</div>
-        <div class="bs-p">Look north on clear, dark evenings — away from city lights</div>
-      </div>
-      <div id="bs1-kp"></div>
-    </div>
-    <a class="bs" id="bs2" href="https://elamysdmc.com">
-      <span class="bs-tag">Groups &amp; companies</span>
-      <div>
-        <div class="bs-h">Bring your group to Lapland</div>
-        <div class="bs-p">Incentives, meetings &amp; events in Levi and across Finland — <b>elamysdmc.com</b></div>
-      </div>
-      <div class="bs-qr" id="bq2"></div>
-    </a>
-    <a class="bs" id="bs3" href="mailto:hello@oomf.fi">
-      <span class="bs-tag">Advertise here</span>
-      <div>
-        <div class="bs-h">Interested in visibility on this screen?</div>
-        <div class="bs-p">Book this spot — contact <b>hello@oomf.fi</b></div>
-      </div>
-      <div class="bs-qr" id="bq3"></div>
-    </a>
     <div id="b-prog"></div>
   </div>
 
-  <a id="m-site" href="https://www.levi.fi/">
-    <div id="m-site-h">LEVI.FI</div>
-    <div id="m-site-p">Tickets · Slopes · Events</div>
+  <a id="m-site" href="#">
+    <div id="m-site-h"></div>
+    <div id="m-site-p"></div>
   </a>
 
   <footer id="foot">
-    <div id="foot-label">Levi</div>
+    <div id="foot-label"></div>
     <div id="foot-track"><div id="ticker"></div></div>
   </footer>
 </div>
@@ -569,35 +540,162 @@ body.night #stars{opacity:1}
    EDIT HERE
 ══════════════════════════════════════════════════════════ */
 
-// Footer ticker — static text, edit freely.
-const TICKER = [
-  'Welcome to Levi · Tervetuloa Leviin',
-  'Live cameras from around Levi Fell',
-  'Slope & lift status: levi.fi',
-  'Northern lights: look north on clear, dark evenings',
-  'Emergency number 112',
-  'Share your day: #visitlevi',
-  'Advertise on this screen: hello@oomf.fi',
-];
+// Each location has its own settings. Pick one with ?loc=levi, ?loc=yllas or ?loc=helsinki
+const LOCS = {
+  levi: {
+    name:'Levi', sub:'Lapland · Finland', lat:67.8009, lon:24.8009,
+    live:'Live from Levi Fell · 531 m', pill:'Levi',
+    fmisid:101886, station:'Kittilä Kenttärova', place:'Kittil%C3%A4',
+    tag:'#VISITLEVI', site:{h:'LEVI.FI', p:'Tickets · Slopes · Events', url:'https://www.levi.fi/'},
+    // Kp needed at this latitude: [possible, good, very active, storm]
+    kp:[2,3,4,5],
+    mark:'<circle cx="24" cy="24" r="22.5"/><path d="M24 9v30M11 16.5l26 15M11 31.5l26-15M24 9l-3.5 3.5M24 9l3.5 3.5M24 39l-3.5-3.5M24 39l3.5-3.5"/>',
+    cams:[
+      {id:'LwihxyJ4V20', l:'Levi Center — Zero Point'},
+      {id:'89vRm9bb9_c', l:'South Point — South Slopes'},
+      {id:'X7tdyNFpp1g', l:'Village View'},
+      {id:'gehi4YiVYdY', l:'Levi Black — Gondola Area'},
+      {id:'tgCjNC-813A', l:'Levi Six — NE Slopes'},
+      {id:'jQrqWYe5Cn4', l:'Levi West — West Slopes'},
+      {id:'Wr9b5aYA4mI', l:'Glacier Express'},
+      {id:'eXDCi75TjM8', l:'Top of Levi — Summit 531 m'},
+      {id:'hWN0iCg8pDY', l:'Lifts 13 & 14 — North'},
+      {id:'mupuSRKkL_M', l:'South Slopes — Leevilandia'},
+    ],
+    ticker:[
+      'Welcome to Levi · Tervetuloa Leviin',
+      'Live cameras from around Levi Fell',
+      'Slope & lift status: levi.fi',
+      'Northern lights: look north on clear, dark evenings',
+      'Emergency number 112',
+      'Share your day: #visitlevi',
+      'Advertise on this screen: hello@oomf.fi',
+    ],
+    ads:[
+      {tag:'Activities', t:'accent', url:'https://laplandwinteractivities.com',
+       h:'Husky safaris, northern lights &amp; snowmobile tours',
+       p:'Find, compare and book activities in Levi — <b>laplandwinteractivities.com</b>'},
+      'aurora',
+      {tag:'Groups &amp; companies', t:'sun', url:'https://elamysdmc.com',
+       h:'Bring your group to Lapland',
+       p:'Incentives, meetings &amp; events in Levi and across Finland — <b>elamysdmc.com</b>'},
+      {tag:'Advertise here', t:'accent', url:'mailto:hello@oomf.fi',
+       h:'Interested in visibility on this screen?',
+       p:'Book this spot — contact <b>hello@oomf.fi</b>'},
+    ],
+  },
+  yllas: {
+    name:'Ylläs', sub:'Lapland · Finland', lat:67.5644, lon:24.2244,
+    live:'Live from Ylläs Fell · 719 m', pill:'Ylläs',
+    fmisid:null, station:'FMI forecast', place:'Kolari',   // no nearby obs station → forecast
+    tag:'#YLLAS', site:{h:'YLLAS.FI', p:'Tickets · Slopes · Events', url:'https://www.yllas.fi/'},
+    kp:[2,3,4,5],
+    mark:'<circle cx="24" cy="24" r="22.5"/><path d="M8.5 33.5l9.5-13.5 5 6.5 6-9 10.5 16z"/><path d="M15.4 24.4l2.6-1.4 2.2 2M26.6 21.6l2.4-1.6 2.6 2.4"/>',
+    cams:[
+      {id:'PeLTbbI2i6U', l:'Gondola Station — Ylläs South'},
+      {id:'FY4GLYiZieE', l:'Ylläs Express Chairlift'},
+      {id:'5Oda5wfGpvw', l:'Summit Camera — 719 m'},
+    ],
+    ticker:[
+      'Welcome to Ylläs · Tervetuloa Ylläkselle',
+      'Live cameras from Ylläs Ski Resort',
+      'Slope & lift status: ski.yllas.fi',
+      'Northern lights: look north on clear, dark evenings',
+      'Emergency number 112',
+      'Advertise on this screen: hello@oomf.fi',
+    ],
+    ads:[
+      {tag:'Activities', t:'accent', url:'https://laplandwinteractivities.com',
+       h:'Husky safaris, northern lights &amp; snowmobile tours',
+       p:'Find, compare and book activities across Lapland — <b>laplandwinteractivities.com</b>'},
+      'aurora',
+      {tag:'Groups &amp; companies', t:'sun', url:'https://elamysdmc.com',
+       h:'Bring your group to Lapland',
+       p:'Incentives, meetings &amp; events in Ylläs, Levi and across Finland — <b>elamysdmc.com</b>'},
+      {tag:'Advertise here', t:'accent', url:'mailto:hello@oomf.fi',
+       h:'Interested in visibility on this screen?',
+       p:'Book this spot — contact <b>hello@oomf.fi</b>'},
+    ],
+  },
+  helsinki: {
+    name:'Helsinki', sub:'Capital of Finland', lat:60.1699, lon:24.9384,
+    live:'Live from Helsinki · harbour &amp; city', pill:'Helsinki',
+    fmisid:100971, station:'Helsinki Kaisaniemi', place:'Helsinki',
+    tag:'#MYHELSINKI', site:{h:'MYHELSINKI.FI', p:'See · Do · Eat', url:'https://www.myhelsinki.fi/'},
+    kp:[4,5,6,7],
+    mark:'<circle cx="24" cy="24" r="22.5"/><path d="M11 19.5c2.2-2 4.3-2 6.5 0s4.3 2 6.5 0 4.3-2 6.5 0 4.3 2 6.5 0M11 25.5c2.2-2 4.3-2 6.5 0s4.3 2 6.5 0 4.3-2 6.5 0 4.3 2 6.5 0M11 31.5c2.2-2 4.3-2 6.5 0s4.3 2 6.5 0 4.3-2 6.5 0 4.3 2 6.5 0"/>',
+    cams:[
+      {id:'LMZQ7eFhm58', l:'Market Square &amp; City Centre'},
+      {id:'CvOB-Is_yYU', l:'South Harbour — Port of Helsinki'},
+      {id:'6hPWq2IG08M', l:'West Harbour — South'},
+      {id:'JnJhFYhIjFs', l:'West Harbour — North'},
+    ],
+    ticker:[
+      'Welcome to Helsinki · Tervetuloa Helsinkiin',
+      'Live cameras from the city centre and the Port of Helsinki',
+      'Heading north? Lapland activities: laplandwinteractivities.com',
+      'Emergency number 112',
+      'Share your day: #myhelsinki',
+      'Advertise on this screen: hello@oomf.fi',
+    ],
+    ads:[
+      {tag:'Groups &amp; companies', t:'sun', url:'https://elamysdmc.com',
+       h:'Bring your group to the happiest country in the world',
+       p:'Incentives, congresses &amp; events in Helsinki and across Finland — <b>elamysdmc.com</b>'},
+      'aurora',
+      {tag:'Lapland', t:'accent', url:'https://laplandwinteractivities.com',
+       h:'Heading north to Lapland?',
+       p:'Book husky safaris, northern lights &amp; snowmobile tours — <b>laplandwinteractivities.com</b>'},
+      {tag:'Advertise here', t:'accent', url:'mailto:hello@oomf.fi',
+       h:'Interested in visibility on this screen?',
+       p:'Book this spot — contact <b>hello@oomf.fi</b>'},
+    ],
+  },
+};
+const LOC_KEY = (new URLSearchParams(location.search).get('loc')||'levi').toLowerCase().replace('ä','a');
+const LOC = LOCS[LOC_KEY] || LOCS.levi;
 
-// Optional live slope/lift feed (see README). Leave empty to disable.
+// Optional live slope/lift feed (Levi, see README). Leave empty to disable.
 // Expected JSON: {"slopesOpen":12,"slopesTotal":43,"liftsOpen":8,"liftsTotal":26}
 const SLOPE_FEED_URL = '';
 
-const LAT = 67.8009, LON = 24.8009;
+const TICKER = LOC.ticker;
+const LAT = LOC.lat, LON = LOC.lon;
 const CAM_INTERVAL = 15000;
-const CAMS = [
-  {id:'LwihxyJ4V20', l:'Levi Center — Zero Point'},
-  {id:'89vRm9bb9_c', l:'South Point — South Slopes'},
-  {id:'X7tdyNFpp1g', l:'Village View'},
-  {id:'gehi4YiVYdY', l:'Levi Black — Gondola Area'},
-  {id:'tgCjNC-813A', l:'Levi Six — NE Slopes'},
-  {id:'jQrqWYe5Cn4', l:'Levi West — West Slopes'},
-  {id:'Wr9b5aYA4mI', l:'Glacier Express'},
-  {id:'eXDCi75TjM8', l:'Top of Levi — Summit 531 m'},
-  {id:'hWN0iCg8pDY', l:'Lifts 13 & 14 — North'},
-  {id:'mupuSRKkL_M', l:'South Slopes — Leevilandia'},
-];
+const CAMS = LOC.cams;
+
+/* ══════════════════════════════════════════════════════════
+   APPLY LOCATION — texts, banners, mobile switch
+══════════════════════════════════════════════════════════ */
+(function applyLoc(){
+  const q=id=>document.getElementById(id);
+  document.title=`${LOC.name} Info TV`;
+  q('mark').innerHTML=LOC.mark;
+  q('logo').textContent=LOC.name.toUpperCase();
+  q('brand-meta').dataset.name=LOC.name.toUpperCase();
+  q('brand-sub').textContent=LOC.sub;
+  const ns=(v,p,n)=>`${Math.abs(v).toFixed(4)}°${v>=0?p:n}`;
+  q('coords').textContent=`${ns(LOC.lat,'N','S')} · ${ns(LOC.lon,'E','W')}`;
+  q('live-txt').innerHTML=LOC.live;
+  q('wx-station').textContent=LOC.station;
+  q('tag').textContent=LOC.tag;
+  q('foot-label').textContent=LOC.name;
+  q('m-site').href=LOC.site.url;
+  q('m-site-h').textContent=LOC.site.h;
+  q('m-site-p').textContent=LOC.site.p;
+  const pin='<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
+  q('m-pill').innerHTML=Object.entries(LOCS).map(([k,l])=>
+    `<a href="?loc=${k}" class="${l===LOC?'on':''}">${l===LOC?pin:''}${l.pill}</a>`).join('');
+  q('banner').insertAdjacentHTML('afterbegin',LOC.ads.map((ad,i)=>ad==='aurora'
+    ?`<div class="bs t-aurora" id="bs-aur" data-skip="1"><span class="bs-tag">Tonight</span><div>
+        <div class="bs-h">Northern lights season is on</div>
+        <div class="bs-p">Look north on clear, dark evenings — away from city lights</div></div>
+        <div id="bsaur-kp"></div></div>`
+    :`<a class="bs t-${ad.t}" href="${ad.url}"><span class="bs-tag">${ad.tag}</span><div>
+        <div class="bs-h">${ad.h}</div><div class="bs-p">${ad.p}</div></div>
+        <div class="bs-qr" data-qr="${ad.url}"></div></a>`).join(''));
+  q('banner').querySelector('.bs').classList.add('on');
+})();
 
 /* ══════════════════════════════════════════════════════════
    LAYOUT: scale TV canvas, or leave it fluid on phones
@@ -732,7 +830,7 @@ function updateTheme(){
   const dark=SUN.elev<-6;                       // past civil twilight
   AUR_SEASON=inSeason;
   $('aur').classList.toggle('off',!inSeason||A.kp===null);
-  $('bs1').dataset.skip=(inSeason&&dark&&A.kp!==null)?'':'1';
+  $('bs-aur').dataset.skip=(inSeason&&dark&&A.kp!==null&&A.kp>=LOC.kp[0])?'':'1';
   if(inSeason){
     if(dark){$('aur-dark').textContent='Dark enough now';$('sky-dark').textContent='Dark now';}
     else{
@@ -791,7 +889,7 @@ function setIcon(svg,kind){
 }
 
 /* ══════════════════════════════════════════════════════════
-   FMI — observations (fmisid 101886) + forecast for Levi
+   FMI — observations (LOC.fmisid) + forecast for LOC
 ══════════════════════════════════════════════════════════ */
 const FMI='https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=';
 function parseFmi(xml){
@@ -806,9 +904,10 @@ function parseFmi(xml){
 const W={obs:null,now:null};   // latest observation, current forecast hour
 
 async function loadObs(){
+  if(!LOC.fmisid){renderNow();return;}
   try{
     const start=new Date(Date.now()-3*3600e3).toISOString().slice(0,19)+'Z';
-    const r=await fetch(`${FMI}fmi::observations::weather::simple&fmisid=101886&parameters=temperature,windspeedms,winddirection&starttime=${start}`);
+    const r=await fetch(`${FMI}fmi::observations::weather::simple&fmisid=${LOC.fmisid}&parameters=temperature,windspeedms,winddirection&starttime=${start}`);
     if(!r.ok) throw new Error(r.status);
     const o={};
     for(const x of parseFmi(await r.text())) if(!isNaN(x.v)) o[x.p]=x.v;   // ascending → keeps latest valid
@@ -820,12 +919,12 @@ async function loadObs(){
 
 async function loadForecast(){
   try{
-    const q='fmi::forecast::edited::weather::scandinavia::point::simple&parameters=Temperature,WeatherSymbol3,TotalCloudCover&timestep=60'
+    const q='fmi::forecast::edited::weather::scandinavia::point::simple&parameters=Temperature,WeatherSymbol3,TotalCloudCover,WindSpeedMS,WindDirection&timestep=60'
       +'&starttime='+new Date(Math.floor(Date.now()/3600e3)*3600e3).toISOString().slice(0,19)+'Z'
       +'&endtime='+new Date(Date.now()+6*86400e3).toISOString().slice(0,19)+'Z';
     let r=await fetch(`${FMI}${q}&latlon=${LAT},${LON}`);
     let rows=r.ok?parseFmi(await r.text()):[];
-    if(!rows.length){ r=await fetch(`${FMI}${q}&place=Kittil%C3%A4`); rows=r.ok?parseFmi(await r.text()):[]; }
+    if(!rows.length){ r=await fetch(`${FMI}${q}&place=${LOC.place}`); rows=r.ok?parseFmi(await r.text()):[]; }
     if(!rows.length) throw new Error('no forecast');
 
     const hours={};
@@ -877,7 +976,8 @@ function renderNow(){
   const [kind,desc]=hasSym?wxKind(f.WeatherSymbol3,night):['',''];
   $('wx-icon').classList.toggle('off',!hasSym);
   if(hasSym) setIcon($('wx-icon'),kind);
-  const ws=o?.windspeedms, wd=o?.winddirection;
+  const ws=ok(o?.windspeedms)?o.windspeedms:f?.WindSpeedMS;
+  const wd=ok(o?.winddirection)?o.winddirection:f?.WindDirection;
   const dir=ok(wd)?['N','NE','E','SE','S','SW','W','NW'][Math.round(wd/45)%8]:'';
   const descTxt=[desc,ok(ws)&&dir?`${dir} wind`:''].filter(Boolean).join(' · ');
   $('wx-desc').textContent=descTxt;
@@ -921,11 +1021,12 @@ function rowsOf(d){
   return d.map(o=>Object.fromEntries(Object.entries(o).map(([k,v])=>[k.toLowerCase(),v])));
 }
 function kpLevel(kp){
-  if(kp>=5) return ['Storm — excellent','var(--aurora)'];
-  if(kp>=4) return ['Very active','var(--aurora)'];
-  if(kp>=3) return ['Active — good chance','var(--aurora)'];
-  if(kp>=2) return ['Moderate — possible','var(--text)'];
-  return ['Quiet — low','var(--dim)'];
+  const [poss,good,act,storm]=LOC.kp;           // thresholds depend on latitude
+  if(kp>=storm) return ['Storm — excellent','var(--aurora)'];
+  if(kp>=act)   return ['Very active','var(--aurora)'];
+  if(kp>=good)  return ['Active — good chance','var(--aurora)'];
+  if(kp>=poss)  return ['Possible','var(--text)'];
+  return [LOC.lat<64?'Unlikely this far south':'Quiet — low','var(--dim)'];
 }
 async function loadAurora(){
   try{
@@ -952,13 +1053,15 @@ async function loadAurora(){
 }
 function renderAurora(){
   $('aur').classList.toggle('off',!AUR_SEASON||A.kp===null);
-  if(A.kp===null){$('bs1').dataset.skip='1';return;}
+  if(A.kp===null){$('bs-aur').dataset.skip='1';return;}
   const kp=A.kp,[label,color]=kpLevel(kp);
   $('aur-kp-v').textContent=kp.toFixed(1);
   $('aur-level').textContent=label;$('aur-level').style.color=color;
+  $('aur-kp').style.color=color;
+  if(kp<LOC.kp[0]) $('bs-aur').dataset.skip='1';   // not worth advertising here tonight
   $('aur-scale').querySelectorAll('i').forEach((el,i)=>el.classList.toggle('on',i<Math.round(kp)));
   $('aur-fc').textContent=A.fcMax!==null?`Next 12 h: up to Kp ${A.fcMax.toFixed(1)}`:'';
-  $('bs1-kp').textContent='Kp '+kp.toFixed(1);
+  $('bsaur-kp').textContent='Kp '+kp.toFixed(1);
   updateAuroraNote();
 }
 function updateAuroraNote(){
@@ -1057,7 +1160,7 @@ window.onYouTubeIframeAPIReady=()=>{
 /* ══════════════════════════════════════════════════════════
    BANNER
 ══════════════════════════════════════════════════════════ */
-const BS=[...document.querySelectorAll('.bs')], BT=[12000,10000,12000,10000];
+const BS=[...document.querySelectorAll('.bs')], BT=BS.map(el=>el.id==='bs-aur'?10000:12000);
 let bi=0;
 (function rot(){
   setTimeout(()=>{
@@ -1074,8 +1177,8 @@ function bprog(){
 }
 bprog();
 try{
-  [['bq0','https://laplandwinteractivities.com'],['bq2','https://elamysdmc.com'],['bq3','mailto:hello@oomf.fi']].forEach(([id,text])=>
-    new QRCode($(id),{text,width:64,height:64,colorDark:'#05080f',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}));
+  document.querySelectorAll('[data-qr]').forEach(el=>
+    new QRCode(el,{text:el.dataset.qr,width:64,height:64,colorDark:'#05080f',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}));
 }catch(e){console.warn('qr',e);}
 
 /* ══════════════════════════════════════════════════════════

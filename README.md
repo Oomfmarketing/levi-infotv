@@ -3,14 +3,20 @@
 Levi Info TV — a single HTML file (`levi-infotv.html`) for 1920×1080 screens.
 It scales to any TV and switches to a scrolling mobile layout on phones (≤ 900 px wide).
 
-Live: https://oomfmarketing.github.io/levi-infotv/levi-infotv.html
+Locations (pick with `?loc=`):
+
+- Levi: https://oomfmarketing.github.io/levi-infotv/levi-infotv.html?loc=levi
+- Ylläs: https://oomfmarketing.github.io/levi-infotv/levi-infotv.html?loc=yllas
+- Helsinki: https://oomfmarketing.github.io/levi-infotv/levi-infotv.html?loc=helsinki
+
+Picker page: https://oomfmarketing.github.io/levi-infotv/
 
 ## Data sources (all free, no API keys)
 
 | What | Source |
 |---|---|
-| Weather now | FMI observations, station `fmisid=101886` (Kittilä Kenttärova) |
-| Forecast, cloud cover | FMI forecast for 67.8009 N, 24.8009 E |
+| Weather now | FMI observations: Levi `fmisid=101886`, Helsinki Kaisaniemi `100971`; Ylläs uses the FMI forecast for the current hour |
+| Forecast, cloud cover | FMI forecast for the location's coordinates |
 | Northern lights | NOAA SWPC planetary Kp + Kp forecast |
 | Sunrise / sunset / night mode | Calculated in the browser |
 | Cameras | Levi YouTube live streams (two players, crossfaded) |
@@ -19,8 +25,8 @@ Live: https://oomfmarketing.github.io/levi-infotv/levi-infotv.html
 
 At the top of the `<script>` block:
 
-- `TICKER` holds the footer ticker lines. Edit freely.
-- `CAMS` holds the camera list.
+- `LOCS` holds every location: name, coordinates, FMI station, cameras,
+  ticker lines and ad banners. Add a new location by copying one block.
 - `SLOPE_FEED_URL` is an optional live slope and lift feed (see below).
 
 ## Slope & lift status in the ticker

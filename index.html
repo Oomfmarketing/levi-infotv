@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05080f">
+<title>Info TV</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#05080f;--line:rgba(255,255,255,.09);--text:#f2f5f9;--dim:rgba(232,240,248,.62);--accent:#5fb4ff;--sun:#ffc35a}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  min-height:100vh;color:var(--text);font-family:'Barlow',system-ui,sans-serif;
+  background:radial-gradient(900px 600px at 80% -10%,#0b1a33,transparent 70%),var(--ink);
+  padding:calc(40px + env(safe-area-inset-top)) 16px 40px;
+  display:flex;flex-direction:column;align-items:center;
+}
+h1{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:34px;letter-spacing:.18em}
+p.lead{color:var(--dim);margin:8px 0 28px;text-align:center}
+.grid{display:grid;gap:12px;width:100%;max-width:720px}
+@media(min-width:640px){.grid{grid-template-columns:repeat(3,1fr)}}
+a.loc{
+  display:block;text-decoration:none;color:inherit;
+  border:1px solid var(--line);border-radius:14px;padding:22px 20px;
+  background:rgba(255,255,255,.03);transition:border-color .2s,background .2s;
+}
+a.loc:hover{border-color:var(--accent);background:rgba(95,180,255,.07)}
+.n{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:28px;letter-spacing:.14em;text-transform:uppercase}
+.s{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-top:2px}
+.c{font-size:14px;color:var(--dim);margin-top:12px}
+.u{font-family:ui-monospace,monospace;font-size:12px;color:var(--dim);margin-top:10px;word-break:break-all}
+footer{margin-top:32px;font-size:13px;color:var(--dim);text-align:center}
+footer a{color:var(--sun);text-decoration:none}
+</style>
+</head>
+<body>
+  <h1>INFO TV</h1>
+  <p class="lead">Choose a location. On a TV, open the location's link directly.</p>
+  <div class="grid">
+    <a class="loc" href="levi-infotv.html?loc=levi">
+      <div class="n">Levi</div><div class="s">Lapland</div>
+      <div class="c">10 live cameras</div>
+      <div class="u">levi-infotv.html?loc=levi</div>
+    </a>
+    <a class="loc" href="levi-infotv.html?loc=yllas">
+      <div class="n">Ylläs</div><div class="s">Lapland</div>
+      <div class="c">3 live cameras</div>
+      <div class="u">levi-infotv.html?loc=yllas</div>
+    </a>
+    <a class="loc" href="levi-infotv.html?loc=helsinki">
+      <div class="n">Helsinki</div><div class="s">Capital of Finland</div>
+      <div class="c">4 live cameras</div>
+      <div class="u">levi-infotv.html?loc=helsinki</div>
+    </a>
+  </div>
+  <footer>Advertise on these screens: <a href="mailto:hello@oomf.fi">hello@oomf.fi</a></footer>
+</body>
+</html>
