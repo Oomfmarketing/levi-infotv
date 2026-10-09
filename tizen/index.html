@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920">
+<title>LeviTV</title>
+<script src="$WEBAPIS/webapis/webapis.js"></script>
+<style>
+  html,body{margin:0;height:100%;background:#05080f;color:#fff;font-family:sans-serif;overflow:hidden}
+  .c{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+  .w{font-size:96px;font-weight:800;letter-spacing:.08em}
+  .w b{color:#5fb4ff;font-weight:800}.w i{color:#788ca5;font-style:normal;font-size:.6em;letter-spacing:.02em}
+  .t{font-size:32px;color:#a0b2c6;margin:10px 0 60px}
+  .s{width:64px;height:64px;border-radius:50%;border:6px solid rgba(255,255,255,.2);border-top-color:#fff;animation:r 1s linear infinite}
+  @keyframes r{to{transform:rotate(360deg)}}
+  #m{font-size:28px;color:#a0b2c6;margin-top:40px;min-height:34px}
+</style>
+</head>
+<body>
+<div class="c">
+  <div class="w">LEVI<b>TV</b><i>.com</i></div>
+  <div class="t">your real-time view of Levi</div>
+  <div class="s"></div>
+  <div id="m"></div>
+</div>
+<script>
+/* LeviTV for Samsung TV (Tizen 4+).
+   This start-up screen keeps the TV from going to its screen saver, checks the
+   connection and opens the live page. Location, layout and the settings menu
+   (OK button) live on the page itself; Left / Right change the camera. */
+var PAGE = 'https://levitv.com/tv.html?app=tizen';
+try {
+  webapis.appcommon.setScreenSaver(webapis.appcommon.AppCommonScreenSaverState.SCREEN_SAVER_OFF);
+} catch (e) {}
+try { // remote keys that are not delivered to apps by default
+  ['MediaPlay', 'MediaPause', 'MediaPlayPause', 'MediaFastForward', 'MediaRewind'].forEach(function (k) {
+    try { tizen.tvinputdevice.registerKey(k); } catch (e) {}
+  });
+} catch (e) {}
+document.addEventListener('keydown', function (e) {
+  if (e.keyCode === 10009) { try { tizen.application.getCurrentApplication().exit(); } catch (x) {} }
+});
+function go() {
+  var x = new XMLHttpRequest();
+  x.open('GET', 'https://levitv.com/config.js?t=' + Date.now());
+  x.timeout = 15000;
+  x.onload = function () { location.href = PAGE; };
+  x.onerror = x.ontimeout = function () {
+    document.getElementById('m').textContent = 'No connection — retrying in 30 seconds…';
+    setTimeout(go, 30000);
+  };
+  x.send();
+}
+// Back from the live page lands here → leave the app
+var back = false;
+try { back = sessionStorage.getItem('opened') === '1'; sessionStorage.setItem('opened', '1'); } catch (e) {}
+if (back) { try { tizen.application.getCurrentApplication().exit(); } catch (e) { setTimeout(go, 400); } }
+else setTimeout(go, 400);
+</script>
+</body>
+</html>

@@ -69,7 +69,7 @@ body{
 }
 
 /* stars, only at night */
-#stars{position:fixed;inset:0;pointer-events:none;opacity:0;transition:opacity 2s}
+#stars{position:fixed;top:0;right:0;bottom:0;left:0;pointer-events:none;opacity:0;transition:opacity 2s}
 body.night #stars{opacity:1}
 #stars{
   background-image:
@@ -166,7 +166,7 @@ body.night #stars{opacity:1}
 .yt-slot.fading{opacity:0;transition:opacity .9s ease}
 .yt-slot iframe{width:100%;height:100%;border:0;pointer-events:none}
 #cam-cover{
-  position:absolute;inset:0;z-index:2;background:#000;
+  position:absolute;top:0;right:0;bottom:0;left:0;z-index:2;background:#000;
   display:flex;align-items:center;justify-content:center;
   font-family:var(--cond);font-size:18px;letter-spacing:.4em;
   text-transform:uppercase;color:var(--muted);transition:opacity .9s;
@@ -178,7 +178,7 @@ body.night #stars{opacity:1}
 @keyframes camspin{to{transform:rotate(360deg)}}
 #cam-cover.gone{opacity:0}
 #cam-cover.gone::after{animation:none}
-#cam-shield{position:absolute;inset:0;z-index:3}
+#cam-shield{position:absolute;top:0;right:0;bottom:0;left:0;z-index:3}
 #cam-fade{
   position:absolute;left:0;right:0;bottom:0;height:140px;z-index:3;
   background:linear-gradient(transparent,rgba(0,0,0,.65));pointer-events:none;
@@ -268,7 +268,7 @@ body.night #stars{opacity:1}
 /* ════════ BANNER ════════ */
 #banner{grid-column:1;grid-row:3;position:relative;overflow:hidden;border-top:1px solid var(--line)}
 .bs{
-  position:absolute;inset:0;display:flex;align-items:center;gap:28px;
+  position:absolute;top:0;right:0;bottom:0;left:0;display:flex;align-items:center;gap:28px;
   padding:0 36px;opacity:0;transition:opacity .8s;text-decoration:none;color:inherit;
 }
 .bs.on{opacity:1}
@@ -561,10 +561,24 @@ html.full,html.full body{cursor:none}
 }
 </style>
 <script>
+/* older TV browsers (Samsung Tizen, LG webOS) */
+if(!Object.fromEntries)Object.fromEntries=function(a){var o={};Array.from(a).forEach(function(p){o[p[0]]=p[1];});return o;};
 /* ?view=full → full-screen camera layout; ?tv=1 → classic TV layout even on narrow screens.
    Both views always use the 1920×1080 canvas, so the mobile layout is removed. */
 (function(){
-  var q=new URLSearchParams(location.search), v=(q.get('view')||'').toLowerCase();
+  var q=new URLSearchParams(location.search);
+  // Smart-TV apps (Samsung Tizen, LG webOS) open the page with only ?app=…;
+  // location, layout and screen name come from the settings saved on the TV.
+  var app=(q.get('app')||'').toLowerCase();
+  if(app==='tizen'||app==='webos'){
+    var P={}; try{P=JSON.parse(localStorage.getItem('levitv.app')||'{}');}catch(e){}
+    if(!P.screen){P.screen=app+'-'+Math.random().toString(36).slice(2,8);try{localStorage.setItem('levitv.app',JSON.stringify(P));}catch(e){}}
+    var want={loc:P.loc||'levi',view:P.view||'full',screen:P.screen}, ch=false;
+    for(var k in want) if(!q.get(k)){q.set(k,want[k]);ch=true;}
+    if(P.debug&&!q.has('debug')){q.set('debug','1');ch=true;}
+    if(ch){location.replace(location.pathname+'?'+q.toString());return;}
+  }
+  var v=(q.get('view')||'').toLowerCase();
   var full=v==='full', tv=full||v==='tv'||q.has('tv');
   // TV / full-screen views are for displays, not search results
   if(tv){ var r=document.createElement('meta'); r.name='robots'; r.content='noindex,follow'; document.head.appendChild(r); }
@@ -1394,7 +1408,57 @@ window.levitvSkip=function(dir){
 addEventListener('hashchange',()=>{
   const m=location.hash.match(/cam=(-?1)_/); if(m) window.levitvSkip(+m[1]);
 });
+/* Settings menu for smart-TV apps (?app=tizen|webos): OK opens it, Up/Down moves,
+   OK changes, Back closes. Settings are saved on the TV (localStorage). */
+const TVAPP=(new URLSearchParams(location.search).get('app')||'').toLowerCase();
+const tvMenu=(()=>{
+  if(TVAPP!=='tizen'&&TVAPP!=='webos') return null;
+  let P={}; try{P=JSON.parse(localStorage.getItem('levitv.app')||'{}');}catch(_){}
+  const start=JSON.stringify(P);
+  const LOCN={levi:'Levi',yllas:'Ylläs',helsinki:'Helsinki'}, VIEWN={full:'Full screen',tv:'Info TV'};
+  const cyc=(o,v)=>{const k=Object.keys(o);return k[(k.indexOf(v)+1)%k.length];};
+  const items=[
+    {l:'Location', v:()=>LOCN[P.loc||'levi'], go:()=>{P.loc=cyc(LOCN,P.loc||'levi');}},
+    {l:'Layout',   v:()=>VIEWN[P.view||'full'], go:()=>{P.view=cyc(VIEWN,P.view||'full');}},
+    {l:'Diagnostics', v:()=>P.debug?'On':'Off', go:()=>{P.debug=!P.debug;}},
+    {l:'Reload', v:()=>'', go:()=>{close(true);}},
+    {l:'Close',  v:()=>'', go:()=>{close();}},
+  ];
+  setTimeout(()=>location.reload(),6*3600000);   // fresh page every 6 h, like the Android app
+  let open=false, sel=0;
+  const el=document.createElement('div'); el.id='tv-menu';
+  el.style.cssText='position:fixed;right:40px;top:40px;width:460px;z-index:100;background:rgba(5,8,15,.94);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:22px 0;font:500 26px/1.2 Barlow,sans-serif;color:#dfe8f2;display:none;box-shadow:0 20px 60px rgba(0,0,0,.6)';
+  document.body.appendChild(el);
+  function render(){
+    el.innerHTML='<div style="padding:0 28px 14px;font:700 30px Barlow Condensed,sans-serif;letter-spacing:.06em">LEVI<span style="color:#5fb4ff">TV</span> settings</div>'
+      +items.map((it,i)=>`<div style="display:flex;justify-content:space-between;padding:14px 28px;${i===sel?'background:#5fb4ff;color:#05080f':''}"><span>${it.l}</span><b>${it.v()}</b></div>`).join('')
+      +`<div style="padding:14px 28px 0;font-size:18px;color:#8aa0b8">Screen: ${P.screen||'-'} · ◀ ▶ camera</div>`;
+  }
+  function close(force){
+    open=false; el.style.display='none';
+    try{localStorage.setItem('levitv.app',JSON.stringify(P));}catch(_){}
+    if(force||JSON.stringify(P)!==start) location.replace(location.pathname+'?app='+TVAPP);
+  }
+  return {
+    key(e){
+      const k=e.keyCode;
+      if(!open){
+        if(k===13){open=true;sel=0;render();el.style.display='block';return true;}
+        if(k===10009&&TVAPP==='tizen'){history.back();return true;}   // back to the app's start screen → exit
+        return false;
+      }
+      if(k===38) sel=(sel+items.length-1)%items.length;
+      else if(k===40) sel=(sel+1)%items.length;
+      else if(k===13) items[sel].go();
+      else if(k===10009||k===461||k===27||k===8){ close(); return true; }
+      else return true;
+      if(open) render();
+      return true;
+    }
+  };
+})();
 addEventListener('keydown',e=>{
+  if(tvMenu&&tvMenu.key(e)){ e.preventDefault(); e.stopPropagation(); return; }
   if(e.key==='ArrowRight'||e.key==='MediaTrackNext'){ window.levitvSkip(1); e.preventDefault(); }
   if(e.key==='ArrowLeft'||e.key==='MediaTrackPrevious'){ window.levitvSkip(-1); e.preventDefault(); }
 });
