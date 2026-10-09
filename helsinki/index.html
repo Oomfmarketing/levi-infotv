@@ -1366,7 +1366,7 @@ const log=(...a)=>{
   const t=new Date().toTimeString().slice(0,8);
   window.__camlog=[t+' '+a.join(' '),...(window.__camlog||[])].slice(0,14);
   const brands=(navigator.userAgentData&&navigator.userAgentData.brands||[]).map(b=>b.brand).join(', ');
-  el.textContent='UA: '+navigator.userAgent.slice(0,150)+'\nbrands: '+(brands||'-')+'\nparams: '+location.search.slice(0,140)
+  el.textContent='params: '+location.search.replace(/^.*?(&app=)/,'$1').slice(0,90)+'\nUA: '+navigator.userAgent.slice(0,110)+'\nbrands: '+(brands||'-')
     +'\n────────\n'+window.__camlog.join('\n');
 };
 if(DEBUG) setTimeout(()=>log('debug on'),300);

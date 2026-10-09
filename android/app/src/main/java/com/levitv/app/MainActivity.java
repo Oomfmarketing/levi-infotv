@@ -83,7 +83,8 @@ public class MainActivity extends Activity {
         // Look like a normal browser to YouTube: without this, every live stream answers
         // "embedding not allowed" (error 150) inside an app.
         //  1) drop the "; wv" WebView marker from the user agent
-        s.setUserAgentString(s.getUserAgentString().replace("; wv", "") + " LeviTV-AndroidTV/" + appVersion());
+        //     and present a plain desktop Chrome (no "; wv", no "Version/4.0", no "Mobile")
+        s.setUserAgentString(desktopChromeUa(s.getUserAgentString()));
         //  2) stop sending "X-Requested-With: com.levitv.app" on every request
         xrwOff = false;
         if (WebViewFeature.isFeatureSupported(WebViewFeature.REQUESTED_WITH_HEADER_ALLOW_LIST)) {
@@ -104,7 +105,9 @@ public class MainActivity extends Activity {
                 brands.add(new UserAgentMetadata.BrandVersion.Builder()
                         .setBrand("Google Chrome").setMajorVersion(major).setFullVersion(full).build());
                 WebSettingsCompat.setUserAgentMetadata(s,
-                        new UserAgentMetadata.Builder(md).setBrandVersionList(brands).build());
+                        new UserAgentMetadata.Builder(md).setBrandVersionList(brands)
+                                .setMobile(false).setPlatform("Linux").setPlatformVersion("")
+                                .setModel("").build());
                 uaBrand = "chrome";
             }
         } catch (Throwable t) {
@@ -293,6 +296,14 @@ public class MainActivity extends Activity {
                 })
                 .setOnDismissListener(d -> hideSystemUi())
                 .show();
+    }
+
+    /** "Mozilla/5.0 (X11; Linux x86_64) … Chrome/<same version> Safari/537.36 LeviTV-AndroidTV/x" */
+    private String desktopChromeUa(String webviewUa) {
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("Chrome/([0-9.]+)").matcher(webviewUa);
+        String ver = m.find() ? m.group(1) : "130.0.0.0";
+        return "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/" + ver
+                + " Safari/537.36 LeviTV-AndroidTV/" + appVersion();
     }
 
     private String appVersion() {
