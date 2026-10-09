@@ -19,6 +19,16 @@ Picker page: https://oomfmarketing.github.io/levi-infotv/
 Short links: `/levi/`, `/levi/full/`, `/yllas/`, `/yllas/full/`, `/helsinki/`, `/helsinki/full/`.
 Add `?screen=<name>` to name a physical TV in analytics, e.g. `/levi/full/?screen=hotel-lobby`.
 
+## Search engines & AI search
+
+- Location pages have their own title, description, canonical URL, Open Graph
+  tags, JSON-LD (WebPage, TouristDestination, FAQPage, breadcrumbs) and a
+  crawlable text section (English + Finnish) shown on mobile.
+- Home page: WebSite, Organization and FAQPage JSON-LD plus visible FAQ.
+- `robots.txt` allows all crawlers including AI ones (GPTBot, OAI-SearchBot,
+  ClaudeBot, PerplexityBot, Google-Extended…); `sitemap.xml`; `llms.txt` summary.
+- TV / full-screen views are `noindex` and point canonically to the location page.
+
 ## Analytics
 
 Cookieless, so no consent banner is needed. Set it up in `config.js`:
@@ -51,6 +61,11 @@ in their own analytics too. Ad targets live in `config.js` (`ads`).
 | Cameras | Levi YouTube live streams (two players, crossfaded) |
 
 ## Editing
+
+`levi-infotv.html` is the template. The location pages `/levi/`, `/yllas/` and
+`/helsinki/` are generated from it — **after editing it, run `python3 build.py`**
+(location texts, FAQs and SEO data live in `build.py`).
+
 
 At the top of the `<script>` block:
 

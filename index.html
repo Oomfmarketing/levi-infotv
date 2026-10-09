@@ -12,6 +12,11 @@
 <meta property="og:image" content="https://levitv.com/og.png">
 <meta property="og:url" content="https://levitv.com/">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://levitv.com/">
+<meta property="og:site_name" content="LeviTV">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://levitv.com/#website", "url": "https://levitv.com/", "name": "LeviTV", "alternateName": ["LeviTV.com", "Levi TV"], "description": "Your real-time view of Levi — live webcams, weather, northern lights and daylight from Levi, Finnish Lapland.", "inLanguage": "en", "publisher": {"@id": "https://levitv.com/#org"}}, {"@type": "Organization", "@id": "https://levitv.com/#org", "name": "OOMF Marketing Oy", "url": "https://levitv.com/", "email": "hello@oomf.fi", "logo": "https://levitv.com/apple-touch-icon.png"}, {"@type": "FAQPage", "@id": "https://levitv.com/#faq", "mainEntity": [{"@type": "Question", "name": "What is LeviTV?", "acceptedAnswer": {"@type": "Answer", "text": "LeviTV (levitv.com) is a real-time view of Levi in Finnish Lapland: live webcams from around Levi Fell, the weather now and a 5-day forecast, northern lights activity (Kp index) and today's sunrise, sunset and day length. It also has live views of Ylläs and Helsinki."}}, {"@type": "Question", "name": "Is LeviTV free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. LeviTV is free to watch on a phone, computer or TV and needs no app or login."}}, {"@type": "Question", "name": "Can I show LeviTV on a TV or hotel lobby screen?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Open levitv.com/levi/full/ on the screen's browser for a full-screen 1080p view with the camera, weather, aurora and daylight. Click or press F for full screen."}}, {"@type": "Question", "name": "Where does the data come from?", "acceptedAnswer": {"@type": "Answer", "text": "Cameras are public YouTube live streams (Levi Ski Resort, Ylläs Ski Resort, Port of Helsinki and others), weather is from the Finnish Meteorological Institute (FMI) and northern lights data from NOAA's Space Weather Prediction Center. Sunrise and sunset are calculated."}}, {"@type": "Question", "name": "How can I advertise on LeviTV?", "acceptedAnswer": {"@type": "Answer", "text": "Contact hello@oomf.fi. Ads appear on LeviTV screens and on the mobile view, with QR codes that are tracked for scans."}}]}]}</script>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script defer src="https://cloud.umami.is/script.js" data-website-id="ced80469-2f42-45f0-8153-00f6fa4c2f66"></script>
@@ -63,6 +68,15 @@ h2{font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.28em;t
 
 .tip{margin-top:30px;font-size:14px;color:var(--muted);line-height:1.5}
 .tip code{font-family:ui-monospace,monospace;font-size:12.5px;color:var(--dim);background:rgba(255,255,255,.05);padding:2px 6px;border-radius:5px}
+.about{margin-top:40px;color:var(--dim);line-height:1.65}
+.about h2{margin-top:30px}
+.about p{margin-bottom:12px}
+.about strong{color:var(--text);font-weight:600}
+.about a{color:var(--accent)}
+.about details{border-top:1px solid var(--line);padding:14px 0}
+.about summary{color:var(--text);font-weight:600;cursor:pointer}
+.about details p{margin:8px 0 0}
+h1.wm{font-size:clamp(52px,12vw,96px);margin:0}
 footer{margin-top:34px;padding-top:20px;border-top:1px solid var(--line);font-size:14px;color:var(--dim);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 footer a{color:var(--sun);text-decoration:none}
 </style>
@@ -72,7 +86,7 @@ footer a{color:var(--sun);text-decoration:none}
   <div class="live"><b></b>LIVE FROM LAPLAND</div>
   <div class="hero">
     <svg class="mark" viewBox="0 0 48 48" fill="none" stroke="#5fb4ff" stroke-width="1.6" stroke-linecap="round"><circle cx="24" cy="24" r="22.5"/><path d="M24 9v30M11 16.5l26 15M11 31.5l26-15M24 9l-3.5 3.5M24 9l3.5 3.5M24 39l-3.5-3.5M24 39l3.5-3.5"/></svg>
-    <div class="wm">LEVI<i>TV</i><small>.COM</small></div>
+    <h1 class="wm" aria-label="LeviTV.com">LEVI<i>TV</i><small>.COM</small></h1>
   </div>
   <div class="tagline">Your real-time view of Levi — live cameras, weather, northern lights and daylight.</div>
 
@@ -98,6 +112,23 @@ footer a{color:var(--sun);text-decoration:none}
       <div class="btns"><a class="btn" href="helsinki/">Watch</a><a class="btn" href="helsinki/full/">Full screen</a></div>
     </div>
   </div>
+
+  <section class="about">
+    <h2>About LeviTV</h2>
+    <p>LeviTV is your real-time view of Levi in Finnish Lapland. One screen brings together
+      <strong>11 live webcams</strong> from around Levi Fell (including an aurora camera), the
+      <strong>weather now</strong> from the Finnish Meteorological Institute, a <strong>5-day forecast</strong>,
+      <strong>northern lights activity</strong> (live Kp index and forecast from NOAA) and today's
+      <strong>sunrise, sunset and day length</strong>. It works on phones, computers and TVs — no app or login.</p>
+    <p lang="fi">LeviTV näyttää Levin reaaliajassa: live-kamerat, Levin sää ja ennuste, revontuliennuste sekä auringonnousu ja -lasku. Mukana myös Ylläs ja Helsinki.</p>
+
+    <h2>Frequently asked questions</h2>
+    <details><summary>What is LeviTV?</summary><p>LeviTV (levitv.com) is a real-time view of Levi in Finnish Lapland: live webcams, the weather now and a 5-day forecast, northern lights activity and today's daylight. It also has live views of <a href="yllas/">Ylläs</a> and <a href="helsinki/">Helsinki</a>.</p></details>
+    <details><summary>Is LeviTV free?</summary><p>Yes. It is free to watch on a phone, computer or TV and needs no app or login.</p></details>
+    <details><summary>Can I show LeviTV on a TV or hotel lobby screen?</summary><p>Yes. Open <a href="levi/full/">levitv.com/levi/full/</a> in the screen's browser for a full-screen 1080p view. Click or press F for full screen.</p></details>
+    <details><summary>Where does the data come from?</summary><p>Cameras are public YouTube live streams (Levi Ski Resort, Ylläs Ski Resort, Port of Helsinki and others), weather is from the Finnish Meteorological Institute (FMI) and northern lights data from NOAA's Space Weather Prediction Center. Sunrise and sunset are calculated. LeviTV is an independent service, not an official Levi channel.</p></details>
+    <details><summary>How can I advertise on LeviTV?</summary><p>Contact <a href="mailto:hello@oomf.fi?subject=LeviTV%20advertising">hello@oomf.fi</a>. Ads appear on LeviTV screens and on the mobile view, with QR codes that are tracked for scans.</p></details>
+  </section>
 
   <p class="tip">On a TV or display: open the full-screen link and click or press F.
     Name the screen with <code>?screen=hotel-lobby</code> at the end of the link.</p>

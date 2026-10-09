@@ -1,0 +1,23 @@
+# LeviTV
+
+> LeviTV (levitv.com) is a free real-time view of Levi in Finnish Lapland: live webcams from around Levi Fell (including an aurora camera), the current weather and a 5-day forecast from the Finnish Meteorological Institute, northern lights activity (live Kp index and forecast from NOAA) and today's sunrise, sunset and day length. It also covers Ylläs and Helsinki. Works on phones, computers and TV screens; no app or login. Independent service by OOMF Marketing Oy — not an official Levi channel.
+
+## Live views
+
+- [Levi live](https://levitv.com/levi/): 11 live webcams (Levi Center Zero Point, South Point, Village View, Levi Black gondola area, Levi Six, Levi West, Glacier Express, Top of Levi summit 531 m, Lifts 13 & 14, Leevilandia, Aurora Cam at Levi Igloos), weather from FMI station Kittilä Kenttärova, forecast, northern lights, daylight.
+- [Ylläs live](https://levitv.com/yllas/): Ylläs Ski Resort cameras (gondola station, Ylläs Express chairlift, summit 719 m), weather, forecast, northern lights, daylight.
+- [Helsinki live](https://levitv.com/helsinki/): Market Square and Port of Helsinki harbour cameras, weather from FMI station Helsinki Kaisaniemi, forecast, daylight.
+
+## For screens
+
+- [Levi full-screen TV view](https://levitv.com/levi/full/): 1080p layout for hotel lobbies and info screens.
+
+## Data sources
+
+- Weather and forecast: Finnish Meteorological Institute (FMI) open data
+- Northern lights: NOAA Space Weather Prediction Center, planetary Kp index
+- Cameras: public YouTube live streams (Levi Ski Resort, Ylläs Ski Resort, Port of Helsinki, EK, Northern Lights Alert)
+
+## Contact
+
+- Advertising and partnerships: hello@oomf.fi

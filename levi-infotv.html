@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<base href="/">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#05080f">
+<!--SEO:start-->
 <title>LeviTV — Your real-time view of Levi</title>
 <meta name="description" content="Live cameras, weather, northern lights and daylight from Levi, Lapland — in real time.">
 <meta property="og:title" content="LeviTV — Your real-time view of Levi">
@@ -12,6 +14,8 @@
 <meta property="og:image" content="https://levitv.com/og.png">
 <meta property="og:url" content="https://levitv.com/">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://levitv.com/levi/">
+<!--SEO:end-->
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -103,7 +107,7 @@ body.night #stars{opacity:1}
 .wm i{font-style:normal;color:var(--accent)}
 .wm small{font-size:.72em;font-weight:600;color:var(--dim);letter-spacing:.1em}
 #live-txt .wm{margin-right:4px}
-#m-pill,#sky,#m-site,#cam-pick,#m-brand{display:none}
+#m-pill,#sky,#m-site,#cam-pick,#m-brand,#about{display:none}
 #b-prog{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--accent);opacity:.7;z-index:2}
 .k-sun{color:var(--sun)}.k-cold{color:var(--accent)}
 #logo{
@@ -530,6 +534,20 @@ html.full,html.full body{cursor:none}
   #m-brand-tag{font-size:16px;color:var(--dim);margin-top:6px}
   #m-brand-ad{font-size:13px;color:var(--muted);margin-top:14px}
   #m-brand-ad a{color:var(--sun);text-decoration:none}
+  #about{
+    order:6;display:block;padding:28px 20px 34px;border-bottom:1px solid var(--line);
+    color:var(--dim);font-size:16px;line-height:1.6;
+  }
+  #about h1{font-family:var(--cond);font-weight:700;font-size:28px;letter-spacing:.04em;line-height:1.15;color:var(--text);margin-bottom:12px}
+  #about h2{font-family:var(--cond);font-weight:600;font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:26px 0 10px}
+  #about p{margin-bottom:10px}
+  #about ul{padding-left:20px;margin-bottom:10px}
+  #about li{margin-bottom:4px}
+  #about strong{color:var(--text);font-weight:600}
+  #about details{border-top:1px solid var(--line);padding:12px 0}
+  #about summary{color:var(--text);font-weight:600;cursor:pointer}
+  #about details p{margin:8px 0 0}
+  #about a{color:var(--accent)}
   #foot{order:7;height:52px;background:none;border:0}
   #foot-label{display:none}
   #ticker span{font-size:17px;padding:0 20px}
@@ -541,6 +559,10 @@ html.full,html.full body{cursor:none}
 (function(){
   var q=new URLSearchParams(location.search), v=(q.get('view')||'').toLowerCase();
   var full=v==='full', tv=full||v==='tv'||q.has('tv');
+  // TV / full-screen views are for displays, not search results
+  if(tv){ var r=document.createElement('meta'); r.name='robots'; r.content='noindex,follow'; document.head.appendChild(r); }
+  var lk=(q.get('loc')||'').toLowerCase().replace('ä','a'), c=document.querySelector('link[rel=canonical]');
+  if(lk&&c&&/levi-infotv\.html$/.test(location.pathname)) c.href='https://levitv.com/'+lk+'/';
   if(full) document.documentElement.classList.add('full');
   if(tv){ var m=document.querySelector('meta[name=viewport]');
     if(m) m.content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,viewport-fit=cover'; }
@@ -677,6 +699,8 @@ html.full,html.full body{cursor:none}
     <div id="m-brand-ad">Advertise on LeviTV — <a href="mailto:hello@oomf.fi?subject=LeviTV%20advertising">hello@oomf.fi</a></div>
   </div>
 
+  <!--ABOUT:start--><!--ABOUT:end-->
+
   <footer id="foot">
     <div id="foot-label"></div>
     <div id="foot-track"><div id="ticker"></div></div>
@@ -803,7 +827,7 @@ const LOCS = {
     ],
   },
 };
-const LOC_KEY = (new URLSearchParams(location.search).get('loc')||'levi').toLowerCase().replace('ä','a');
+const LOC_KEY = (new URLSearchParams(location.search).get('loc')||window.INFOTV_LOC||'levi').toLowerCase().replace('ä','a');
 const LOC = LOCS[LOC_KEY] || LOCS.levi;
 
 // Optional live slope/lift feed (Levi, see README). Leave empty to disable.
@@ -828,7 +852,7 @@ const AD_URLS = Object.assign({
 const SCREEN = (new URLSearchParams(location.search).get('screen')||'').toLowerCase().replace(/[\s_]+/g,'-').replace(/[^a-z0-9-]/g,'').slice(0,40);
 const VIEW = () => document.documentElement.classList.contains('full') ? 'full'
   : (document.documentElement.classList.contains('tv')||!matchMedia('(max-width:900px)').matches) ? 'tv' : 'mobile';
-const BASE_URL = location.href.split('#')[0].split('?')[0].replace(/[^/]*$/,'');
+const BASE_URL = new URL('./', document.baseURI).href;
 
 const track = (()=>{
   const a=CFG.analytics||{}, pending=[];
@@ -877,7 +901,8 @@ if(VIEW()!=='mobile'){
 (function applyLoc(){
   const q=id=>document.getElementById(id);
   const WM='<span class="wm">LEVI<i>TV</i><small>.COM</small></span>';
-  document.title = LOC_KEY==='levi' ? 'LeviTV — Your real-time view of Levi' : `${LOC.name} live — LeviTV`;
+  if(!window.INFOTV_LOC)   // generated location pages keep their SEO title
+    document.title = LOC_KEY==='levi' ? 'LeviTV — Your real-time view of Levi' : `${LOC.name} live — LeviTV`;
   q('mark').innerHTML=LOC.mark;
   q('logo').textContent=LOC.name.toUpperCase();
   q('brand-meta').dataset.name=LOC.name.toUpperCase();
@@ -894,7 +919,7 @@ if(VIEW()!=='mobile'){
   q('m-site-p').textContent=LOC.site.p;
   const pin='<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
   q('m-pill').innerHTML=Object.entries(LOCS).map(([k,l])=>
-    `<a href="?loc=${k}" class="${l===LOC?'on':''}">${l===LOC?pin:''}${l.pill}</a>`).join('');
+    `<a href="/${k}/" class="${l===LOC?'on':''}">${l===LOC?pin:''}${l.pill}</a>`).join('');
   q('banner').insertAdjacentHTML('afterbegin',LOC.ads.map((ad,i)=>ad==='aurora'
     ?`<div class="bs t-aurora" id="bs-aur" data-skip="1"><span class="bs-tag">Tonight</span><div>
         <div class="bs-h">Northern lights season is on</div>
