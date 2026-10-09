@@ -152,24 +152,50 @@ public class MainActivity extends Activity {
     }
 
     // ── Remote control ───────────────────────────────────────────────
+    // Handled in dispatchKeyEvent, i.e. BEFORE the WebView: otherwise the
+    // WebView swallows OK / Back and the menu never opens.
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (keyCode) {
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int code = event.getKeyCode();
+        boolean up = event.getAction() == KeyEvent.ACTION_UP;
+        switch (code) {
             case KeyEvent.KEYCODE_MENU:
+            case KeyEvent.KEYCODE_SETTINGS:
             case KeyEvent.KEYCODE_DPAD_CENTER:
             case KeyEvent.KEYCODE_ENTER:
-            case KeyEvent.KEYCODE_SETTINGS:
-                showMenu();
+            case KeyEvent.KEYCODE_NUMPAD_ENTER:
+            case KeyEvent.KEYCODE_BUTTON_A:
+                if (up) showMenu();
                 return true;
+            case KeyEvent.KEYCODE_DPAD_RIGHT:
+            case KeyEvent.KEYCODE_MEDIA_NEXT:
+            case KeyEvent.KEYCODE_CHANNEL_UP:
+                if (up) skipCamera(1);
+                return true;
+            case KeyEvent.KEYCODE_DPAD_LEFT:
+            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+            case KeyEvent.KEYCODE_CHANNEL_DOWN:
+                if (up) skipCamera(-1);
+                return true;
+            case KeyEvent.KEYCODE_DPAD_UP:
+            case KeyEvent.KEYCODE_DPAD_DOWN:
+                return true;                      // nothing to scroll on the TV layout
             case KeyEvent.KEYCODE_BACK:
-                long now = System.currentTimeMillis();
-                if (now - lastBack < 2500) { finish(); return true; }
-                lastBack = now;
-                Toast.makeText(this, "Press Back again to exit", Toast.LENGTH_SHORT).show();
+                if (up) {
+                    long now = System.currentTimeMillis();
+                    if (now - lastBack < 2500) { finish(); return true; }
+                    lastBack = now;
+                    Toast.makeText(this, "Press Back again to exit · OK for menu", Toast.LENGTH_SHORT).show();
+                }
                 return true;
             default:
-                return super.onKeyDown(keyCode, event);
+                return super.dispatchKeyEvent(event);
         }
+    }
+
+    /** Next / previous camera on the page; automatic rotation continues. */
+    private void skipCamera(int dir) {
+        web.evaluateJavascript("window.levitvSkip&&window.levitvSkip(" + dir + ")", null);
     }
 
     private void showMenu() {
