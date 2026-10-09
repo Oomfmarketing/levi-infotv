@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="config.js"></script>
 <style>
 /* ════════════════════════════════════════════════════════════
    TOKENS
@@ -693,14 +694,14 @@ const LOCS = {
       'Advertise on this screen: hello@oomf.fi',
     ],
     ads:[
-      {tag:'Activities', t:'accent', url:'https://laplandwinteractivities.com',
+      {tag:'Activities', t:'accent', ad:'lwa',
        h:'Husky safaris, northern lights &amp; snowmobile tours',
        p:'Find, compare and book activities in Levi — <b>laplandwinteractivities.com</b>'},
       'aurora',
-      {tag:'Groups &amp; companies', t:'sun', url:'https://elamysdmc.com',
+      {tag:'Groups &amp; companies', t:'sun', ad:'edmc',
        h:'Bring your group to Lapland',
        p:'Incentives, meetings &amp; events in Levi and across Finland — <b>elamysdmc.com</b>'},
-      {tag:'Advertise here', t:'accent', url:'mailto:hello@oomf.fi',
+      {tag:'Advertise here', t:'accent', ad:'oomf',
        h:'Interested in visibility on this screen?',
        p:'Book this spot — contact <b>hello@oomf.fi</b>'},
     ],
@@ -726,14 +727,14 @@ const LOCS = {
       'Advertise on this screen: hello@oomf.fi',
     ],
     ads:[
-      {tag:'Activities', t:'accent', url:'https://laplandwinteractivities.com',
+      {tag:'Activities', t:'accent', ad:'lwa',
        h:'Husky safaris, northern lights &amp; snowmobile tours',
        p:'Find, compare and book activities across Lapland — <b>laplandwinteractivities.com</b>'},
       'aurora',
-      {tag:'Groups &amp; companies', t:'sun', url:'https://elamysdmc.com',
+      {tag:'Groups &amp; companies', t:'sun', ad:'edmc',
        h:'Bring your group to Lapland',
        p:'Incentives, meetings &amp; events in Ylläs, Levi and across Finland — <b>elamysdmc.com</b>'},
-      {tag:'Advertise here', t:'accent', url:'mailto:hello@oomf.fi',
+      {tag:'Advertise here', t:'accent', ad:'oomf',
        h:'Interested in visibility on this screen?',
        p:'Book this spot — contact <b>hello@oomf.fi</b>'},
     ],
@@ -760,14 +761,14 @@ const LOCS = {
       'Advertise on this screen: hello@oomf.fi',
     ],
     ads:[
-      {tag:'Groups &amp; companies', t:'sun', url:'https://elamysdmc.com',
+      {tag:'Groups &amp; companies', t:'sun', ad:'edmc',
        h:'Bring your group to the happiest country in the world',
        p:'Incentives, congresses &amp; events in Helsinki and across Finland — <b>elamysdmc.com</b>'},
       'aurora',
-      {tag:'Lapland', t:'accent', url:'https://laplandwinteractivities.com',
+      {tag:'Lapland', t:'accent', ad:'lwa',
        h:'Heading north to Lapland?',
        p:'Book husky safaris, northern lights &amp; snowmobile tours — <b>laplandwinteractivities.com</b>'},
-      {tag:'Advertise here', t:'accent', url:'mailto:hello@oomf.fi',
+      {tag:'Advertise here', t:'accent', ad:'oomf',
        h:'Interested in visibility on this screen?',
        p:'Book this spot — contact <b>hello@oomf.fi</b>'},
     ],
@@ -784,6 +785,62 @@ const TICKER = LOC.ticker;
 const LAT = LOC.lat, LON = LOC.lon;
 const CAM_INTERVAL = 15000;
 const CAMS = LOC.cams;
+
+/* ══════════════════════════════════════════════════════════
+   ANALYTICS (cookieless; configured in config.js) + ad links
+══════════════════════════════════════════════════════════ */
+const CFG = window.INFOTV || {};
+const AD_URLS = Object.assign({
+  lwa:'https://laplandwinteractivities.com',
+  edmc:'https://elamysdmc.com',
+  oomf:'mailto:hello@oomf.fi?subject=Info%20TV%20advertising',
+}, CFG.ads||{});
+// Optional screen name for the TV, e.g. ?screen=hotel-lobby (shows up in analytics)
+const SCREEN = (new URLSearchParams(location.search).get('screen')||'').toLowerCase().replace(/[\s_]+/g,'-').replace(/[^a-z0-9-]/g,'').slice(0,40);
+const VIEW = () => document.documentElement.classList.contains('full') ? 'full'
+  : (document.documentElement.classList.contains('tv')||!matchMedia('(max-width:900px)').matches) ? 'tv' : 'mobile';
+const BASE_URL = location.href.split('#')[0].split('?')[0].replace(/[^/]*$/,'');
+
+const track = (()=>{
+  const a=CFG.analytics||{}, pending=[];
+  let send=null;
+  if(a.provider==='umami'&&a.id){
+    const s=document.createElement('script');
+    s.src=a.src||'https://cloud.umami.is/script.js'; s.defer=true;
+    s.setAttribute('data-website-id',a.id);
+    s.onload=()=>{ send=(n,p)=>window.umami?.track(n,p); pending.splice(0).forEach(x=>send(...x)); };
+    document.head.appendChild(s);
+  }else if(a.provider==='plausible'&&a.id){
+    window.plausible=window.plausible||function(){(window.plausible.q=window.plausible.q||[]).push(arguments)};
+    const s=document.createElement('script');
+    s.src=a.src||'https://plausible.io/js/script.js'; s.defer=true;
+    s.setAttribute('data-domain',a.id);
+    document.head.appendChild(s);
+    send=(n,p)=>window.plausible(n,{props:p});
+  }else return ()=>{};
+  return (name,props={})=>{
+    const p={loc:LOC_KEY,view:VIEW(),screen:SCREEN||'-',...props};
+    send?send(name,p):pending.push([name,p]);
+  };
+})();
+
+function adLink(id,medium){
+  const url=AD_URLS[id]||'#';
+  if(!/^https?:/i.test(url)) return url;
+  const u=new URL(url);
+  u.searchParams.set('utm_source','infotv');
+  u.searchParams.set('utm_medium',medium);
+  u.searchParams.set('utm_campaign',LOC_KEY);
+  if(SCREEN) u.searchParams.set('utm_content',SCREEN);
+  return u.toString();
+}
+// QR codes go through go.html so scans are counted, then forward to the advertiser
+const qrLink = id => `${BASE_URL}go.html?a=${id}&l=${LOC_KEY}${SCREEN?'&s='+SCREEN:''}`;
+
+// Screens report in regularly → uptime per screen, and ad exposure follows from it
+if(VIEW()!=='mobile'){
+  setInterval(()=>track('screen_online'), Math.max(5,CFG.heartbeatMinutes||60)*60e3);
+}
 
 /* ══════════════════════════════════════════════════════════
    APPLY LOCATION — texts, banners, mobile switch
@@ -812,9 +869,12 @@ const CAMS = LOC.cams;
         <div class="bs-h">Northern lights season is on</div>
         <div class="bs-p">Look north on clear, dark evenings — away from city lights</div></div>
         <div id="bsaur-kp"></div></div>`
-    :`<a class="bs t-${ad.t}" href="${ad.url}"><span class="bs-tag">${ad.tag}</span><div>
+    :`<a class="bs t-${ad.t}" href="${adLink(ad.ad,'screen')}" data-ad="${ad.ad}" target="_blank" rel="noopener"><span class="bs-tag">${ad.tag}</span><div>
         <div class="bs-h">${ad.h}</div><div class="bs-p">${ad.p}</div></div>
-        <div class="bs-qr" data-qr="${ad.url}"></div></a>`).join(''));
+        <div class="bs-qr" data-qr="${qrLink(ad.ad)}"></div></a>`).join(''));
+  q('banner').addEventListener('click',e=>{
+    const a=e.target.closest('a[data-ad]'); if(a) track('ad_click',{ad:a.dataset.ad});
+  });
   q('banner').querySelector('.bs').classList.add('on');
 })();
 
@@ -1239,8 +1299,9 @@ $('cam-pick').addEventListener('click',e=>{
   const a=e.target.closest('a[data-cam]'); if(!a) return;
   e.preventDefault();
   const v=a.dataset.cam;
-  if(v==='auto'){ manual=false; renderPick(); if(firstShown) cycle(); return; }
+  if(v==='auto'){ manual=false; renderPick(); if(firstShown) cycle(); track('camera_pick',{cam:'auto'}); return; }
   pickCam(+v);
+  track('camera_pick',{cam:CAMS[+v].n||CAMS[+v].l});
 });
 renderPick();
 function pickCam(i){
@@ -1412,7 +1473,7 @@ function bprog(){
 bprog();
 try{
   document.querySelectorAll('[data-qr]').forEach(el=>
-    new QRCode(el,{text:el.dataset.qr,width:64,height:64,colorDark:'#05080f',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}));
+    new QRCode(el,{text:el.dataset.qr,width:72,height:72,colorDark:'#05080f',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}));
 }catch(e){console.warn('qr',e);}
 
 /* ══════════════════════════════════════════════════════════

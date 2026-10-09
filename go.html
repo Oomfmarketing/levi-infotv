@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Opening…</title>
+<style>
+  html,body{height:100%;margin:0;background:#05080f;color:rgba(232,240,248,.6);
+    font:16px system-ui,sans-serif;display:flex;align-items:center;justify-content:center}
+</style>
+<script src="config.js"></script>
+</head>
+<body>
+Opening…
+<script>
+/* QR redirect: records the scan, then forwards to the advertiser.
+   Only keys listed in config.js are allowed (no open redirect). */
+(function(){
+  var C=window.INFOTV||{}, ads=C.ads||{}, a=C.analytics||{};
+  var q=new URLSearchParams(location.search);
+  var clean=function(v,n){return (v||'').toLowerCase().replace(/[\s_]+/g,'-').replace(/[^a-z0-9-]/g,'').slice(0,n);};
+  var key=clean(q.get('a'),20), loc=clean(q.get('l'),20), screen=clean(q.get('s'),40);
+  var target=ads[key];
+  if(!target){ location.replace('./'); return; }
+  if(/^https?:/i.test(target)){
+    var u=new URL(target);
+    u.searchParams.set('utm_source','infotv');
+    u.searchParams.set('utm_medium','qr');
+    if(loc) u.searchParams.set('utm_campaign',loc);
+    if(screen) u.searchParams.set('utm_content',screen);
+    target=u.toString();
+  }
+  var done=false, go=function(){ if(!done){ done=true; location.replace(target); } };
+  setTimeout(go,900);                                   // never wait longer than this
+  var props={ad:key,loc:loc||'-',screen:screen||'-'};
+  if(a.provider==='umami'&&a.id){
+    var s=document.createElement('script');
+    s.src=a.src||'https://cloud.umami.is/script.js'; s.defer=true;
+    s.setAttribute('data-website-id',a.id); s.setAttribute('data-auto-track','false');
+    s.onload=function(){ try{ Promise.resolve(window.umami.track('qr_scan',props)).then(go,go); }catch(e){ go(); } };
+    s.onerror=go; document.head.appendChild(s);
+  }else if(a.provider==='plausible'&&a.id){
+    window.plausible=window.plausible||function(){(window.plausible.q=window.plausible.q||[]).push(arguments)};
+    var p=document.createElement('script');
+    p.src=a.src||'https://plausible.io/js/script.manual.js'; p.defer=true;
+    p.setAttribute('data-domain',a.id);
+    p.onerror=go; document.head.appendChild(p);
+    window.plausible('qr_scan',{props:props,callback:go});
+  }else go();
+})();
+</script>
+</body>
+</html>

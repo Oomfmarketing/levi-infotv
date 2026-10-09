@@ -16,6 +16,30 @@ the 1920×1080 canvas, even on small screens. Click or press F to go full screen
 
 Picker page: https://oomfmarketing.github.io/levi-infotv/
 
+Short links: `/levi/`, `/levi/full/`, `/yllas/`, `/yllas/full/`, `/helsinki/`, `/helsinki/full/`.
+Add `?screen=<name>` to name a physical TV in analytics, e.g. `/levi/full/?screen=hotel-lobby`.
+
+## Analytics
+
+Cookieless, so no consent banner is needed. Set it up in `config.js`:
+
+- Umami Cloud: `analytics: { provider:'umami', id:'<website id>' }`
+- Plausible: `analytics: { provider:'plausible', id:'<domain>' }`
+
+What is recorded:
+
+| Event | When | Props |
+|---|---|---|
+| pageview | page opens | URL incl. `loc`, `view` |
+| `screen_online` | every `heartbeatMinutes` (default 60) on TV / full views | `loc`, `view`, `screen` |
+| `qr_scan` | someone scans an ad QR code (via `go.html`) | `ad`, `loc`, `screen` |
+| `ad_click` | someone taps an ad (mobile) | `ad`, `loc`, `screen` |
+| `camera_pick` | camera chosen on mobile | `cam`, `loc` |
+
+Ad links and QR codes carry `utm_source=infotv`, `utm_medium=qr|screen`,
+`utm_campaign=<location>`, `utm_content=<screen>`, so advertisers see the traffic
+in their own analytics too. Ad targets live in `config.js` (`ads`).
+
 ## Data sources (all free, no API keys)
 
 | What | Source |
