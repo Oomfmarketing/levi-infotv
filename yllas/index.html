@@ -1366,7 +1366,7 @@ const log=(...a)=>{
   const t=new Date().toTimeString().slice(0,8);
   el.textContent=(t+' '+a.join(' ')+'\n'+el.textContent).split('\n').slice(0,16).join('\n');
 };
-if(DEBUG) setTimeout(()=>log('UA',navigator.userAgent.slice(0,160)),500);
+if(DEBUG) setTimeout(()=>{log('UA',navigator.userAgent.slice(0,170));log('params',location.search.slice(0,120));},500);
 const players=[null,null], ready=[false,false], settle=[null,null];
 let vis=0, curCam=0, nextCam=null, hiddenReady=false, swapDue=false;
 let firstShown=false, single=false, waitVis=false;
@@ -1508,7 +1508,8 @@ function onPlaying(i){
 function makePlayer(i,videoId){
   return new YT.Player('yt-p'+i,{
     videoId:videoId||undefined,width:'100%',height:'100%',
-    playerVars:{autoplay:videoId?1:0,mute:1,controls:0,modestbranding:1,rel:0,iv_load_policy:3,disablekb:1,fs:0,playsinline:1},
+    playerVars:{autoplay:videoId?1:0,mute:1,controls:0,modestbranding:1,rel:0,iv_load_policy:3,disablekb:1,fs:0,playsinline:1,
+      origin:location.origin,widget_referrer:location.origin+'/'},
     events:{
       onReady:e=>{log('player',i,'ready');ready[i]=true;e.target.mute();if(videoId)e.target.playVideo();},
       onStateChange:e=>{

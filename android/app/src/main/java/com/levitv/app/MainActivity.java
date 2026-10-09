@@ -22,6 +22,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import androidx.webkit.WebSettingsCompat;
+import androidx.webkit.WebViewFeature;
+
+import java.util.Collections;
+
 /**
  * LeviTV for Android TV: shows levitv.com full screen in a WebView.
  * OK / Menu on the remote opens settings (location, layout, start on boot).
@@ -41,6 +46,7 @@ public class MainActivity extends Activity {
     private SharedPreferences prefs;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private long lastBack = 0;
+    private boolean xrwOff = false;
 
     private final Runnable periodicReload = new Runnable() {
         @Override public void run() {
@@ -70,7 +76,16 @@ public class MainActivity extends Activity {
         s.setMediaPlaybackRequiresUserGesture(false);   // muted camera streams autoplay
         s.setLoadWithOverviewMode(true);
         s.setUseWideViewPort(true);
-        s.setUserAgentString(s.getUserAgentString() + " LeviTV-AndroidTV/" + appVersion());
+        // Look like a normal browser to YouTube: without this, every live stream answers
+        // "embedding not allowed" (error 150) inside an app.
+        //  1) drop the "; wv" WebView marker from the user agent
+        s.setUserAgentString(s.getUserAgentString().replace("; wv", "") + " LeviTV-AndroidTV/" + appVersion());
+        //  2) stop sending "X-Requested-With: com.levitv.app" on every request
+        xrwOff = false;
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.REQUESTED_WITH_HEADER_ALLOW_LIST)) {
+            WebSettingsCompat.setRequestedWithHeaderOriginAllowList(s, Collections.emptySet());
+            xrwOff = true;
+        }
 
         // YouTube embeds need cookies, including third-party ones (blocked by default in WebView)
         CookieManager cm = CookieManager.getInstance();
@@ -133,7 +148,7 @@ public class MainActivity extends Activity {
             prefs.edit().putString("screen", screen).apply();
         }
         return SITE + loc + "/" + (full ? "full/?" : "?view=tv&") + "screen=" + Uri.encode(screen) + "&app=androidtv"
-                + (prefs.getBoolean("debug", false) ? "&debug=1" : "");
+                + (prefs.getBoolean("debug", false) ? "&debug=1&xrw=" + (xrwOff ? "off" : "on") : "");
     }
 
     private void load() {

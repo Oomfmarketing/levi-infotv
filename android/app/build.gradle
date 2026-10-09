@@ -41,3 +41,8 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 }
+
+dependencies {
+    // Control of the X-Requested-With header (YouTube refuses embeds it identifies as in-app)
+    implementation 'androidx.webkit:webkit:1.11.0'
+}
