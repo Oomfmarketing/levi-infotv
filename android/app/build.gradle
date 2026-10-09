@@ -8,7 +8,7 @@ def ks = System.getenv("KEYSTORE_FILE")
 
 android {
     namespace 'com.levitv.app'
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.levitv.app"

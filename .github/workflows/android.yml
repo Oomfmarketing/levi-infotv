@@ -25,7 +25,7 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '8.7'
+          gradle-version: '8.11.1'
 
       # Optional stable signing key (repo secrets). Without it the APK is debug-signed.
       - name: Restore signing key
@@ -44,7 +44,17 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: gradle -p android assembleRelease bundleRelease --no-daemon
+        run: |
+          set -o pipefail
+          gradle -p android assembleRelease bundleRelease --no-daemon 2>&1 | tee build.log
+
+      # Surface build errors as annotations (readable without the raw log)
+      - name: Report build errors
+        if: failure()
+        run: |
+          grep -E "error:|e: |What went wrong|> |Could not|FAILURE" build.log | grep -v "^> Task" | head -25 | while IFS= read -r line; do
+            echo "::error::${line//%/%25}"
+          done
 
       - name: Collect APK and AAB
         run: |
