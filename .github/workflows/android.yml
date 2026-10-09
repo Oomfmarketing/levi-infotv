@@ -30,10 +30,13 @@ jobs:
       - name: Restore signing key
         env:
           KEYSTORE_B64: ${{ secrets.KEYSTORE_B64 }}
-        if: env.KEYSTORE_B64 != ''
         run: |
-          echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/levitv.jks"
-          echo "KEYSTORE_FILE=$RUNNER_TEMP/levitv.jks" >> "$GITHUB_ENV"
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/levitv.jks"
+            echo "KEYSTORE_FILE=$RUNNER_TEMP/levitv.jks" >> "$GITHUB_ENV"
+          else
+            echo "No signing key secret — building with the debug key"
+          fi
 
       - name: Build APK
         env:
@@ -50,7 +53,7 @@ jobs:
           name: levitv-apk
           path: levitv.apk
 
-      - name: Publish release (download: levitv.com/app)
+      - name: Publish release for levitv.com/app
         uses: softprops/action-gh-release@v2
         with:
           tag_name: app-v1.0.${{ github.run_number }}
