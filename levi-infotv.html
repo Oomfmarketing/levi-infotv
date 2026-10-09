@@ -287,74 +287,86 @@ body.night #stars{opacity:1}
 
 
 /* ════════════════════════════════════════════════════════════
-   FULL VIEW (?view=full) — camera fills the 1920×1080 canvas,
-   information floats on top. Always the TV layout.
+   FULL VIEW (?view=full) — the whole camera picture stays visible
+   (16:9, uncropped, nothing on top of it). Info lives in a sidebar,
+   camera name + ad + ticker sit below the picture.
+   Canvas 1920×1080: camera 1520×855 | sidebar 400.
 ════════════════════════════════════════════════════════════ */
 html.full #app{display:block}
 html.full #stars{display:none}
-html.full #camera{position:absolute;inset:0;z-index:0}
-html.full #cam-fade{
-  height:520px;z-index:4;
-  background:linear-gradient(transparent,rgba(3,6,12,.55) 45%,rgba(3,6,12,.85));
+html.full #camera{position:absolute;left:0;top:0;width:1520px;height:855px;overflow:visible;z-index:1}
+html.full .yt-slot{width:100%;height:100%;aspect-ratio:auto}
+html.full #cam-fade,html.full #cam-topfade{display:none}
+html.full #cam-cover{height:855px}
+html.full #cam-shield{height:855px}
+html.full #cam-progress{bottom:auto;top:855px;height:3px}
+
+/* camera name row under the picture */
+html.full #cam-label{
+  top:858px;bottom:auto;left:32px;height:53px;
+  flex-direction:row;align-items:center;gap:16px;
 }
-html.full #cam-topfade{display:block}
+html.full #cam-kicker{font-size:13px}
+html.full #cam-name{font-size:24px;text-shadow:none}
+html.full #cam-dots{top:858px;bottom:auto;right:32px;height:53px;align-items:center}
+
+/* sidebar: brand + clock on top, then data */
 html.full #header{
-  position:absolute;left:0;right:0;top:0;height:104px;z-index:10;border:0;
-  padding:0 40px;
+  position:absolute;right:0;top:0;width:400px;height:168px;z-index:2;
+  flex-direction:column;align-items:flex-start;justify-content:center;gap:12px;
+  padding:0 28px;background:var(--panel);border-left:1px solid var(--line);
 }
-html.full #cam-label{top:118px;bottom:auto;left:40px}
-html.full #cam-dots{top:186px;bottom:auto;left:40px;right:auto}
-html.full #cam-progress{top:104px;bottom:auto;height:2px;opacity:.8}
+html.full #brand{gap:6px 14px;flex-wrap:wrap}
+html.full #mark{width:40px;height:40px}
+html.full #logo{font-size:40px}
+html.full #brand-meta{flex-basis:100%;flex-direction:row;gap:14px;border:0;padding:0;white-space:nowrap}
+html.full #brand-sub{font-size:13px;letter-spacing:.2em}
+html.full #coords{font-size:13px;letter-spacing:.08em}
+html.full #live-pill{display:none}
+html.full #clock{display:flex;align-items:baseline;gap:14px;text-align:left}
+html.full #clock-time{font-size:40px}
+html.full #clock-sec{font-size:22px}
+html.full #clock-date{margin:0;font-size:13px}
 
 html.full #side{
-  position:absolute;left:32px;right:32px;bottom:96px;height:212px;z-index:10;
-  flex-direction:row;padding:0;border:1px solid rgba(255,255,255,.1);border-radius:18px;
-  background:rgba(6,10,18,.62);
-  -webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);
-  overflow:hidden;
+  position:absolute;right:0;top:168px;width:400px;height:912px;z-index:2;
+  padding:0;border-left:1px solid var(--line);
 }
-html.full .sec{border:0;border-right:1px solid var(--line);padding:22px 28px;flex:1 1 0;min-width:0}
-html.full .sec:last-of-type{border-right:0}
-html.full .kicker{font-size:13px;margin-bottom:12px}
-html.full #wx{flex:1.05}
-html.full #fcsec{flex:1.45}
-html.full #aur{flex:.95}
-html.full #sun{flex:1.05}
-html.full #sky,html.full #tag,html.full #wx-stats{display:none!important}
-html.full #wx-icon{width:64px;height:64px}
-html.full #wx-temp{font-size:88px}
-html.full #wx-desc{font-size:18px;margin-top:6px}
+html.full .sec{padding:18px 24px}
+html.full .kicker{font-size:12px;margin-bottom:12px}
+html.full #sky{display:none!important}
+html.full #wx-icon{width:60px;height:60px}
+html.full #wx-row{gap:16px}
+html.full #wx-temp{font-size:80px}
+html.full #wx-desc{font-size:16px;margin-top:6px}
+html.full #wx-stats{gap:8px;margin-top:14px}
+html.full .stat{padding:8px 10px}
+html.full .stat-l{font-size:11px;letter-spacing:.14em}
+html.full .stat-v{font-size:22px}
+html.full #fc{gap:6px}
 html.full .fc{padding:8px 0 6px}
-html.full .fc-i{width:30px;height:30px;margin:4px auto 2px}
-html.full #aur-kp{font-size:60px}
-html.full #aur-level{font-size:20px}
+html.full .fc-d{font-size:12px;letter-spacing:.12em}
+html.full .fc-i{width:28px;height:28px;margin:5px auto 3px}
+html.full .fc-t{font-size:19px}
+html.full .fc-t small{display:block;font-size:13px;margin:0}
+html.full #aur-kp{font-size:52px}
+html.full #aur-level{font-size:18px}
+html.full #aur-note{font-size:13px}
 html.full #aur-scale{margin-top:12px}
-html.full #aur-foot{margin-top:10px;font-size:13px}
-html.full #sun-svg{height:84px}
-html.full #sun-row{margin-top:2px}
-html.full .sun-v{font-size:24px}
+html.full #aur-foot{font-size:12px}
+html.full #sun-svg{height:96px}
+html.full .sun-v{font-size:22px}
+html.full .sun-l{font-size:11px}
+html.full #tag{font-size:15px;padding:12px 24px}
 
+/* ad + ticker under the picture */
 html.full #banner{
-  position:absolute;right:32px;top:118px;width:760px;height:104px;z-index:10;
-  border:1px solid rgba(255,255,255,.1);border-radius:16px;
-  background:rgba(6,10,18,.62);
-  -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+  position:absolute;left:0;top:911px;width:1520px;height:97px;z-index:1;
+  border-top:1px solid var(--line);
 }
-html.full .bs{padding:0 22px;gap:18px}
-html.full .bs-tag{display:none}
-html.full .bs-h{font-size:24px}
-html.full .bs-p{font-size:15px}
-html.full #bsaur-kp{font-size:44px}
-
-html.full #foot{
-  position:absolute;left:0;right:0;bottom:0;height:72px;z-index:10;
-  background:rgba(3,6,12,.7);
-  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
-}
-#cam-topfade{
-  display:none;position:absolute;left:0;right:0;top:0;height:260px;z-index:4;pointer-events:none;
-  background:linear-gradient(rgba(3,6,12,.8),rgba(3,6,12,.35) 55%,transparent);
-}
+html.full .bs{padding:0 32px}
+html.full .bs-h{font-size:27px}
+html.full #foot{position:absolute;left:0;bottom:0;width:1520px;height:72px;z-index:1}
 html.full,html.full body{cursor:none}
 
 /* ════════════════════════════════════════════════════════════

@@ -9,8 +9,9 @@ Locations (pick with `?loc=`):
 - Ylläs: https://oomfmarketing.github.io/levi-infotv/levi-infotv.html?loc=yllas
 - Helsinki: https://oomfmarketing.github.io/levi-infotv/levi-infotv.html?loc=helsinki
 
-Add `&view=full` for the full-screen layout: the camera fills the whole
-1920×1080 screen and the information floats on top. TV and full views always keep
+Add `&view=full` for the full-screen layout: the whole camera picture is shown
+uncropped (1520×855, nothing on top of it), with the information in a sidebar and
+the camera name, ad and ticker below the picture. TV and full views always keep
 the 1920×1080 canvas, even on small screens. Click or press F to go full screen.
 
 Picker page: https://oomfmarketing.github.io/levi-infotv/
