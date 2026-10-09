@@ -1384,6 +1384,14 @@ window.levitvSkip=function(dir){
   hardNext();
   renderPick();
 };
+// Android TV app (GeckoView) steers cameras with a #cam=<dir>_<n> fragment; keys work too
+addEventListener('hashchange',()=>{
+  const m=location.hash.match(/cam=(-?1)_/); if(m) window.levitvSkip(+m[1]);
+});
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='MediaTrackNext'){ window.levitvSkip(1); e.preventDefault(); }
+  if(e.key==='ArrowLeft'||e.key==='MediaTrackPrevious'){ window.levitvSkip(-1); e.preventDefault(); }
+});
 function pickCam(i){
   manual=true;
   clearTimeout(preTimer);clearTimeout(dueTimer);clearTimeout(loadTimer);

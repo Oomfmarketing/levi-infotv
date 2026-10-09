@@ -12,10 +12,12 @@ android {
 
     defaultConfig {
         applicationId "com.levitv.app"
-        minSdk 21
+        minSdk 26
         targetSdk 34
         versionCode Integer.parseInt(System.getenv("GITHUB_RUN_NUMBER") ?: "1")
         versionName "1.0." + (System.getenv("GITHUB_RUN_NUMBER") ?: "0")
+        // TVs are ARM; keeps the APK smaller (GeckoView ships native code per ABI)
+        ndk { abiFilters 'armeabi-v7a', 'arm64-v8a' }
     }
 
     signingConfigs {
@@ -43,6 +45,6 @@ android {
 }
 
 dependencies {
-    // Control of the X-Requested-With header (YouTube refuses embeds it identifies as in-app)
-    implementation 'androidx.webkit:webkit:1.12.1'
+    // Mozilla GeckoView (Firefox engine): YouTube embeds play here, unlike in Android WebView
+    implementation 'org.mozilla.geckoview:geckoview:+'
 }

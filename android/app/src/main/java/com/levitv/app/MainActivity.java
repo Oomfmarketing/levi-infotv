@@ -3,7 +3,6 @@ package com.levitv.app;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,26 +12,25 @@ import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.webkit.CookieManager;
-import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import androidx.webkit.UserAgentMetadata;
-import androidx.webkit.WebSettingsCompat;
-import androidx.webkit.WebViewFeature;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import org.mozilla.geckoview.AllowOrDeny;
+import org.mozilla.geckoview.GeckoResult;
+import org.mozilla.geckoview.GeckoRuntime;
+import org.mozilla.geckoview.GeckoRuntimeSettings;
+import org.mozilla.geckoview.GeckoSession;
+import org.mozilla.geckoview.GeckoSessionSettings;
+import org.mozilla.geckoview.GeckoView;
 
 /**
- * LeviTV for Android TV: shows levitv.com full screen in a WebView.
- * OK / Menu on the remote opens settings (location, layout, start on boot).
+ * LeviTV for Android TV: shows levitv.com full screen.
+ *
+ * Uses GeckoView (Mozilla's Firefox engine) instead of Android's WebView:
+ * YouTube refuses to play embedded live streams inside an Android WebView
+ * (error 150), but plays them in a regular browser engine.
+ *
+ * Remote: OK / Menu = settings, Left / Right = previous / next camera,
+ * Back twice = exit.
  */
 public class MainActivity extends Activity {
 
@@ -45,12 +43,15 @@ public class MainActivity extends Activity {
     private static final long RELOAD_EVERY_MS = 6L * 60 * 60 * 1000;   // fresh page every 6 h
     private static final long RETRY_MS = 30_000;                       // after a network error
 
-    private WebView web;
+    private static GeckoRuntime sRuntime;                               // one per process
+
+    private GeckoView view;
+    private GeckoSession session;
     private SharedPreferences prefs;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private long lastBack = 0;
-    private boolean xrwOff = false;
-    private String uaBrand = "?";
+    private String pageUrl = "";
+    private int skipCounter = 0;
 
     private final Runnable periodicReload = new Runnable() {
         @Override public void run() {
@@ -68,86 +69,54 @@ public class MainActivity extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 | WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        web = new WebView(this);
-        web.setBackgroundColor(Color.rgb(5, 8, 15));
-        web.setFocusable(true);
-        setContentView(web);
-        hideSystemUi();
-
-        WebSettings s = web.getSettings();
-        s.setJavaScriptEnabled(true);
-        s.setDomStorageEnabled(true);
-        s.setMediaPlaybackRequiresUserGesture(false);   // muted camera streams autoplay
-        s.setLoadWithOverviewMode(true);
-        s.setUseWideViewPort(true);
-        // Look like a normal browser to YouTube: without this, every live stream answers
-        // "embedding not allowed" (error 150) inside an app.
-        //  1) drop the "; wv" WebView marker from the user agent
-        //     and present a plain desktop Chrome (no "; wv", no "Version/4.0", no "Mobile")
-        s.setUserAgentString(desktopChromeUa(s.getUserAgentString()));
-        //  2) stop sending "X-Requested-With: com.levitv.app" on every request
-        xrwOff = false;
-        if (WebViewFeature.isFeatureSupported(WebViewFeature.REQUESTED_WITH_HEADER_ALLOW_LIST)) {
-            WebSettingsCompat.setRequestedWithHeaderOriginAllowList(s, Collections.emptySet());
-            xrwOff = true;
+        if (sRuntime == null) {
+            sRuntime = GeckoRuntime.create(getApplicationContext(),
+                    new GeckoRuntimeSettings.Builder()
+                            .consoleOutput(false)
+                            .build());
         }
-        //  3) client hints: report the brand as Chrome, not "Android WebView"
-        uaBrand = "webview";
-        try {
-            if (WebViewFeature.isFeatureSupported(WebViewFeature.USER_AGENT_METADATA)) {
-                UserAgentMetadata md = WebSettingsCompat.getUserAgentMetadata(s);
-                List<UserAgentMetadata.BrandVersion> brands = new ArrayList<>();
-                String major = "130", full = "130.0.0.0";
-                for (UserAgentMetadata.BrandVersion b : md.getBrandVersionList()) {
-                    if (b.getBrand().contains("Chromium")) { major = b.getMajorVersion(); full = b.getFullVersion(); }
-                    if (!b.getBrand().contains("WebView")) brands.add(b);
+
+        session = new GeckoSession(new GeckoSessionSettings.Builder()
+                .usePrivateMode(false)
+                .build());
+
+        // Muted camera streams must autoplay
+        session.setPermissionDelegate(new GeckoSession.PermissionDelegate() {
+            @Override
+            public GeckoResult<Integer> onContentPermissionRequest(GeckoSession s, ContentPermission perm) {
+                if (perm.permission == PERMISSION_AUTOPLAY_INAUDIBLE
+                        || perm.permission == PERMISSION_AUTOPLAY_AUDIBLE) {
+                    return GeckoResult.fromValue(ContentPermission.VALUE_ALLOW);
                 }
-                brands.add(new UserAgentMetadata.BrandVersion.Builder()
-                        .setBrand("Google Chrome").setMajorVersion(major).setFullVersion(full).build());
-                WebSettingsCompat.setUserAgentMetadata(s,
-                        new UserAgentMetadata.Builder(md).setBrandVersionList(brands)
-                                .setMobile(false).setPlatform("Linux").setPlatformVersion("")
-                                .setModel("").build());
-                uaBrand = "chrome";
-            }
-        } catch (Throwable t) {
-            uaBrand = "error";
-        }
-
-        // YouTube embeds need cookies, including third-party ones (blocked by default in WebView)
-        CookieManager cm = CookieManager.getInstance();
-        cm.setAcceptCookie(true);
-        cm.setAcceptThirdPartyCookies(web, true);
-
-        web.setWebChromeClient(new WebChromeClient() {
-            @Override public Bitmap getDefaultVideoPoster() {   // no grey "play" poster before video starts
-                return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+                return GeckoResult.fromValue(ContentPermission.VALUE_DENY);
             }
         });
-        web.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                if (!request.isForMainFrame()) return false;   // never interfere with the YouTube iframes
-                return !isAllowed(request.getUrl());           // stay on LeviTV; ad links can't open on a TV
-            }
 
+        // Stay on LeviTV: ad links can't be opened on a TV
+        session.setNavigationDelegate(new GeckoSession.NavigationDelegate() {
             @Override
-            @SuppressWarnings("deprecation")
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                return !isAllowed(Uri.parse(url));
-            }
-
-            @Override
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                if (request.isForMainFrame()) showOffline();
-            }
-
-            @Override
-            @SuppressWarnings("deprecation")
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                if (failingUrl != null && failingUrl.startsWith(SITE)) showOffline();
+            public GeckoResult<AllowOrDeny> onLoadRequest(GeckoSession s, LoadRequest request) {
+                return GeckoResult.fromValue(isAllowed(request.uri) ? AllowOrDeny.ALLOW : AllowOrDeny.DENY);
             }
         });
+
+        // Network error → offline screen and retry
+        session.setProgressDelegate(new GeckoSession.ProgressDelegate() {
+            @Override
+            public void onPageStop(GeckoSession s, boolean success) {
+                if (!success && pageUrl.startsWith(SITE)) showOffline();
+            }
+        });
+
+        session.open(sRuntime);
+
+        view = new GeckoView(this);
+        view.setBackgroundColor(Color.rgb(5, 8, 15));
+        view.setFocusable(true);
+        view.setSession(session);
+        setContentView(view);
+        view.requestFocus();
+        hideSystemUi();
 
         load();
         handler.postDelayed(periodicReload, RELOAD_EVERY_MS);
@@ -158,13 +127,16 @@ public class MainActivity extends Activity {
         }
     }
 
-    private boolean isAllowed(Uri u) {
-        String host = u.getHost() == null ? "" : u.getHost();
+    private boolean isAllowed(String url) {
+        if (url == null) return false;
+        if (url.startsWith("data:") || url.startsWith("about:")) return true;
+        String host = Uri.parse(url).getHost();
+        if (host == null) return false;
         return host.equals("levitv.com") || host.endsWith(".levitv.com")
                 || host.endsWith("youtube.com") || host.endsWith("youtube-nocookie.com");
     }
 
-    /** levitv.com/<loc>/full/?screen=atv-xxxxxx  or  levitv.com/<loc>/?view=tv&screen=… */
+    /** The page itself (no redirect), so a #cam= fragment can steer it without reloading. */
     private String url() {
         String loc = prefs.getString("loc", "levi");
         boolean full = prefs.getInt("view", 0) == 0;
@@ -174,13 +146,15 @@ public class MainActivity extends Activity {
             screen = "atv-" + (id == null ? "tv" : id.substring(0, Math.min(6, id.length())));
             prefs.edit().putString("screen", screen).apply();
         }
-        return SITE + loc + "/" + (full ? "full/?" : "?view=tv&") + "screen=" + Uri.encode(screen) + "&app=androidtv"
-                + (prefs.getBoolean("debug", false) ? "&debug=1&xrw=" + (xrwOff ? "off" : "on") + "&brand=" + uaBrand : "");
+        return SITE + "levi-infotv.html?loc=" + loc + "&view=" + (full ? "full" : "tv")
+                + "&screen=" + Uri.encode(screen) + "&app=androidtv&engine=gecko"
+                + (prefs.getBoolean("debug", false) ? "&debug=1" : "");
     }
 
     private void load() {
         handler.removeCallbacks(retry);
-        web.loadUrl(url());
+        pageUrl = url();
+        session.loadUri(pageUrl);
     }
 
     private void showOffline() {
@@ -188,14 +162,14 @@ public class MainActivity extends Activity {
                 + "display:flex;align-items:center;justify-content:center;height:100vh;text-align:center'>"
                 + "<div><div style='font-size:48px;font-weight:800;letter-spacing:6px;color:#fff'>LEVI<span style='color:#5fb4ff'>TV</span></div>"
                 + "<p style='font-size:22px'>No connection — retrying in 30 seconds…</p></div></body></html>";
-        web.loadDataWithBaseURL(null, html, "text/html", "utf-8", null);
+        pageUrl = "data:";
+        session.loadUri("data:text/html;charset=utf-8," + Uri.encode(html));
         handler.removeCallbacks(retry);
         handler.postDelayed(retry, RETRY_MS);
     }
 
     // ── Remote control ───────────────────────────────────────────────
-    // Handled in dispatchKeyEvent, i.e. BEFORE the WebView: otherwise the
-    // WebView swallows OK / Back and the menu never opens.
+    // Handled before the browser view, otherwise it swallows OK / Back.
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         int code = event.getKeyCode();
@@ -235,9 +209,12 @@ public class MainActivity extends Activity {
         }
     }
 
-    /** Next / previous camera on the page; automatic rotation continues. */
+    /** Next / previous camera: a #cam= fragment the page listens for (no reload). */
     private void skipCamera(int dir) {
-        web.evaluateJavascript("window.levitvSkip&&window.levitvSkip(" + dir + ")", null);
+        if (!pageUrl.startsWith(SITE)) return;
+        skipCounter++;
+        String base = pageUrl.contains("#") ? pageUrl.substring(0, pageUrl.indexOf('#')) : pageUrl;
+        session.loadUri(base + "#cam=" + dir + "_" + skipCounter);
     }
 
     private void showMenu() {
@@ -269,7 +246,7 @@ public class MainActivity extends Activity {
                         case 6: finish(); break;
                     }
                 })
-                .setOnDismissListener(d -> hideSystemUi())
+                .setOnDismissListener(d -> { hideSystemUi(); view.requestFocus(); })
                 .show();
     }
 
@@ -282,7 +259,7 @@ public class MainActivity extends Activity {
                     d.dismiss();
                     load();
                 })
-                .setOnDismissListener(d -> hideSystemUi())
+                .setOnDismissListener(d -> { hideSystemUi(); view.requestFocus(); })
                 .show();
     }
 
@@ -294,16 +271,8 @@ public class MainActivity extends Activity {
                     d.dismiss();
                     load();
                 })
-                .setOnDismissListener(d -> hideSystemUi())
+                .setOnDismissListener(d -> { hideSystemUi(); view.requestFocus(); })
                 .show();
-    }
-
-    /** "Mozilla/5.0 (X11; Linux x86_64) … Chrome/<same version> Safari/537.36 LeviTV-AndroidTV/x" */
-    private String desktopChromeUa(String webviewUa) {
-        java.util.regex.Matcher m = java.util.regex.Pattern.compile("Chrome/([0-9.]+)").matcher(webviewUa);
-        String ver = m.find() ? m.group(1) : "130.0.0.0";
-        return "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/" + ver
-                + " Safari/537.36 LeviTV-AndroidTV/" + appVersion();
     }
 
     private String appVersion() {
@@ -337,20 +306,19 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        web.onResume();
-        web.resumeTimers();
+        if (session != null) session.setActive(true);
     }
 
     @Override
     protected void onPause() {
-        web.onPause();
+        if (session != null) session.setActive(false);
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
         handler.removeCallbacksAndMessages(null);
-        web.destroy();
+        if (session != null) session.close();
         super.onDestroy();
     }
 }
