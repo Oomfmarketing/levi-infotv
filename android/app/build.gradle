@@ -46,5 +46,5 @@ android {
 
 dependencies {
     // Mozilla GeckoView (Firefox engine): YouTube embeds play here, unlike in Android WebView
-    implementation 'org.mozilla.geckoview:geckoview:+'
+    implementation 'org.mozilla.geckoview:geckoview:[140.0,150.0)'
 }
