@@ -16,7 +16,8 @@
         android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen"
         android:hardwareAccelerated="true"
         android:usesCleartextTraffic="false"
-        android:allowBackup="true">
+        android:allowBackup="true"
+        android:extractNativeLibs="true">
 
         <activity
             android:name=".MainActivity"

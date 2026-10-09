@@ -38,6 +38,11 @@ android {
         }
     }
 
+    // Compress GeckoView's native libraries inside the APK (much smaller download)
+    packaging {
+        jniLibs { useLegacyPackaging true }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
