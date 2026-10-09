@@ -1,6 +1,6 @@
-# levi-infotv
+# LeviTV.com — your real-time view of Levi
 
-Levi Info TV — a single HTML file (`levi-infotv.html`) for 1920×1080 screens.
+LeviTV — a single HTML file (`levi-infotv.html`) for 1920×1080 screens.
 It scales to any TV and switches to a scrolling mobile layout on phones (≤ 900 px wide).
 
 Locations (pick with `?loc=`):

@@ -4,70 +4,107 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#05080f">
-<title>Info TV</title>
+<title>LeviTV — Your real-time view of Levi</title>
+<meta name="description" content="Live cameras, weather, northern lights and daylight from Levi, Lapland — in real time.">
+<meta property="og:title" content="LeviTV — Your real-time view of Levi">
+<meta property="og:description" content="Live cameras, weather, northern lights and daylight from Levi, Lapland.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script defer src="https://cloud.umami.is/script.js" data-website-id="ced80469-2f42-45f0-8153-00f6fa4c2f66"></script>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#05080f;--line:rgba(255,255,255,.09);--text:#f2f5f9;--dim:rgba(232,240,248,.62);--accent:#5fb4ff;--sun:#ffc35a}
+:root{--ink:#05080f;--line:rgba(255,255,255,.09);--text:#f2f5f9;--dim:rgba(232,240,248,.64);--muted:rgba(232,240,248,.42);--accent:#5fb4ff;--sun:#ffc35a;--cond:'Barlow Condensed','Arial Narrow',sans-serif}
 *{margin:0;padding:0;box-sizing:border-box}
 body{
   min-height:100vh;color:var(--text);font-family:'Barlow',system-ui,sans-serif;
-  background:radial-gradient(900px 600px at 80% -10%,#0b1a33,transparent 70%),var(--ink);
-  padding:calc(40px + env(safe-area-inset-top)) 16px 40px;
+  background:radial-gradient(1000px 650px at 85% -10%,#0f2747,transparent 70%),radial-gradient(800px 500px at 0% 110%,#0b1a33,transparent 70%),var(--ink);
+  padding:calc(48px + env(safe-area-inset-top)) 20px calc(40px + env(safe-area-inset-bottom));
   display:flex;flex-direction:column;align-items:center;
 }
-h1{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:34px;letter-spacing:.18em}
-p.lead{color:var(--dim);margin:8px 0 28px;text-align:center}
-.grid{display:grid;gap:12px;width:100%;max-width:720px}
-@media(min-width:640px){.grid{grid-template-columns:repeat(3,1fr)}}
-div.loc{
-  display:block;text-decoration:none;color:inherit;
-  border:1px solid var(--line);border-radius:14px;padding:22px 20px;
-  background:rgba(255,255,255,.03);transition:border-color .2s,background .2s;
+.wrap{width:100%;max-width:880px}
+.live{display:inline-flex;align-items:center;gap:10px;font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.28em;color:var(--dim)}
+.live b{width:9px;height:9px;border-radius:50%;background:#ff4d4d;box-shadow:0 0 10px #ff4d4d;animation:p 2s infinite}
+@keyframes p{50%{opacity:.35}}
+.hero{display:flex;align-items:center;gap:22px;margin:22px 0 10px}
+.mark{width:64px;height:64px;flex-shrink:0}
+.wm{font-family:var(--cond);font-weight:800;font-size:clamp(52px,12vw,96px);letter-spacing:.1em;line-height:.9}
+.wm i{font-style:normal;color:var(--accent)}.wm small{font-size:.4em;color:var(--dim);letter-spacing:.08em}
+.tagline{font-size:clamp(18px,3.4vw,24px);color:var(--dim)}
+
+.main{
+  margin-top:34px;border:1px solid rgba(95,180,255,.35);border-radius:18px;padding:26px 24px;
+  background:linear-gradient(135deg,rgba(95,180,255,.12),rgba(255,255,255,.02));
 }
-div.loc:hover{border-color:var(--accent);background:rgba(95,180,255,.07)}
-.n{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:28px;letter-spacing:.14em;text-transform:uppercase}
-.s{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-top:2px}
-.c{font-size:14px;color:var(--dim);margin-top:12px}
-.links{display:flex;gap:8px;margin-top:16px}
-.links a{flex:1;text-align:center;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-weight:600;
-  font-size:14px;letter-spacing:.16em;text-transform:uppercase;padding:9px 6px;border-radius:999px;
-  border:1px solid var(--line);color:var(--text)}
-.links a:hover{border-color:var(--accent)}
-.links a.full{background:rgba(95,180,255,.12);border-color:rgba(95,180,255,.4)}
-footer{margin-top:32px;font-size:13px;color:var(--dim);text-align:center}
+.main .n{font-family:var(--cond);font-weight:700;font-size:34px;letter-spacing:.14em;text-transform:uppercase}
+.main .c{color:var(--dim);margin-top:4px}
+.btns{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.btn{
+  flex:1 1 180px;text-align:center;text-decoration:none;font-family:var(--cond);font-weight:700;
+  font-size:16px;letter-spacing:.18em;text-transform:uppercase;padding:13px 10px;border-radius:999px;
+  border:1px solid var(--line);color:var(--text);transition:border-color .2s,background .2s;
+}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--ink)}
+.btn.primary:hover{background:#7fc4ff}
+
+h2{font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin:38px 0 12px}
+.grid{display:grid;gap:12px}
+@media(min-width:640px){.grid{grid-template-columns:1fr 1fr}}
+.loc{border:1px solid var(--line);border-radius:14px;padding:20px;background:rgba(255,255,255,.03)}
+.loc .n{font-family:var(--cond);font-weight:700;font-size:24px;letter-spacing:.14em;text-transform:uppercase}
+.loc .s{font-family:var(--cond);font-size:13px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-top:2px}
+.loc .c{font-size:14px;color:var(--dim);margin-top:8px}
+.loc .btns{margin-top:14px}
+.loc .btn{font-size:14px;padding:9px 8px;flex-basis:120px}
+
+.tip{margin-top:30px;font-size:14px;color:var(--muted);line-height:1.5}
+.tip code{font-family:ui-monospace,monospace;font-size:12.5px;color:var(--dim);background:rgba(255,255,255,.05);padding:2px 6px;border-radius:5px}
+footer{margin-top:34px;padding-top:20px;border-top:1px solid var(--line);font-size:14px;color:var(--dim);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 footer a{color:var(--sun);text-decoration:none}
 </style>
 </head>
 <body>
-  <h1>INFO TV</h1>
-  <p class="lead">Choose a location and layout. On a TV, open the link directly; click or press F for full screen.</p>
-  <div class="grid">
-    <div class="loc">
-      <div class="n">Levi</div><div class="s">Lapland</div>
-      <div class="c">10 live cameras</div>
-      <div class="links">
-        <a href="levi-infotv.html?loc=levi">Info TV</a>
-        <a class="full" href="levi-infotv.html?loc=levi&amp;view=full">Full screen</a>
-      </div>
+<div class="wrap">
+  <div class="live"><b></b>LIVE FROM LAPLAND</div>
+  <div class="hero">
+    <svg class="mark" viewBox="0 0 48 48" fill="none" stroke="#5fb4ff" stroke-width="1.6" stroke-linecap="round"><circle cx="24" cy="24" r="22.5"/><path d="M24 9v30M11 16.5l26 15M11 31.5l26-15M24 9l-3.5 3.5M24 9l3.5 3.5M24 39l-3.5-3.5M24 39l3.5-3.5"/></svg>
+    <div class="wm">LEVI<i>TV</i><small>.COM</small></div>
+  </div>
+  <div class="tagline">Your real-time view of Levi — live cameras, weather, northern lights and daylight.</div>
+
+  <div class="main">
+    <div class="n">Levi</div>
+    <div class="c">10 live cameras · Lapland, Finland · 67.8°N</div>
+    <div class="btns">
+      <a class="btn primary" href="levi/">Watch live</a>
+      <a class="btn" href="levi/full/">Full-screen TV view</a>
     </div>
+  </div>
+
+  <h2>More live views</h2>
+  <div class="grid">
     <div class="loc">
       <div class="n">Ylläs</div><div class="s">Lapland</div>
       <div class="c">3 live cameras</div>
-      <div class="links">
-        <a href="levi-infotv.html?loc=yllas">Info TV</a>
-        <a class="full" href="levi-infotv.html?loc=yllas&amp;view=full">Full screen</a>
-      </div>
+      <div class="btns"><a class="btn" href="yllas/">Watch</a><a class="btn" href="yllas/full/">Full screen</a></div>
     </div>
     <div class="loc">
       <div class="n">Helsinki</div><div class="s">Capital of Finland</div>
       <div class="c">4 live cameras</div>
-      <div class="links">
-        <a href="levi-infotv.html?loc=helsinki">Info TV</a>
-        <a class="full" href="levi-infotv.html?loc=helsinki&amp;view=full">Full screen</a>
-      </div>
+      <div class="btns"><a class="btn" href="helsinki/">Watch</a><a class="btn" href="helsinki/full/">Full screen</a></div>
     </div>
   </div>
-  <footer>Advertise on these screens: <a href="mailto:hello@oomf.fi">hello@oomf.fi</a></footer>
+
+  <p class="tip">On a TV or display: open the full-screen link and click or press F.
+    Name the screen with <code>?screen=hotel-lobby</code> at the end of the link.</p>
+
+  <footer>
+    <span>Advertise on LeviTV — <a href="mailto:hello@oomf.fi?subject=LeviTV%20advertising">hello@oomf.fi</a></span>
+    <span>Cameras: Levi Ski Resort, Ylläs Ski Resort, Port of Helsinki, EK · Weather: FMI · Aurora: NOAA</span>
+  </footer>
+</div>
 </body>
 </html>

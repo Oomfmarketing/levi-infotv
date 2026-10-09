@@ -4,7 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#05080f">
-<title>Info TV</title>
+<title>LeviTV — Your real-time view of Levi</title>
+<meta name="description" content="Live cameras, weather, northern lights and daylight from Levi, Lapland — in real time.">
+<meta property="og:title" content="LeviTV — Your real-time view of Levi">
+<meta property="og:description" content="Live cameras, weather, northern lights and daylight from Levi, Lapland.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
@@ -89,7 +97,12 @@ body.night #stars{opacity:1}
 }
 #brand{display:flex;align-items:center;gap:22px}
 #mark{width:46px;height:46px;fill:none;stroke:var(--accent);stroke-width:1.6;stroke-linecap:round;flex-shrink:0}
-#m-pill,#sky,#m-site,#cam-pick{display:none}
+/* LeviTV wordmark */
+.wm{font-family:var(--cond);font-weight:800;letter-spacing:.12em;color:var(--text);white-space:nowrap}
+.wm i{font-style:normal;color:var(--accent)}
+.wm small{font-size:.72em;font-weight:600;color:var(--dim);letter-spacing:.1em}
+#live-txt .wm{margin-right:4px}
+#m-pill,#sky,#m-site,#cam-pick,#m-brand{display:none}
 #b-prog{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--accent);opacity:.7;z-index:2}
 .k-sun{color:var(--sun)}.k-cold{color:var(--accent)}
 #logo{
@@ -509,6 +522,13 @@ html.full,html.full body{cursor:none}
   #m-site-h{font-family:var(--cond);font-size:34px;font-weight:700;letter-spacing:.14em;color:var(--sun)}
   #m-site-p{font-family:var(--cond);font-size:14px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);margin-top:6px}
 
+  #m-brand{
+    order:6;display:block;text-align:center;padding:30px 16px 26px;border-bottom:1px solid var(--line);
+  }
+  #m-brand .wm{font-size:40px;display:block}
+  #m-brand-tag{font-size:16px;color:var(--dim);margin-top:6px}
+  #m-brand-ad{font-size:13px;color:var(--muted);margin-top:14px}
+  #m-brand-ad a{color:var(--sun);text-decoration:none}
   #foot{order:7;height:52px;background:none;border:0}
   #foot-label{display:none}
   #ticker span{font-size:17px;padding:0 20px}
@@ -650,6 +670,12 @@ html.full,html.full body{cursor:none}
     <div id="m-site-p"></div>
   </a>
 
+  <div id="m-brand">
+    <span class="wm">LEVI<i>TV</i><small>.COM</small></span>
+    <div id="m-brand-tag"></div>
+    <div id="m-brand-ad">Advertise on LeviTV — <a href="mailto:hello@oomf.fi?subject=LeviTV%20advertising">hello@oomf.fi</a></div>
+  </div>
+
   <footer id="foot">
     <div id="foot-label"></div>
     <div id="foot-track"><div id="ticker"></div></div>
@@ -685,13 +711,14 @@ const LOCS = {
       {id:'mupuSRKkL_M', n:'Leevilandia', l:'South Slopes — Leevilandia'},
     ],
     ticker:[
+      'LeviTV.com — your real-time view of Levi',
       'Welcome to Levi · Tervetuloa Leviin',
       'Live cameras from around Levi Fell',
       'Slope & lift status: levi.fi',
       'Northern lights: look north on clear, dark evenings',
       'Emergency number 112',
       'Share your day: #visitlevi',
-      'Advertise on this screen: hello@oomf.fi',
+      'Advertise on LeviTV: hello@oomf.fi',
     ],
     ads:[
       {tag:'Activities', t:'accent', ad:'lwa',
@@ -702,8 +729,8 @@ const LOCS = {
        h:'Bring your group to Lapland',
        p:'Incentives, meetings &amp; events in Levi and across Finland — <b>elamysdmc.com</b>'},
       {tag:'Advertise here', t:'accent', ad:'oomf',
-       h:'Interested in visibility on this screen?',
-       p:'Book this spot — contact <b>hello@oomf.fi</b>'},
+       h:'Advertise on LeviTV',
+       p:'Reach visitors on screens and phones — contact <b>hello@oomf.fi</b>'},
     ],
   },
   yllas: {
@@ -724,7 +751,7 @@ const LOCS = {
       'Slope & lift status: ski.yllas.fi',
       'Northern lights: look north on clear, dark evenings',
       'Emergency number 112',
-      'Advertise on this screen: hello@oomf.fi',
+      'Advertise on LeviTV: hello@oomf.fi',
     ],
     ads:[
       {tag:'Activities', t:'accent', ad:'lwa',
@@ -735,8 +762,8 @@ const LOCS = {
        h:'Bring your group to Lapland',
        p:'Incentives, meetings &amp; events in Ylläs, Levi and across Finland — <b>elamysdmc.com</b>'},
       {tag:'Advertise here', t:'accent', ad:'oomf',
-       h:'Interested in visibility on this screen?',
-       p:'Book this spot — contact <b>hello@oomf.fi</b>'},
+       h:'Advertise on LeviTV',
+       p:'Reach visitors on screens and phones — contact <b>hello@oomf.fi</b>'},
     ],
   },
   helsinki: {
@@ -758,7 +785,7 @@ const LOCS = {
       'Heading north? Lapland activities: laplandwinteractivities.com',
       'Emergency number 112',
       'Share your day: #myhelsinki',
-      'Advertise on this screen: hello@oomf.fi',
+      'Advertise on LeviTV: hello@oomf.fi',
     ],
     ads:[
       {tag:'Groups &amp; companies', t:'sun', ad:'edmc',
@@ -769,8 +796,8 @@ const LOCS = {
        h:'Heading north to Lapland?',
        p:'Book husky safaris, northern lights &amp; snowmobile tours — <b>laplandwinteractivities.com</b>'},
       {tag:'Advertise here', t:'accent', ad:'oomf',
-       h:'Interested in visibility on this screen?',
-       p:'Book this spot — contact <b>hello@oomf.fi</b>'},
+       h:'Advertise on LeviTV',
+       p:'Reach visitors on screens and phones — contact <b>hello@oomf.fi</b>'},
     ],
   },
 };
@@ -793,7 +820,7 @@ const CFG = window.INFOTV || {};
 const AD_URLS = Object.assign({
   lwa:'https://laplandwinteractivities.com',
   edmc:'https://elamysdmc.com',
-  oomf:'mailto:hello@oomf.fi?subject=Info%20TV%20advertising',
+  oomf:'mailto:hello@oomf.fi?subject=LeviTV%20advertising',
 }, CFG.ads||{});
 // Optional screen name for the TV, e.g. ?screen=hotel-lobby (shows up in analytics)
 const SCREEN = (new URLSearchParams(location.search).get('screen')||'').toLowerCase().replace(/[\s_]+/g,'-').replace(/[^a-z0-9-]/g,'').slice(0,40);
@@ -847,17 +874,19 @@ if(VIEW()!=='mobile'){
 ══════════════════════════════════════════════════════════ */
 (function applyLoc(){
   const q=id=>document.getElementById(id);
-  document.title=`${LOC.name} Info TV`;
+  const WM='<span class="wm">LEVI<i>TV</i><small>.COM</small></span>';
+  document.title = LOC_KEY==='levi' ? 'LeviTV — Your real-time view of Levi' : `${LOC.name} live — LeviTV`;
   q('mark').innerHTML=LOC.mark;
   q('logo').textContent=LOC.name.toUpperCase();
   q('brand-meta').dataset.name=LOC.name.toUpperCase();
   q('brand-sub').textContent=LOC.sub;
   const ns=(v,p,n)=>`${Math.abs(v).toFixed(4)}°${v>=0?p:n}`;
   q('coords').textContent=`${ns(LOC.lat,'N','S')} · ${ns(LOC.lon,'E','W')}`;
-  q('live-txt').innerHTML=LOC.live;
+  q('live-txt').innerHTML=WM+' · '+LOC.live;
   q('wx-station').textContent=LOC.station;
   q('tag').textContent=LOC.tag;
-  q('foot-label').textContent=LOC.name;
+  q('foot-label').innerHTML=WM;
+  q('m-brand-tag').textContent=`Your real-time view of ${LOC.name}`;
   q('m-site').href=LOC.site.url;
   q('m-site-h').textContent=LOC.site.h;
   q('m-site-p').textContent=LOC.site.p;

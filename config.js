@@ -15,6 +15,6 @@ window.INFOTV = {
   ads: {
     lwa:  'https://laplandwinteractivities.com',
     edmc: 'https://elamysdmc.com',
-    oomf: 'mailto:hello@oomf.fi?subject=Info%20TV%20advertising',
+    oomf: 'mailto:hello@oomf.fi?subject=LeviTV%20advertising',
   },
 };
