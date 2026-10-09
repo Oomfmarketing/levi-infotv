@@ -1,71 +1,71 @@
 {
- "checked": "2026-10-09T15:16Z",
+ "checked": "2026-10-09T15:17Z",
  "cams": {
   "LwihxyJ4V20": {
    "loc": "levi",
    "name": "Zero Point",
-   "state": "unknown",
-   "reason": "YouTube bot check"
+   "state": "offline",
+   "reason": "This video is unavailable"
   },
   "89vRm9bb9_c": {
    "loc": "levi",
    "name": "South Point",
-   "state": "unknown",
-   "reason": "YouTube bot check"
+   "state": "offline",
+   "reason": "This video is unavailable"
   },
   "X7tdyNFpp1g": {
    "loc": "levi",
    "name": "Village View",
-   "state": "unknown",
-   "reason": "YouTube bot check"
+   "state": "offline",
+   "reason": "This video is unavailable"
   },
   "gehi4YiVYdY": {
    "loc": "levi",
    "name": "Levi Black",
-   "state": "unknown",
-   "reason": "YouTube bot check"
+   "state": "offline",
+   "reason": "This video is unavailable"
   },
   "tgCjNC-813A": {
    "loc": "levi",
    "name": "Levi Six",
-   "state": "unknown",
-   "reason": "YouTube bot check"
+   "state": "offline",
+   "reason": "This video is unavailable"
   },
   "jQrqWYe5Cn4": {
    "loc": "levi",
    "name": "Levi West",
-   "state": "unknown",
-   "reason": "YouTube bot check"
+   "state": "offline",
+   "reason": "This video is unavailable"
   },
   "Wr9b5aYA4mI": {
    "loc": "levi",
    "name": "Glacier Express",
-   "state": "unknown",
-   "reason": "YouTube bot check"
+   "state": "offline",
+   "reason": "This video is unavailable"
   },
   "eXDCi75TjM8": {
    "loc": "levi",
    "name": "Top of Levi",
-   "state": "unknown",
-   "reason": "YouTube bot check"
+   "state": "offline",
+   "reason": "This video is unavailable"
   },
   "hWN0iCg8pDY": {
    "loc": "levi",
    "name": "Lifts 13 & 14",
-   "state": "unknown",
-   "reason": "YouTube bot check"
+   "state": "offline",
+   "reason": "This video is unavailable"
   },
   "9NxBGQUb1oY": {
    "loc": "levi",
    "name": "Aurora Cam",
-   "state": "unknown",
-   "reason": "YouTube bot check"
+   "state": "offline",
+   "reason": "This video is unavailable"
   },
   "PeLTbbI2i6U": {
    "loc": "yllas",
    "name": "Gondola",
-   "state": "unknown",
-   "reason": "YouTube bot check"
+   "state": "offline",
+   "reason": "This video is unavailable"
   },
   "FY4GLYiZieE": {
    "loc": "yllas",
@@ -76,32 +76,32 @@
   "5Oda5wfGpvw": {
    "loc": "yllas",
    "name": "Summit",
-   "state": "unknown",
-   "reason": "YouTube bot check"
+   "state": "offline",
+   "reason": "This video is unavailable"
   },
   "LMZQ7eFhm58": {
    "loc": "helsinki",
    "name": "Market Square",
-   "state": "unknown",
-   "reason": "YouTube bot check"
+   "state": "offline",
+   "reason": "This video is unavailable"
   },
   "CvOB-Is_yYU": {
    "loc": "helsinki",
    "name": "South Harbour",
-   "state": "unknown",
-   "reason": "YouTube bot check"
+   "state": "offline",
+   "reason": "This video is unavailable"
   },
   "6hPWq2IG08M": {
    "loc": "helsinki",
    "name": "West Harbour S",
-   "state": "unknown",
-   "reason": "YouTube bot check"
+   "state": "offline",
+   "reason": "This video is unavailable"
   },
   "JnJhFYhIjFs": {
    "loc": "helsinki",
    "name": "West Harbour N",
-   "state": "unknown",
-   "reason": "YouTube bot check"
+   "state": "offline",
+   "reason": "This video is unavailable"
   }
  }
 }
