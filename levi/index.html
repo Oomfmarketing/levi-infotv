@@ -1529,6 +1529,15 @@ function makePlayer(i,videoId){
       onError:e=>{
         log('error',i,'code',e&&e.data,'cam',(i===vis?CAMS[curCam]:CAMS[nextCam??curCam]||{}).n);
         track('cam_error',{code:String(e&&e.data),cam:((i===vis?CAMS[curCam]:CAMS[nextCam??curCam])||{}).n||'-'});
+        // diagnostics: stop here and show YouTube's own message on screen
+        if(DEBUG){
+          log('DEBUG: holding on this camera so YouTube shows its message');
+          clearTimeout(visTimer);clearTimeout(dueTimer);clearTimeout(preTimer);clearTimeout(loadTimer);
+          waitVis=false;firstShown=true;manual=true;
+          slot(i).classList.add('show');slot(1-i).classList.remove('show');cover(false);
+          const d=document.getElementById('cam-debug'); if(d) d.style.maxWidth='560px';
+          return;
+        }
         if(i!==vis&&nextCam!==null&&!single) preload(nextCam);
         else if(i===vis&&(waitVis||!firstShown)) hardNext();
       }
