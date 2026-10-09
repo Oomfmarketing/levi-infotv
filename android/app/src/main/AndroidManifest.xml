@@ -5,8 +5,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
-    <!-- Runs on Android TV and Google TV, also installable on tablets -->
-    <uses-feature android:name="android.software.leanback" android:required="false" />
+    <!-- TV-only app (Android TV / Google TV). Phones and tablets use levitv.com -->
+    <uses-feature android:name="android.software.leanback" android:required="true" />
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
     <application

@@ -44,15 +44,23 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: gradle -p android assembleRelease --no-daemon
+        run: gradle -p android assembleRelease bundleRelease --no-daemon
 
-      - name: Collect APK
-        run: cp android/app/build/outputs/apk/release/app-release.apk levitv.apk
+      - name: Collect APK and AAB
+        run: |
+          cp android/app/build/outputs/apk/release/app-release.apk levitv.apk
+          cp android/app/build/outputs/bundle/release/app-release.aab levitv.aab
 
       - uses: actions/upload-artifact@v4
         with:
           name: levitv-apk
           path: levitv.apk
+
+      # App bundle for Google Play: Actions run → Artifacts → levitv-aab
+      - uses: actions/upload-artifact@v4
+        with:
+          name: levitv-aab
+          path: levitv.aab
 
       - name: Publish release for levitv.com/app
         uses: softprops/action-gh-release@v2
