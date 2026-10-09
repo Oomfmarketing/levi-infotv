@@ -94,8 +94,12 @@ def check(vid):
         return 'unknown', 'YouTube bot check'
     ps = pr.get('playabilityStatus', {})
     status, reason = ps.get('status', '?'), ps.get('reason', '')
+    # Only trust specific reasons: a data-centre IP often gets a generic
+    # "This video is unavailable" for streams that play fine on real screens.
     if status in ('ERROR', 'UNPLAYABLE'):
-        return 'offline', reason or status
+        if re.search(r'recording is not available|has ended|removed|private|terminated|no longer available', reason, re.I):
+            return 'offline', reason
+        return 'unknown', reason or status
     live = (pr.get('microformat', {}).get('playerMicroformatRenderer', {})
               .get('liveBroadcastDetails', {}))
     vd = pr.get('videoDetails', {})
@@ -122,6 +126,11 @@ def main():
         print(f'{loc:9} {name:18} {vid}  {state:8} {why}')
         time.sleep(1.5)
 
+    # sanity check: if most cameras look offline, the check itself is blocked
+    if sum(r['state'] == 'offline' for r in result.values()) > len(result) / 2:
+        for r in result.values():
+            if r['state'] == 'offline':
+                r['state'], r['reason'] = 'unknown', 'check blocked? ' + r['reason']
     out = ROOT / 'cam-status.json'
     old = {}
     if out.exists():
@@ -131,7 +140,8 @@ def main():
             pass
     # an "unknown" (YouTube blocked the check) keeps yesterday's verdict
     for vid, r in result.items():
-        if r['state'] == 'unknown' and old.get(vid, {}).get('state') in ('live', 'offline'):
+        if r['state'] == 'unknown' and old.get(vid, {}).get('state') in ('live', 'offline') \
+                and 'kept' not in old[vid].get('reason', ''):
             r['state'] = old[vid]['state']
             r['reason'] = (old[vid].get('reason') or '') + ' (kept from last check)'
     out.write_text(json.dumps({

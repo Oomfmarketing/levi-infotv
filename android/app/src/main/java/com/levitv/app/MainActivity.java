@@ -11,7 +11,17 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Gravity;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.graphics.Typeface;
 import android.widget.Toast;
 
 import org.mozilla.geckoview.AllowOrDeny;
@@ -52,6 +62,8 @@ public class MainActivity extends Activity {
     private long lastBack = 0;
     private String pageUrl = "";
     private int skipCounter = 0;
+    private View splash;
+    private final Runnable hideSplash = this::hideSplash;
 
     private final Runnable periodicReload = new Runnable() {
         @Override public void run() {
@@ -105,6 +117,15 @@ public class MainActivity extends Activity {
             @Override
             public void onPageStop(GeckoSession s, boolean success) {
                 if (!success && pageUrl.startsWith(SITE)) showOffline();
+                else handler.postDelayed(hideSplash, 2500);     // fallback if no paint event
+            }
+        });
+
+        // Page painted → fade the splash away
+        session.setContentDelegate(new GeckoSession.ContentDelegate() {
+            @Override
+            public void onFirstContentfulPaint(GeckoSession s) {
+                handler.postDelayed(hideSplash, 600);
             }
         });
 
@@ -112,9 +133,17 @@ public class MainActivity extends Activity {
 
         view = new GeckoView(this);
         view.setBackgroundColor(Color.rgb(5, 8, 15));
+        view.coverUntilFirstPaint(Color.rgb(5, 8, 15));       // no white surface before the page
         view.setFocusable(true);
         view.setSession(session);
-        setContentView(view);
+        FrameLayout root = new FrameLayout(this);
+        root.setBackgroundColor(Color.rgb(5, 8, 15));
+        root.addView(view, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        splash = makeSplash();
+        root.addView(splash, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        setContentView(root);
         view.requestFocus();
         hideSystemUi();
 
@@ -151,7 +180,60 @@ public class MainActivity extends Activity {
                 + (prefs.getBoolean("debug", false) ? "&debug=1" : "");
     }
 
+    /** Start-up screen: LEVITV.com wordmark, tagline and a spinner. */
+    private View makeSplash() {
+        LinearLayout box = new LinearLayout(this);
+        box.setOrientation(LinearLayout.VERTICAL);
+        box.setGravity(Gravity.CENTER);
+        box.setBackgroundColor(Color.rgb(5, 8, 15));
+        box.setClickable(false);
+        box.setFocusable(false);
+
+        SpannableString word = new SpannableString("LEVITV.com");
+        word.setSpan(new ForegroundColorSpan(Color.rgb(95, 180, 255)), 4, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        word.setSpan(new ForegroundColorSpan(Color.rgb(120, 140, 165)), 6, 10, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        TextView t = new TextView(this);
+        t.setText(word);
+        t.setTextColor(Color.WHITE);
+        t.setTextSize(56);
+        t.setTypeface(Typeface.create("sans-serif-condensed", Typeface.BOLD));
+        t.setLetterSpacing(0.08f);
+        t.setGravity(Gravity.CENTER);
+        box.addView(t);
+
+        TextView sub = new TextView(this);
+        int li = indexOf(LOC_KEYS, prefs.getString("loc", "levi"));
+        sub.setText("your real-time view of " + LOC_NAMES[li < 0 ? 0 : li]);
+        sub.setTextColor(Color.rgb(160, 178, 198));
+        sub.setTextSize(20);
+        sub.setGravity(Gravity.CENTER);
+        sub.setPadding(0, 8, 0, 48);
+        box.addView(sub);
+
+        ProgressBar p = new ProgressBar(this);
+        p.setIndeterminate(true);
+        box.addView(p, new LinearLayout.LayoutParams(72, 72));
+        return box;
+    }
+
+    private void showSplash() {
+        if (splash == null) return;
+        splash.animate().cancel();
+        splash.setAlpha(1f);
+        splash.setVisibility(View.VISIBLE);
+        handler.removeCallbacks(hideSplash);
+        handler.postDelayed(hideSplash, 20_000);              // never stay forever
+    }
+
+    private void hideSplash() {
+        if (splash == null || splash.getVisibility() != View.VISIBLE) return;
+        handler.removeCallbacks(hideSplash);
+        splash.animate().alpha(0f).setDuration(600)
+                .withEndAction(() -> splash.setVisibility(View.GONE)).start();
+    }
+
     private void load() {
+        showSplash();
         handler.removeCallbacks(retry);
         pageUrl = url();
         session.loadUri(pageUrl);
