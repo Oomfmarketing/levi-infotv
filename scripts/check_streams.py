@@ -148,7 +148,7 @@ def main():
         'checked': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%MZ'),
         'cams': result}, ensure_ascii=False, indent=1) + '\n')
 
-    bad = [r for r in rows if result[r[2]]['state'] != 'live']
+    bad = [r for r in rows if result[r[2]]['state'] == 'offline']
     lines = ['Daily LeviTV camera check. Cameras marked **offline** are skipped on the screens '
              'automatically until they come back. Replace or remove them in `levi-infotv.html` '
              '(LOCS → cams) if they stay down.', '',
