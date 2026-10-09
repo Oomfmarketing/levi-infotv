@@ -1,0 +1,15 @@
+{
+  "id": "com.levitv.app",
+  "version": "1.0.0",
+  "vendor": "OOMF Marketing Oy",
+  "type": "web",
+  "main": "index.html",
+  "title": "LeviTV",
+  "icon": "icon.png",
+  "largeIcon": "largeIcon.png",
+  "splashBackground": "splash.png",
+  "bgColor": "#05080f",
+  "resolution": "1920x1080",
+  "disableBackHistoryAPI": true,
+  "requiredMemory": 200
+}

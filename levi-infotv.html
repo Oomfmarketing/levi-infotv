@@ -1444,7 +1444,7 @@ const tvMenu=(()=>{
       const k=e.keyCode;
       if(!open){
         if(k===13){open=true;sel=0;render();el.style.display='block';return true;}
-        if(k===10009&&TVAPP==='tizen'){history.back();return true;}   // back to the app's start screen → exit
+        if((k===10009&&TVAPP==='tizen')||(k===461&&TVAPP==='webos')){history.back();return true;}   // back to the app's start screen → exit
         return false;
       }
       if(k===38) sel=(sel+items.length-1)%items.length;

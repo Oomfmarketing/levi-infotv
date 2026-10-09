@@ -1,0 +1,34 @@
+name: LG TV app
+
+on:
+  push:
+    branches: [main]
+    paths: ['webos/**', '.github/workflows/webos.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Package .ipk
+        run: |
+          npm i -g @webos-tools/cli
+          V="1.0.${{ github.run_number }}"
+          jq --arg v "$V" '.version=$v' webos/appinfo.json > /tmp/a.json && mv /tmp/a.json webos/appinfo.json
+          ares-package webos -o out
+          cp out/*.ipk levitv-lg.ipk
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: lg-v1.0.${{ github.run_number }}
+          name: LeviTV for LG TV 1.0.${{ github.run_number }}
+          body: |
+            LeviTV for LG webOS TVs — install with the Developer Mode app and `ares-install levitv-lg.ipk`.
+          files: levitv-lg.ipk
+          make_latest: false

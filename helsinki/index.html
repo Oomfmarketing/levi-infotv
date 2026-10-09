@@ -1635,7 +1635,7 @@ const tvMenu = (() => {
           el.style.display = "block";
           return true;
         }
-        if (k === 10009 && TVAPP === "tizen") {
+        if (k === 10009 && TVAPP === "tizen" || k === 461 && TVAPP === "webos") {
           history.back();
           return true;
         }
