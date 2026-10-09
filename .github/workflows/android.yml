@@ -52,7 +52,7 @@ jobs:
       - name: Report build errors
         if: failure()
         run: |
-          grep -E "error:|e: |What went wrong|> |Could not|FAILURE" build.log | grep -v "^> Task" | head -25 | while IFS= read -r line; do
+          { grep -E "error:|^e: " build.log | head -10; sed -n '/What went wrong/,/^\* Try/p' build.log | head -40; } | grep -v "^\s*$" | while IFS= read -r line; do
             echo "::error::${line//%/%25}"
           done
 
