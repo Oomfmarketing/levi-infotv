@@ -88,7 +88,7 @@ body.night #stars{opacity:1}
 }
 #brand{display:flex;align-items:center;gap:22px}
 #mark{width:46px;height:46px;fill:none;stroke:var(--accent);stroke-width:1.6;stroke-linecap:round;flex-shrink:0}
-#m-pill,#sky,#m-site{display:none}
+#m-pill,#sky,#m-site,#cam-pick{display:none}
 #b-prog{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--accent);opacity:.7;z-index:2}
 .k-sun{color:var(--sun)}.k-cold{color:var(--accent)}
 #logo{
@@ -422,6 +422,20 @@ html.full,html.full body{cursor:none}
   .cam-dot{width:5px;height:5px}.cam-dot.on{width:14px}
   #cam-fade{height:80px}
 
+  #cam-pick{
+    display:flex;gap:8px;overflow-x:auto;padding:12px 16px 2px;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  }
+  #cam-pick::-webkit-scrollbar{display:none}
+  #cam-pick a{
+    flex-shrink:0;padding:8px 14px;border-radius:999px;text-decoration:none;white-space:nowrap;
+    font-family:var(--cond);font-size:14px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--dim);border:1px solid var(--line);background:rgba(255,255,255,.03);
+  }
+  #cam-pick a.on{color:var(--text);border-color:color-mix(in srgb,var(--accent) 55%,transparent);
+    background:color-mix(in srgb,var(--accent) 16%,transparent)}
+  #cam-pick a.yt{color:var(--accent)}
+
   /* cards */
   #side{
     background:none;border:0;padding:0 16px;
@@ -555,6 +569,8 @@ html.full,html.full body{cursor:none}
     <div id="cam-progress"></div>
   </section>
 
+  <nav id="cam-pick" aria-label="Choose camera"></nav>
+
   <aside id="side">
     <section class="sec off" id="wx">
       <div class="kicker">Weather now <b id="wx-station"></b></div>
@@ -656,16 +672,16 @@ const LOCS = {
     kp:[2,3,4,5],
     mark:'<circle cx="24" cy="24" r="22.5"/><path d="M24 9v30M11 16.5l26 15M11 31.5l26-15M24 9l-3.5 3.5M24 9l3.5 3.5M24 39l-3.5-3.5M24 39l3.5-3.5"/>',
     cams:[
-      {id:'LwihxyJ4V20', l:'Levi Center — Zero Point'},
-      {id:'89vRm9bb9_c', l:'South Point — South Slopes'},
-      {id:'X7tdyNFpp1g', l:'Village View'},
-      {id:'gehi4YiVYdY', l:'Levi Black — Gondola Area'},
-      {id:'tgCjNC-813A', l:'Levi Six — NE Slopes'},
-      {id:'jQrqWYe5Cn4', l:'Levi West — West Slopes'},
-      {id:'Wr9b5aYA4mI', l:'Glacier Express'},
-      {id:'eXDCi75TjM8', l:'Top of Levi — Summit 531 m'},
-      {id:'hWN0iCg8pDY', l:'Lifts 13 & 14 — North'},
-      {id:'mupuSRKkL_M', l:'South Slopes — Leevilandia'},
+      {id:'LwihxyJ4V20', n:'Zero Point', l:'Levi Center — Zero Point'},
+      {id:'89vRm9bb9_c', n:'South Point', l:'South Point — South Slopes'},
+      {id:'X7tdyNFpp1g', n:'Village View', l:'Village View'},
+      {id:'gehi4YiVYdY', n:'Levi Black', l:'Levi Black — Gondola Area'},
+      {id:'tgCjNC-813A', n:'Levi Six', l:'Levi Six — NE Slopes'},
+      {id:'jQrqWYe5Cn4', n:'Levi West', l:'Levi West — West Slopes'},
+      {id:'Wr9b5aYA4mI', n:'Glacier Express', l:'Glacier Express'},
+      {id:'eXDCi75TjM8', n:'Top of Levi', l:'Top of Levi — Summit 531 m'},
+      {id:'hWN0iCg8pDY', n:'Lifts 13 &amp; 14', l:'Lifts 13 & 14 — North'},
+      {id:'mupuSRKkL_M', n:'Leevilandia', l:'South Slopes — Leevilandia'},
     ],
     ticker:[
       'Welcome to Levi · Tervetuloa Leviin',
@@ -697,9 +713,9 @@ const LOCS = {
     kp:[2,3,4,5],
     mark:'<circle cx="24" cy="24" r="22.5"/><path d="M8.5 33.5l9.5-13.5 5 6.5 6-9 10.5 16z"/><path d="M15.4 24.4l2.6-1.4 2.2 2M26.6 21.6l2.4-1.6 2.6 2.4"/>',
     cams:[
-      {id:'PeLTbbI2i6U', l:'Gondola Station — Ylläs South'},
-      {id:'FY4GLYiZieE', l:'Ylläs Express Chairlift'},
-      {id:'5Oda5wfGpvw', l:'Summit Camera — 719 m'},
+      {id:'PeLTbbI2i6U', n:'Gondola', l:'Gondola Station — Ylläs South'},
+      {id:'FY4GLYiZieE', n:'Chairlift', l:'Ylläs Express Chairlift'},
+      {id:'5Oda5wfGpvw', n:'Summit', l:'Summit Camera — 719 m'},
     ],
     ticker:[
       'Welcome to Ylläs · Tervetuloa Ylläkselle',
@@ -730,10 +746,10 @@ const LOCS = {
     kp:[4,5,6,7],
     mark:'<circle cx="24" cy="24" r="22.5"/><path d="M11 19.5c2.2-2 4.3-2 6.5 0s4.3 2 6.5 0 4.3-2 6.5 0 4.3 2 6.5 0M11 25.5c2.2-2 4.3-2 6.5 0s4.3 2 6.5 0 4.3-2 6.5 0 4.3 2 6.5 0M11 31.5c2.2-2 4.3-2 6.5 0s4.3 2 6.5 0 4.3-2 6.5 0 4.3 2 6.5 0"/>',
     cams:[
-      {id:'LMZQ7eFhm58', l:'Market Square &amp; City Centre'},
-      {id:'CvOB-Is_yYU', l:'South Harbour — Port of Helsinki'},
-      {id:'6hPWq2IG08M', l:'West Harbour — South'},
-      {id:'JnJhFYhIjFs', l:'West Harbour — North'},
+      {id:'LMZQ7eFhm58', n:'Market Square', l:'Market Square &amp; City Centre'},
+      {id:'CvOB-Is_yYU', n:'South Harbour', l:'South Harbour — Port of Helsinki'},
+      {id:'6hPWq2IG08M', n:'West Harbour S', l:'West Harbour — South'},
+      {id:'JnJhFYhIjFs', n:'West Harbour N', l:'West Harbour — North'},
     ],
     ticker:[
       'Welcome to Helsinki · Tervetuloa Helsinkiin',
@@ -1208,11 +1224,37 @@ const players=[null,null], ready=[false,false], settle=[null,null];
 let vis=0, curCam=0, nextCam=null, hiddenReady=false, swapDue=false;
 let firstShown=false, single=false, waitVis=false;
 let loadTimer=null, dueTimer=null, preTimer=null, visTimer=null;
-let lastSwitch=Date.now(), readyWait=0, skips=0;
+let lastSwitch=Date.now(), readyWait=0, skips=0, manual=false;
 
 $('cam-dots').innerHTML=CAMS.map(()=>'<i class="cam-dot"></i>').join('');
+function renderPick(){
+  const el=$('cam-pick'); if(!el) return;
+  const sl=el.scrollLeft;
+  el.innerHTML=`<a href="#" data-cam="auto" class="${manual?'':'on'}">Auto</a>`
+    +CAMS.map((c,i)=>`<a href="#" data-cam="${i}" class="${manual&&i===curCam?'on':''}">${c.n||c.l}</a>`).join('')
+    +`<a class="yt" href="https://www.youtube.com/watch?v=${CAMS[curCam].id}" target="_blank" rel="noopener">YouTube ↗</a>`;
+  el.scrollLeft=sl;
+}
+$('cam-pick').addEventListener('click',e=>{
+  const a=e.target.closest('a[data-cam]'); if(!a) return;
+  e.preventDefault();
+  const v=a.dataset.cam;
+  if(v==='auto'){ manual=false; renderPick(); if(firstShown) cycle(); return; }
+  pickCam(+v);
+});
+renderPick();
+function pickCam(i){
+  manual=true;
+  clearTimeout(preTimer);clearTimeout(dueTimer);clearTimeout(loadTimer);
+  nextCam=null;hiddenReady=false;swapDue=false;
+  if(i===curCam&&firstShown&&!waitVis){ renderPick(); return; }
+  curCam=(i-1+CAMS.length)%CAMS.length;   // hardNext() steps forward to i
+  hardNext();
+  renderPick();
+}
 function markCam(){
   lastSwitch=Date.now();
+  renderPick();
   $('cam-name').innerHTML=CAMS[curCam].l;
   $('cam-dots').querySelectorAll('.cam-dot').forEach((d,i)=>d.classList.toggle('on',i===curCam));
   const bar=$('cam-progress');
@@ -1227,7 +1269,7 @@ const state=i=>{try{return players[i].getPlayerState();}catch(_){return -9;}};
 function cycle(){
   clearTimeout(preTimer);clearTimeout(dueTimer);
   swapDue=false;
-  if(CAMS.length<2) return;
+  if(CAMS.length<2||manual) return;
   if(single){ dueTimer=setTimeout(hardNext,CAM_INTERVAL); return; }
   preTimer=setTimeout(()=>preload(curCam),Math.max(0,CAM_INTERVAL-PRELOAD_MS));
   dueTimer=setTimeout(()=>{swapDue=true;swap();},CAM_INTERVAL);
@@ -1288,6 +1330,7 @@ function hardNext(skip){
   waitVis=true;cover(true);
   try{players[vis].loadVideoById(CAMS[curCam].id);}catch(_){}
   visTimer=setTimeout(()=>{ if(waitVis) hardNext(); },LOAD_TIMEOUT);   // offline → next
+  if(manual) renderPick();
 }
 
 function onPlaying(i){
@@ -1331,7 +1374,7 @@ function makePlayer(i,videoId){
 }
 // Watchdog: whatever happens, never sit on one camera for long
 setInterval(()=>{
-  if(!firstShown||CAMS.length<2) return;
+  if(!firstShown||CAMS.length<2||manual) return;
   if(Date.now()-lastSwitch>CAM_INTERVAL+20000){
     log('watchdog');
     lastSwitch=Date.now();
