@@ -739,7 +739,6 @@ const LOCS = {
       {id:'Wr9b5aYA4mI', n:'Glacier Express', l:'Glacier Express'},
       {id:'eXDCi75TjM8', n:'Top of Levi', l:'Top of Levi — Summit 531 m'},
       {id:'hWN0iCg8pDY', n:'Lifts 13 &amp; 14', l:'Lifts 13 & 14 — North'},
-      {id:'mupuSRKkL_M', n:'Leevilandia', l:'South Slopes — Leevilandia'},
       {id:'9NxBGQUb1oY', n:'Aurora Cam', l:'Aurora Cam — Levi Igloos'},
     ],
     ticker:[
@@ -1432,6 +1431,13 @@ const cover=(on,cam)=>{
 const dead={};
 const isDead=i=>dead[i]&&Date.now()<dead[i];
 function markDead(i,code){ if(i==null) return; dead[i]=Date.now()+30*60000; log('skip cam',i,'for 30 min, code',code); }
+// Daily stream check (GitHub Actions → cam-status.json): skip streams found offline
+fetch('cam-status.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{
+  if(!j||!j.cams) return;
+  CAMS.forEach((c,i)=>{ const s=j.cams[c.id];
+    if(s&&s.state==='offline'&&CAMS.some((d,k)=>k!==i&&(j.cams[d.id]||{}).state!=='offline')){
+      dead[i]=Date.now()+24*3600000; log('offline per daily check:',c.n); } });
+}).catch(()=>{});
 const nextIdx=i=>{
   for(let k=1;k<=CAMS.length;k++){ const j=(i+k)%CAMS.length; if(!isDead(j)) return j; }
   return (i+1)%CAMS.length;

@@ -17,7 +17,7 @@ LOCATIONS = {
   'levi': {
     'name': 'Levi', 'lat': 67.8009, 'lon': 24.8009, 'region': 'Kittilä, Lapland, Finland',
     'title': 'Levi Live Webcams, Weather & Northern Lights — LeviTV',
-    'desc': 'Watch Levi live: 11 webcams from Levi Ski Resort including an aurora cam, '
+    'desc': 'Watch Levi live: 10 webcams from Levi Ski Resort including an aurora cam, '
             'real-time weather, 5-day forecast, northern lights (Kp) and sunrise & sunset in Levi, Finnish Lapland.',
     'h1': 'Levi live webcams, weather and northern lights',
     'intro': [
@@ -29,7 +29,7 @@ LOCATIONS = {
     'cams_title': 'Live cameras in Levi',
     'cams': ['Zero Point (Levi Center)', 'South Point (South Slopes)', 'Village View', 'Levi Black (Gondola Area)',
              'Levi Six (NE Slopes)', 'Levi West (West Slopes)', 'Glacier Express', 'Top of Levi (summit, 531 m)',
-             'Lifts 13 & 14 (North)', 'Leevilandia (South Slopes)', 'Aurora Cam (Levi Igloos)'],
+             'Lifts 13 & 14 (North)', 'Aurora Cam (Levi Igloos)'],
     'data': [
       ('Weather now', 'observations from the Finnish Meteorological Institute (FMI) station Kittilä Kenttärova, refreshed every 10 minutes'),
       ('Forecast', '5-day FMI forecast for Levi with daily highs, lows and cloud cover'),
@@ -38,7 +38,7 @@ LOCATIONS = {
     ],
     'faq': [
       ('Where can I watch Levi webcams live?',
-       'On LeviTV (levitv.com/levi/). It rotates through 11 live cameras around Levi Fell — Levi Center, the slopes, '
+       'On LeviTV (levitv.com/levi/). It rotates through 10 live cameras around Levi Fell — Levi Center, the slopes, '
        'the gondola area, the summit and an aurora camera — and you can pick a single camera on your phone.'),
       ('What is the weather in Levi right now?',
        'LeviTV shows the latest observation from the FMI weather station Kittilä Kenttärova near Levi, '
@@ -55,7 +55,7 @@ LOCATIONS = {
        'live streams, weather comes from FMI and aurora data from NOAA. For tickets, slopes and events see levi.fi.'),
     ],
     'fi_title': 'Levi live — webkamerat, sää ja revontulet',
-    'fi': 'LeviTV näyttää Levin reaaliajassa: 11 live-kameraa Levitunturilta (myös revontulikamera), Levin sää nyt ja '
+    'fi': 'LeviTV näyttää Levin reaaliajassa: 10 live-kameraa Levitunturilta (myös revontulikamera), Levin sää nyt ja '
           '5 päivän ennuste (Ilmatieteen laitos), revontuliennuste (Kp-indeksi) sekä auringonnousu ja -lasku.',
   },
   'yllas': {

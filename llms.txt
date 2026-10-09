@@ -4,7 +4,7 @@
 
 ## Live views
 
-- [Levi live](https://levitv.com/levi/): 11 live webcams (Levi Center Zero Point, South Point, Village View, Levi Black gondola area, Levi Six, Levi West, Glacier Express, Top of Levi summit 531 m, Lifts 13 & 14, Leevilandia, Aurora Cam at Levi Igloos), weather from FMI station Kittilä Kenttärova, forecast, northern lights, daylight.
+- [Levi live](https://levitv.com/levi/): 10 live webcams (Levi Center Zero Point, South Point, Village View, Levi Black gondola area, Levi Six, Levi West, Glacier Express, Top of Levi summit 531 m, Lifts 13 & 14, Aurora Cam at Levi Igloos), weather from FMI station Kittilä Kenttärova, forecast, northern lights, daylight.
 - [Ylläs live](https://levitv.com/yllas/): Ylläs Ski Resort cameras (gondola station, Ylläs Express chairlift, summit 719 m), weather, forecast, northern lights, daylight.
 - [Helsinki live](https://levitv.com/helsinki/): Market Square and Port of Helsinki harbour cameras, weather from FMI station Helsinki Kaisaniemi, forecast, daylight.
 
