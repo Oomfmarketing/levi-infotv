@@ -1344,9 +1344,12 @@ const log=(...a)=>{
     el.style.cssText='position:fixed;left:8px;top:8px;z-index:99;max-width:900px;margin:0;padding:8px 10px;background:rgba(0,0,0,.8);color:#7fffa0;font:13px/1.35 monospace;white-space:pre-wrap;pointer-events:none';
     document.body.appendChild(el); }
   const t=new Date().toTimeString().slice(0,8);
-  el.textContent=(t+' '+a.join(' ')+'\n'+el.textContent).split('\n').slice(0,16).join('\n');
+  window.__camlog=[t+' '+a.join(' '),...(window.__camlog||[])].slice(0,14);
+  const brands=(navigator.userAgentData&&navigator.userAgentData.brands||[]).map(b=>b.brand).join(', ');
+  el.textContent='UA: '+navigator.userAgent.slice(0,150)+'\nbrands: '+(brands||'-')+'\nparams: '+location.search.slice(0,140)
+    +'\n────────\n'+window.__camlog.join('\n');
 };
-if(DEBUG) setTimeout(()=>{log('UA',navigator.userAgent.slice(0,170));log('params',location.search.slice(0,120));},500);
+if(DEBUG) setTimeout(()=>log('debug on'),300);
 const players=[null,null], ready=[false,false], settle=[null,null];
 let vis=0, curCam=0, nextCam=null, hiddenReady=false, swapDue=false;
 let firstShown=false, single=false, waitVis=false;

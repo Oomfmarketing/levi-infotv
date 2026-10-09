@@ -22,10 +22,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import androidx.webkit.UserAgentMetadata;
 import androidx.webkit.WebSettingsCompat;
 import androidx.webkit.WebViewFeature;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * LeviTV for Android TV: shows levitv.com full screen in a WebView.
@@ -47,6 +50,7 @@ public class MainActivity extends Activity {
     private final Handler handler = new Handler(Looper.getMainLooper());
     private long lastBack = 0;
     private boolean xrwOff = false;
+    private String uaBrand = "?";
 
     private final Runnable periodicReload = new Runnable() {
         @Override public void run() {
@@ -85,6 +89,26 @@ public class MainActivity extends Activity {
         if (WebViewFeature.isFeatureSupported(WebViewFeature.REQUESTED_WITH_HEADER_ALLOW_LIST)) {
             WebSettingsCompat.setRequestedWithHeaderOriginAllowList(s, Collections.emptySet());
             xrwOff = true;
+        }
+        //  3) client hints: report the brand as Chrome, not "Android WebView"
+        uaBrand = "webview";
+        try {
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.USER_AGENT_METADATA)) {
+                UserAgentMetadata md = WebSettingsCompat.getUserAgentMetadata(s);
+                List<UserAgentMetadata.BrandVersion> brands = new ArrayList<>();
+                String major = "130", full = "130.0.0.0";
+                for (UserAgentMetadata.BrandVersion b : md.getBrandVersionList()) {
+                    if (b.getBrand().contains("Chromium")) { major = b.getMajorVersion(); full = b.getFullVersion(); }
+                    if (!b.getBrand().contains("WebView")) brands.add(b);
+                }
+                brands.add(new UserAgentMetadata.BrandVersion.Builder()
+                        .setBrand("Google Chrome").setMajorVersion(major).setFullVersion(full).build());
+                WebSettingsCompat.setUserAgentMetadata(s,
+                        new UserAgentMetadata.Builder(md).setBrandVersionList(brands).build());
+                uaBrand = "chrome";
+            }
+        } catch (Throwable t) {
+            uaBrand = "error";
         }
 
         // YouTube embeds need cookies, including third-party ones (blocked by default in WebView)
@@ -148,7 +172,7 @@ public class MainActivity extends Activity {
             prefs.edit().putString("screen", screen).apply();
         }
         return SITE + loc + "/" + (full ? "full/?" : "?view=tv&") + "screen=" + Uri.encode(screen) + "&app=androidtv"
-                + (prefs.getBoolean("debug", false) ? "&debug=1&xrw=" + (xrwOff ? "off" : "on") : "");
+                + (prefs.getBoolean("debug", false) ? "&debug=1&xrw=" + (xrwOff ? "off" : "on") + "&brand=" + uaBrand : "");
     }
 
     private void load() {
