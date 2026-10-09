@@ -52,6 +52,34 @@ def player_response(page):
         return None
 
 
+CLIENTS = [  # InnerTube clients that usually skip the bot check on data-centre IPs
+    {'clientName': 'WEB_EMBEDDED_PLAYER', 'clientVersion': '1.20250310.01.00'},
+    {'clientName': 'TVHTML5_SIMPLY_EMBEDDED_PLAYER', 'clientVersion': '2.0'},
+    {'clientName': 'ANDROID_VR', 'clientVersion': '1.62.27', 'androidSdkVersion': 32},
+    {'clientName': 'IOS', 'clientVersion': '20.10.4', 'deviceModel': 'iPhone16,2'},
+]
+
+
+def innertube(vid):
+    for c in CLIENTS:
+        body = json.dumps({'videoId': vid, 'context': {
+            'client': dict(c, hl='en', gl='FI'),
+            'thirdParty': {'embedUrl': 'https://levitv.com/'}}}).encode()
+        req = urllib.request.Request(
+            'https://www.youtube.com/youtubei/v1/player?prettyPrint=false', data=body,
+            headers={'Content-Type': 'application/json', 'User-Agent': UA})
+        try:
+            with urllib.request.urlopen(req, timeout=25) as r:
+                pr = json.loads(r.read().decode('utf-8', 'replace'))
+        except Exception:
+            continue
+        ps = json.dumps(pr.get('playabilityStatus', {})).lower()
+        if 'bot' in ps or 'sign in' in ps:
+            continue
+        return pr
+    return None
+
+
 def check(vid):
     code, _ = get(f'https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v={vid}&format=json')
     if code in (401, 403):
@@ -59,15 +87,13 @@ def check(vid):
     if code == 404:
         return 'offline', 'video removed or private'
     code, page = get(f'https://www.youtube.com/watch?v={vid}')
-    if code != 200:
-        return 'unknown', f'watch page HTTP {code}'
-    pr = player_response(page)
+    pr = player_response(page) if code == 200 else None
+    if not pr or 'bot' in json.dumps(pr.get('playabilityStatus', {})).lower():
+        pr = innertube(vid)
     if not pr:
-        return 'unknown', 'could not read YouTube page'
+        return 'unknown', 'YouTube bot check'
     ps = pr.get('playabilityStatus', {})
     status, reason = ps.get('status', '?'), ps.get('reason', '')
-    if status in ('LOGIN_REQUIRED',) and 'bot' in json.dumps(ps).lower():
-        return 'unknown', 'YouTube bot check'
     if status in ('ERROR', 'UNPLAYABLE'):
         return 'offline', reason or status
     live = (pr.get('microformat', {}).get('playerMicroformatRenderer', {})
