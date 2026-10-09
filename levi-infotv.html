@@ -169,8 +169,14 @@ body.night #stars{opacity:1}
   display:flex;align-items:center;justify-content:center;
   font-family:var(--cond);font-size:18px;letter-spacing:.4em;
   text-transform:uppercase;color:var(--muted);transition:opacity .9s;
+  background-size:cover;background-position:center;
 }
+#cam-cover.thumb{color:#fff;text-shadow:0 1px 6px #000;align-items:flex-end;padding-bottom:28px;box-sizing:border-box}
+#cam-cover.thumb::after{content:'';position:absolute;right:24px;top:24px;width:28px;height:28px;border-radius:50%;
+  border:3px solid rgba(255,255,255,.35);border-top-color:#fff;animation:camspin 1s linear infinite}
+@keyframes camspin{to{transform:rotate(360deg)}}
 #cam-cover.gone{opacity:0}
+#cam-cover.gone::after{animation:none}
 #cam-shield{position:absolute;inset:0;z-index:3}
 #cam-fade{
   position:absolute;left:0;right:0;bottom:0;height:140px;z-index:3;
@@ -1333,7 +1339,7 @@ setInterval(loadForecast,60*60e3);
    Fallback mode — if a device will not autoplay the standby player,
    rotate with a single player and cover the picture while loading.
 ══════════════════════════════════════════════════════════ */
-const SETTLE_MS=1200, PRELOAD_MS=7000, LOAD_TIMEOUT=10000;
+const SETTLE_MS=1200, PRELOAD_MS=8000, LOAD_TIMEOUT=15000;
 const DEBUG=new URLSearchParams(location.search).has('debug');
 const log=(...a)=>{
   if(!DEBUG) return;
@@ -1408,18 +1414,37 @@ function markCam(){
   $('cam-dots').querySelectorAll('.cam-dot').forEach((d,i)=>d.classList.toggle('on',i===curCam));
   const bar=$('cam-progress');
   bar.style.transition='none';bar.style.width='0';bar.offsetWidth;
-  bar.style.transition=`width ${CAM_INTERVAL}ms linear`;bar.style.width='100%';
+  bar.style.transition=`width ${dwell()}ms linear`;bar.style.width='100%';
 }
 const slot=i=>$('yt-slot-'+i);
-const cover=on=>$('cam-cover').classList.toggle('gone',!on);
-const nextIdx=i=>(i+1)%CAMS.length;
+const cover=(on,cam)=>{
+  const c=$('cam-cover');
+  if(on&&cam!=null&&CAMS[cam]){
+    // show the camera's still picture while the live stream buffers — no black screen
+    c.style.transition='none';
+    c.style.backgroundImage=`url(https://i.ytimg.com/vi/${CAMS[cam].id}/hqdefault_live.jpg)`;
+    c.classList.add('thumb');c.textContent=CAMS[cam].n||CAMS[cam].l.replace(/<[^>]*>/g,'');
+    c.offsetWidth;c.style.transition='';
+  }
+  c.classList.toggle('gone',!on);
+};
+// Ended / private streams (YouTube errors 100/101/150) are skipped for 30 minutes
+const dead={};
+const isDead=i=>dead[i]&&Date.now()<dead[i];
+function markDead(i,code){ if(i==null) return; dead[i]=Date.now()+30*60000; log('skip cam',i,'for 30 min, code',code); }
+const nextIdx=i=>{
+  for(let k=1;k<=CAMS.length;k++){ const j=(i+k)%CAMS.length; if(!isDead(j)) return j; }
+  return (i+1)%CAMS.length;
+};
+// single-player mode loads slowly (TV boxes) → stay longer on each camera
+const dwell=()=>single?Math.max(CAM_INTERVAL,30000):CAM_INTERVAL;
 const state=i=>{try{return players[i].getPlayerState();}catch(_){return -9;}};
 
 function cycle(){
   clearTimeout(preTimer);clearTimeout(dueTimer);
   swapDue=false;
   if(CAMS.length<2||manual) return;
-  if(single){ dueTimer=setTimeout(hardNext,CAM_INTERVAL); return; }
+  if(single){ dueTimer=setTimeout(hardNext,dwell()); return; }
   preTimer=setTimeout(()=>preload(curCam),Math.max(0,CAM_INTERVAL-PRELOAD_MS));
   dueTimer=setTimeout(()=>{swapDue=true;swap();},CAM_INTERVAL);
 }
@@ -1428,7 +1453,7 @@ function cycle(){
 function preload(after){
   const h=1-vis;
   if(!ready[h]){
-    if(++readyWait>20){ log('standby never ready'); goSingle(); return; }   // ~10 s
+    if(++readyWait>40){ log('standby never ready'); goSingle(); return; }   // ~20 s
     return void(preTimer=setTimeout(()=>preload(after),500));
   }
   nextCam=nextIdx(after);
@@ -1476,9 +1501,9 @@ function hardNext(skip){
   clearTimeout(visTimer);clearTimeout(dueTimer);
   curCam=nextIdx(curCam);
   log('hard switch to',curCam);
-  waitVis=true;cover(true);
+  waitVis=true;cover(true,curCam);
   try{players[vis].loadVideoById(CAMS[curCam].id);}catch(_){}
-  visTimer=setTimeout(()=>{ if(waitVis) hardNext(); },LOAD_TIMEOUT);   // offline → next
+  visTimer=setTimeout(()=>{ if(waitVis) hardNext(); },single?LOAD_TIMEOUT*2:LOAD_TIMEOUT);   // offline → next
   if(manual) renderPick();
 }
 
@@ -1496,13 +1521,13 @@ function onPlaying(i){
     }
   },SETTLE_MS);
 }
-function makePlayer(i,videoId){
+function makePlayer(i,videoId,play){
   return new YT.Player('yt-p'+i,{
     videoId:videoId||undefined,width:'100%',height:'100%',
-    playerVars:{autoplay:videoId?1:0,mute:1,controls:0,modestbranding:1,rel:0,iv_load_policy:3,disablekb:1,fs:0,playsinline:1,
+    playerVars:{autoplay:play?1:0,mute:1,controls:0,modestbranding:1,rel:0,iv_load_policy:3,disablekb:1,fs:0,playsinline:1,
       origin:location.origin,widget_referrer:location.origin+'/'},
     events:{
-      onReady:e=>{log('player',i,'ready');ready[i]=true;e.target.mute();if(videoId)e.target.playVideo();},
+      onReady:e=>{log('player',i,'ready');ready[i]=true;e.target.mute();if(play)e.target.playVideo();},
       onStateChange:e=>{
         const S=YT.PlayerState;
         log('state',i,e.data);
@@ -1517,15 +1542,9 @@ function makePlayer(i,videoId){
       onError:e=>{
         log('error',i,'code',e&&e.data,'cam',(i===vis?CAMS[curCam]:CAMS[nextCam??curCam]||{}).n);
         track('cam_error',{code:String(e&&e.data),cam:((i===vis?CAMS[curCam]:CAMS[nextCam??curCam])||{}).n||'-'});
-        // diagnostics: stop here and show YouTube's own message on screen
-        if(DEBUG){
-          log('DEBUG: holding on this camera so YouTube shows its message');
-          clearTimeout(visTimer);clearTimeout(dueTimer);clearTimeout(preTimer);clearTimeout(loadTimer);
-          waitVis=false;firstShown=true;manual=true;
-          slot(i).classList.add('show');slot(1-i).classList.remove('show');cover(false);
-          const d=document.getElementById('cam-debug'); if(d) d.style.maxWidth='560px';
-          return;
-        }
+        // stream ended / private / embedding off → leave it out of the rotation for a while
+        const code=e&&e.data;
+        if(code===100||code===101||code===150) markDead(i===vis?curCam:nextCam,code);
         if(i!==vis&&nextCam!==null&&!single) preload(nextCam);
         else if(i===vis&&(waitVis||!firstShown)) hardNext();
       }
@@ -1534,8 +1553,8 @@ function makePlayer(i,videoId){
 }
 // Watchdog: whatever happens, never sit on one camera for long
 setInterval(()=>{
-  if(!firstShown||CAMS.length<2||manual) return;
-  if(Date.now()-lastSwitch>CAM_INTERVAL+20000){
+  if(!firstShown||CAMS.length<2||manual||waitVis) return;   // a loading camera has its own timer
+  if(Date.now()-lastSwitch>dwell()+30000){
     log('watchdog');
     lastSwitch=Date.now();
     if(!single) goSingle();
@@ -1545,10 +1564,11 @@ setInterval(()=>{
 
 window.onYouTubeIframeAPIReady=()=>{
   log('YT API ready');
-  players[0]=makePlayer(0,CAMS[0].id);
-  players[1]=CAMS.length>1?makePlayer(1,null):null;
-  waitVis=true;                              // first camera: wait for it under the cover
-  visTimer=setTimeout(()=>{ if(waitVis) hardNext(); },LOAD_TIMEOUT);
+  players[0]=makePlayer(0,CAMS[0].id,true);
+  // standby gets a real (not playing) video: some engines never fire onReady for an empty player
+  players[1]=CAMS.length>1?makePlayer(1,CAMS[1].id,false):null;
+  waitVis=true;cover(true,0);                              // first camera: wait for it under the cover
+  visTimer=setTimeout(()=>{ if(waitVis) hardNext(); },LOAD_TIMEOUT*2);
   // nothing has played after 40 s → show the player anyway (YouTube's own message is
   // more useful than a black screen) and report it
   setTimeout(()=>{
