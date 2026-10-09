@@ -3,6 +3,7 @@ package com.levitv.app;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -70,11 +72,21 @@ public class MainActivity extends Activity {
         s.setUseWideViewPort(true);
         s.setUserAgentString(s.getUserAgentString() + " LeviTV-AndroidTV/" + appVersion());
 
-        web.setWebChromeClient(new WebChromeClient());
+        // YouTube embeds need cookies, including third-party ones (blocked by default in WebView)
+        CookieManager cm = CookieManager.getInstance();
+        cm.setAcceptCookie(true);
+        cm.setAcceptThirdPartyCookies(web, true);
+
+        web.setWebChromeClient(new WebChromeClient() {
+            @Override public Bitmap getDefaultVideoPoster() {   // no grey "play" poster before video starts
+                return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+            }
+        });
         web.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                return !isAllowed(request.getUrl());   // stay on LeviTV; ad links can't open on a TV
+                if (!request.isForMainFrame()) return false;   // never interfere with the YouTube iframes
+                return !isAllowed(request.getUrl());           // stay on LeviTV; ad links can't open on a TV
             }
 
             @Override
@@ -120,7 +132,8 @@ public class MainActivity extends Activity {
             screen = "atv-" + (id == null ? "tv" : id.substring(0, Math.min(6, id.length())));
             prefs.edit().putString("screen", screen).apply();
         }
-        return SITE + loc + "/" + (full ? "full/?" : "?view=tv&") + "screen=" + Uri.encode(screen) + "&app=androidtv";
+        return SITE + loc + "/" + (full ? "full/?" : "?view=tv&") + "screen=" + Uri.encode(screen) + "&app=androidtv"
+                + (prefs.getBoolean("debug", false) ? "&debug=1" : "");
     }
 
     private void load() {
@@ -168,6 +181,7 @@ public class MainActivity extends Activity {
                 "Start on boot: " + (boot ? "On" : "Off"),
                 "Reload",
                 "Screen name: " + prefs.getString("screen", "-"),
+                "Diagnostics: " + (prefs.getBoolean("debug", false) ? "On" : "Off"),
                 "Exit LeviTV"
         };
         new AlertDialog.Builder(this)
@@ -182,7 +196,9 @@ public class MainActivity extends Activity {
                         case 3: load(); break;
                         case 4: Toast.makeText(this, "This screen appears in analytics as \""
                                 + prefs.getString("screen", "-") + "\"", Toast.LENGTH_LONG).show(); break;
-                        case 5: finish(); break;
+                        case 5: prefs.edit().putBoolean("debug", !prefs.getBoolean("debug", false)).apply();
+                                load(); break;
+                        case 6: finish(); break;
                     }
                 })
                 .setOnDismissListener(d -> hideSystemUi())

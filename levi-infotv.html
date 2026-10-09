@@ -1335,7 +1335,18 @@ setInterval(loadForecast,60*60e3);
 ══════════════════════════════════════════════════════════ */
 const SETTLE_MS=1200, PRELOAD_MS=7000, LOAD_TIMEOUT=10000;
 const DEBUG=new URLSearchParams(location.search).has('debug');
-const log=(...a)=>{if(DEBUG)console.log('[cam]',...a);};
+const log=(...a)=>{
+  if(!DEBUG) return;
+  console.log('[cam]',...a);
+  // on-screen log (TV apps have no console)
+  let el=document.getElementById('cam-debug');
+  if(!el){ el=document.createElement('pre'); el.id='cam-debug';
+    el.style.cssText='position:fixed;left:8px;top:8px;z-index:99;max-width:900px;margin:0;padding:8px 10px;background:rgba(0,0,0,.8);color:#7fffa0;font:13px/1.35 monospace;white-space:pre-wrap;pointer-events:none';
+    document.body.appendChild(el); }
+  const t=new Date().toTimeString().slice(0,8);
+  el.textContent=(t+' '+a.join(' ')+'\n'+el.textContent).split('\n').slice(0,16).join('\n');
+};
+if(DEBUG) setTimeout(()=>log('UA',navigator.userAgent.slice(0,160)),500);
 const players=[null,null], ready=[false,false], settle=[null,null];
 let vis=0, curCam=0, nextCam=null, hiddenReady=false, swapDue=false;
 let firstShown=false, single=false, waitVis=false;
@@ -1481,8 +1492,9 @@ function makePlayer(i,videoId){
           setTimeout(()=>{try{players[i].playVideo();}catch(_){}},200);
         }
       },
-      onError:()=>{
-        log('error',i);
+      onError:e=>{
+        log('error',i,'code',e&&e.data,'cam',(i===vis?CAMS[curCam]:CAMS[nextCam??curCam]||{}).n);
+        track('cam_error',{code:String(e&&e.data),cam:((i===vis?CAMS[curCam]:CAMS[nextCam??curCam])||{}).n||'-'});
         if(i!==vis&&nextCam!==null&&!single) preload(nextCam);
         else if(i===vis&&(waitVis||!firstShown)) hardNext();
       }
@@ -1505,6 +1517,14 @@ window.onYouTubeIframeAPIReady=()=>{
   players[1]=CAMS.length>1?makePlayer(1,null):null;
   waitVis=true;                              // first camera: wait for it under the cover
   visTimer=setTimeout(()=>{ if(waitVis) hardNext(); },LOAD_TIMEOUT);
+  // nothing has played after 40 s → show the player anyway (YouTube's own message is
+  // more useful than a black screen) and report it
+  setTimeout(()=>{
+    if(firstShown) return;
+    log('no camera started; state',state(0));
+    track('cam_stuck',{state:String(state(0))});
+    slot(vis).classList.add('show'); cover(false);
+  },40000);
 };
 (()=>{const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';document.head.appendChild(s);})();
 
