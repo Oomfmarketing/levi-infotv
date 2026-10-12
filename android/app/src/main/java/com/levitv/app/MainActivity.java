@@ -46,8 +46,8 @@ public class MainActivity extends Activity {
 
     static final String SITE = "https://levitv.com/";
     static final String PREFS = "levitv";
-    static final String[] LOC_KEYS = {"levi", "yllas", "helsinki"};
-    static final String[] LOC_NAMES = {"Levi", "Ylläs", "Helsinki"};
+    static final String[] LOC_KEYS = {"levi", "yllas", "rovaniemi", "helsinki"};
+    static final String[] LOC_NAMES = {"Levi", "Ylläs", "Rovaniemi", "Helsinki"};
     static final String[] VIEW_NAMES = {"Full screen (camera + sidebar)", "Info TV (large camera)"};
 
     private static final long RELOAD_EVERY_MS = 6L * 60 * 60 * 1000;   // fresh page every 6 h

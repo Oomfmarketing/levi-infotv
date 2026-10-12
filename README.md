@@ -7,6 +7,7 @@ Locations (pick with `?loc=`):
 
 - Levi: https://oomfmarketing.github.io/levi-infotv/levi-infotv.html?loc=levi
 - Ylläs: https://oomfmarketing.github.io/levi-infotv/levi-infotv.html?loc=yllas
+- Rovaniemi: https://levitv.com/rovaniemi/
 - Helsinki: https://oomfmarketing.github.io/levi-infotv/levi-infotv.html?loc=helsinki
 
 Add `&view=full` for the full-screen layout: the whole camera picture is shown
@@ -16,7 +17,7 @@ the 1920×1080 canvas, even on small screens. Click or press F to go full screen
 
 Picker page: https://oomfmarketing.github.io/levi-infotv/
 
-Short links: `/levi/`, `/levi/full/`, `/yllas/`, `/yllas/full/`, `/helsinki/`, `/helsinki/full/`.
+Short links: `/levi/`, `/levi/full/`, `/yllas/`, `/yllas/full/`, `/rovaniemi/`, `/rovaniemi/full/`, `/helsinki/`, `/helsinki/full/`.
 Add `?screen=<name>` to name a physical TV in analytics, e.g. `/levi/full/?screen=hotel-lobby`.
 
 ## Search engines & AI search

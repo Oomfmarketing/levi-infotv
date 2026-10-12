@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the location pages (/levi/, /yllas/, /helsinki/) from levi-infotv.html.
+"""Build the location pages (/levi/, /yllas/, /rovaniemi/, /helsinki/) from levi-infotv.html.
 
 Each page is the full live app with its own title, description, canonical URL,
 structured data (JSON-LD) and a crawlable text section for search engines and
@@ -17,7 +17,7 @@ LOCATIONS = {
   'levi': {
     'name': 'Levi', 'lat': 67.8009, 'lon': 24.8009, 'region': 'Kittilä, Lapland, Finland',
     'title': 'Levi Live Webcams, Weather & Northern Lights — LeviTV',
-    'desc': 'Watch Levi live: 10 webcams from Levi Ski Resort including an aurora cam, '
+    'desc': 'Watch Levi live: 11 webcams from Levi Ski Resort including an aurora cam, '
             'real-time weather, 5-day forecast, northern lights (Kp) and sunrise & sunset in Levi, Finnish Lapland.',
     'h1': 'Levi live webcams, weather and northern lights',
     'intro': [
@@ -29,7 +29,7 @@ LOCATIONS = {
     'cams_title': 'Live cameras in Levi',
     'cams': ['Zero Point (Levi Center)', 'South Point (South Slopes)', 'Village View', 'Levi Black (Gondola Area)',
              'Levi Six (NE Slopes)', 'Levi West (West Slopes)', 'Glacier Express', 'Top of Levi (summit, 531 m)',
-             'Lifts 13 & 14 (North)', 'Aurora Cam (Levi Igloos)'],
+             'Lifts 13 & 14 (North)', 'Elves Village (Tonttula)', 'Aurora Cam (Levi Igloos)'],
     'data': [
       ('Weather now', 'observations from the Finnish Meteorological Institute (FMI) station Kittilä Kenttärova, refreshed every 10 minutes'),
       ('Forecast', '5-day FMI forecast for Levi with daily highs, lows and cloud cover'),
@@ -38,7 +38,7 @@ LOCATIONS = {
     ],
     'faq': [
       ('Where can I watch Levi webcams live?',
-       'On LeviTV (levitv.com/levi/). It rotates through 10 live cameras around Levi Fell — Levi Center, the slopes, '
+       'On LeviTV (levitv.com/levi/). It rotates through 11 live cameras around Levi Fell — Levi Center, the slopes, '
        'the gondola area, the summit and an aurora camera — and you can pick a single camera on your phone.'),
       ('What is the weather in Levi right now?',
        'LeviTV shows the latest observation from the FMI weather station Kittilä Kenttärova near Levi, '
@@ -55,7 +55,7 @@ LOCATIONS = {
        'live streams, weather comes from FMI and aurora data from NOAA. For tickets, slopes and events see levi.fi.'),
     ],
     'fi_title': 'Levi live — webkamerat, sää ja revontulet',
-    'fi': 'LeviTV näyttää Levin reaaliajassa: 10 live-kameraa Levitunturilta (myös revontulikamera), Levin sää nyt ja '
+    'fi': 'LeviTV näyttää Levin reaaliajassa: 11 live-kameraa Levitunturilta (myös revontulikamera), Levin sää nyt ja '
           '5 päivän ennuste (Ilmatieteen laitos), revontuliennuste (Kp-indeksi) sekä auringonnousu ja -lasku.',
   },
   'yllas': {
@@ -91,6 +91,36 @@ LOCATIONS = {
     'fi_title': 'Ylläs live — webkamerat, sää ja revontulet',
     'fi': 'LeviTV näyttää Ylläksen reaaliajassa: Ylläs Ski Resortin live-kamerat (gondoli, tuolihissi, huippu), '
           'Ylläksen sää ja 5 päivän ennuste, revontuliennuste (Kp-indeksi) sekä auringonnousu ja -lasku.',
+  },
+  'rovaniemi': {
+    'name': 'Rovaniemi', 'lat': 66.5039, 'lon': 25.7294, 'region': 'Rovaniemi, Lapland, Finland',
+    'title': 'Rovaniemi Live Webcams — Santa Claus Village, Weather & Northern Lights — LeviTV',
+    'desc': 'Watch Rovaniemi live: webcams of Santa Claus Village on the Arctic Circle and Apukka Resort, '
+            'current weather from FMI, 5-day forecast, northern lights (Kp) and sunrise & sunset.',
+    'h1': 'Rovaniemi live webcams, weather and northern lights',
+    'intro': [
+      'LeviTV shows Rovaniemi, the capital of Finnish Lapland on the Arctic Circle, in real time: live cameras of '
+      'Santa Claus Village and Apukka Resort, the weather now, a 5-day forecast, northern lights activity and today\'s daylight.',
+    ],
+    'cams_title': 'Live cameras in Rovaniemi',
+    'cams': ['Santa Claus Village (Arctic Circle)', 'Apukka Resort (aurora cam)'],
+    'data': [
+      ('Weather now', 'observations from the Finnish Meteorological Institute (FMI) station Rovaniemi railway station, refreshed every 10 minutes'),
+      ('Forecast', '5-day FMI forecast for Rovaniemi with daily highs, lows and cloud cover'),
+      ('Northern lights', 'live Kp index and Kp forecast from NOAA, rated for Rovaniemi\'s latitude (66.5°N), plus tonight\'s cloud cover'),
+      ('Daylight', 'sunrise, sunset and day length for Rovaniemi, calculated for today'),
+    ],
+    'faq': [
+      ('Is there a live webcam at Santa Claus Village?',
+       'Yes. LeviTV (levitv.com/rovaniemi/) shows the live camera of Santa Claus Village on the Arctic Circle in '
+       'Rovaniemi, together with an aurora camera at Apukka Resort, the weather and the northern lights forecast.'),
+      ('Can you see the northern lights in Rovaniemi?',
+       'Yes, often. Rovaniemi is on the Arctic Circle and northern lights can be seen from late August to early April '
+       'on dark, clear nights — already at a Kp index of about 2–3. Head away from city lights and look north.'),
+    ],
+    'fi_title': 'Rovaniemi live — webkamerat, sää ja revontulet',
+    'fi': 'LeviTV näyttää Rovaniemen reaaliajassa: Joulupukin Pajakylän ja Apukka Resortin live-kamerat, '
+          'Rovaniemen sää ja 5 päivän ennuste, revontuliennuste (Kp-indeksi) sekä auringonnousu ja -lasku.',
   },
   'helsinki': {
     'name': 'Helsinki', 'lat': 60.1699, 'lon': 24.9384, 'region': 'Helsinki, Finland',

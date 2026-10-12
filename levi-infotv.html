@@ -345,6 +345,7 @@ html.full #header{
 html.full #brand{gap:6px 14px;flex-wrap:wrap}
 html.full #mark{width:40px;height:40px}
 html.full #logo{font-size:40px}
+html.full.longname #logo{font-size:34px;letter-spacing:.12em}
 html.full #brand-meta{flex-basis:100%;flex-direction:row;gap:14px;border:0;padding:0;white-space:nowrap}
 html.full #brand-sub{font-size:13px;letter-spacing:.2em}
 html.full #coords{font-size:13px;letter-spacing:.08em}
@@ -411,12 +412,15 @@ html.full,html.full body{cursor:none}
   #brand{gap:14px;align-items:center}
   #mark{width:44px;height:44px}
   #logo{font-size:30px;letter-spacing:.16em}
+  html.longname #logo{font-size:24px;letter-spacing:.1em}
   #brand-meta{border:0;padding:0;gap:0}
   #brand>#logo{display:none}
   #brand-meta::before{
     content:attr(data-name);font-family:var(--cond);font-weight:700;font-size:30px;
     letter-spacing:.18em;line-height:1;color:var(--text);
   }
+  html.longname #brand-meta::before{font-size:24px;letter-spacing:.1em}
+  html.longname #m-site-h{font-size:clamp(20px,7vw,34px);letter-spacing:.06em;overflow-wrap:anywhere}
   #brand-sub{font-size:11px;letter-spacing:.2em;color:var(--accent);margin-top:4px;white-space:nowrap}
   #coords{display:none}
   #live-pill{display:none}
@@ -429,11 +433,13 @@ html.full,html.full body{cursor:none}
     display:flex;gap:6px;margin:0 16px 14px;padding:5px;border-radius:999px;
     border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);
     background:color-mix(in srgb,var(--accent) 6%,transparent);
+    overflow-x:auto;scrollbar-width:none;
   }
+  #m-pill::-webkit-scrollbar{display:none}
   #m-pill a{
-    flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
+    flex:1 0 auto;display:flex;align-items:center;justify-content:center;gap:8px;
     padding:8px 10px;border-radius:999px;text-decoration:none;
-    font-family:var(--cond);font-size:13px;font-weight:600;letter-spacing:.14em;
+    font-family:var(--cond);font-size:13px;font-weight:600;letter-spacing:.1em;
     text-transform:uppercase;color:var(--dim);white-space:nowrap;
   }
   #m-pill a.on{background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--text)}
@@ -734,7 +740,7 @@ if(!Object.fromEntries)Object.fromEntries=function(a){var o={};Array.from(a).for
    EDIT HERE
 ══════════════════════════════════════════════════════════ */
 
-// Each location has its own settings. Pick one with ?loc=levi, ?loc=yllas or ?loc=helsinki
+// Each location has its own settings. Pick one with ?loc=levi, ?loc=yllas, ?loc=rovaniemi or ?loc=helsinki
 const LOCS = {
   levi: {
     name:'Levi', sub:'Lapland · Finland', lat:67.8009, lon:24.8009,
@@ -754,6 +760,7 @@ const LOCS = {
       {id:'Wr9b5aYA4mI', n:'Glacier Express', l:'Glacier Express'},
       {id:'eXDCi75TjM8', n:'Top of Levi', l:'Top of Levi — Summit 531 m'},
       {id:'hWN0iCg8pDY', n:'Lifts 13 &amp; 14', l:'Lifts 13 & 14 — North'},
+      {id:'EmoTKMm5sDI', n:'Elves Village', l:'Elves Village — Tonttula'},
       {id:'9NxBGQUb1oY', n:'Aurora Cam', l:'Aurora Cam — Levi Igloos'},
     ],
     ticker:[
@@ -788,7 +795,7 @@ const LOCS = {
     mark:'<circle cx="24" cy="24" r="22.5"/><path d="M8.5 33.5l9.5-13.5 5 6.5 6-9 10.5 16z"/><path d="M15.4 24.4l2.6-1.4 2.2 2M26.6 21.6l2.4-1.6 2.6 2.4"/>',
     cams:[
       {id:'PeLTbbI2i6U', n:'Gondola', l:'Gondola Station — Ylläs South'},
-      {id:'FY4GLYiZieE', n:'Chairlift', l:'Ylläs Express Chairlift'},
+      {id:'ptZhHJtTqRY', n:'Chairlift', l:'Ylläs Chairlift'},
       {id:'5Oda5wfGpvw', n:'Summit', l:'Summit Camera — 719 m'},
     ],
     ticker:[
@@ -807,6 +814,37 @@ const LOCS = {
       {tag:'Groups &amp; companies', t:'sun', ad:'edmc',
        h:'Bring your group to Lapland',
        p:'Incentives, meetings &amp; events in Ylläs, Levi and across Finland — <b>elamysdmc.com</b>'},
+      {tag:'Advertise here', t:'accent', ad:'oomf',
+       h:'Advertise on LeviTV',
+       p:'Reach visitors on screens and phones — contact <b>hello@oomf.fi</b>'},
+    ],
+  },
+  rovaniemi: {
+    name:'Rovaniemi', sub:'Arctic Circle', lat:66.5039, lon:25.7294,
+    live:'Live from Rovaniemi · Arctic Circle', pill:'Rovaniemi',
+    fmisid:101928, station:'Rovaniemi rautatieasema', place:'Rovaniemi',
+    tag:'#VISITROVANIEMI', site:{h:'VISITROVANIEMI.FI', p:'See · Do · Stay', url:'https://www.visitrovaniemi.fi/'},
+    kp:[2,3,4,5],
+    mark:'<circle cx="24" cy="24" r="22.5"/><path d="M4 26h40" stroke-dasharray="3 3"/><path d="M24 9l2.6 7.4h7.8l-6.3 4.6 2.4 7.4-6.5-4.6-6.5 4.6 2.4-7.4-6.3-4.6h7.8z"/>',
+    cams:[
+      {id:'Cp4RRAEgpeU', n:'Santa Claus Village', l:'Santa Claus Village — Arctic Circle'},
+      {id:'wT8Zhh9MBEE', n:'Apukka Resort', l:'Apukka Resort — Aurora Cam'},
+    ],
+    ticker:[
+      'Welcome to Rovaniemi · Tervetuloa Rovaniemelle',
+      'Live from the Arctic Circle and Santa Claus Village',
+      'Northern lights: look north on clear, dark evenings',
+      'Emergency number 112',
+      'Advertise on LeviTV: hello@oomf.fi',
+    ],
+    ads:[
+      {tag:'Activities', t:'accent', ad:'lwa',
+       h:'Husky safaris, northern lights &amp; snowmobile tours',
+       p:'Find, compare and book activities across Lapland — <b>laplandwinteractivities.com</b>'},
+      'aurora',
+      {tag:'Groups &amp; companies', t:'sun', ad:'edmc',
+       h:'Bring your group to Lapland',
+       p:'Incentives, meetings &amp; events in Rovaniemi, Levi and across Finland — <b>elamysdmc.com</b>'},
       {tag:'Advertise here', t:'accent', ad:'oomf',
        h:'Advertise on LeviTV',
        p:'Reach visitors on screens and phones — contact <b>hello@oomf.fi</b>'},
@@ -925,9 +963,10 @@ if(VIEW()!=='mobile'){
     document.title = LOC_KEY==='levi' ? 'LeviTV — Your real-time view of Levi' : `${LOC.name} live — LeviTV`;
   q('mark').innerHTML=LOC.mark;
   q('logo').textContent=LOC.name.toUpperCase();
+  if(LOC.name.length>7) document.documentElement.classList.add('longname');   // e.g. ROVANIEMI
   q('brand-meta').dataset.name=LOC.name.toUpperCase();
   q('brand-sub').textContent=LOC.sub;
-  const ns=(v,p,n)=>`${Math.abs(v).toFixed(4)}°${v>=0?p:n}`;
+  const ns=(v,p,n)=>`${Math.abs(v).toFixed(2)}°${v>=0?p:n}`;
   q('coords').textContent=`${ns(LOC.lat,'N','S')} · ${ns(LOC.lon,'E','W')}`;
   q('live-txt').innerHTML=WM+' · '+LOC.live;
   q('wx-station').textContent=LOC.station;
@@ -1415,7 +1454,7 @@ const tvMenu=(()=>{
   if(TVAPP!=='tizen'&&TVAPP!=='webos') return null;
   let P={}; try{P=JSON.parse(localStorage.getItem('levitv.app')||'{}');}catch(_){}
   const start=JSON.stringify(P);
-  const LOCN={levi:'Levi',yllas:'Ylläs',helsinki:'Helsinki'}, VIEWN={full:'Full screen',tv:'Info TV'};
+  const LOCN={levi:'Levi',yllas:'Ylläs',rovaniemi:'Rovaniemi',helsinki:'Helsinki'}, VIEWN={full:'Full screen',tv:'Info TV'};
   const cyc=(o,v)=>{const k=Object.keys(o);return k[(k.indexOf(v)+1)%k.length];};
   const items=[
     {l:'Location', v:()=>LOCN[P.loc||'levi'], go:()=>{P.loc=cyc(LOCN,P.loc||'levi');}},
