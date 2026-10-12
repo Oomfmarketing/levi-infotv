@@ -1,17 +1,44 @@
 {
-  "updated": "2026-10-12T11:45:14Z",
+  "updated": "2026-10-12T13:42:16Z",
   "levi": {
-    "updated": "2026-10-12T11:45:16Z",
+    "updated": "2026-10-12T13:42:18Z",
     "slopesOpen": 3,
     "slopesTotal": 44,
     "liftsOpen": 3,
     "liftsTotal": 28,
+    "openSlopes": [
+      {
+        "name": "N.1",
+        "difficulty": "red"
+      },
+      {
+        "name": "ICE.1",
+        "difficulty": "red"
+      },
+      {
+        "name": "ICE.2",
+        "difficulty": "red"
+      }
+    ],
+    "openLifts": [
+      {
+        "name": "Express gondoli"
+      },
+      {
+        "name": "North tuolihissi"
+      },
+      {
+        "name": "Glacier Express"
+      }
+    ],
     "source": "https://levi-CloudProd-agent.frendsapp.com/api/statistics/v1/today"
   },
   "yllas": {
-    "updated": "2026-10-12T11:45:23Z",
+    "updated": "2026-10-12T13:42:24Z",
     "slopesOpen": 0,
     "liftsOpen": 0,
+    "openSlopes": [],
+    "openLifts": [],
     "source": "https://ski.yllas.fi/rinteet-ja-hissit/rinnekartta/"
   }
 }
