@@ -1,5 +1,5 @@
 {
- "checked": "2026-10-09T15:20Z",
+ "checked": "2026-10-12T10:27Z",
  "cams": {
   "LwihxyJ4V20": {
    "loc": "levi",
@@ -55,6 +55,12 @@
    "state": "unknown",
    "reason": "This video is unavailable"
   },
+  "EmoTKMm5sDI": {
+   "loc": "levi",
+   "name": "Elves Village",
+   "state": "unknown",
+   "reason": "This video is unavailable"
+  },
   "9NxBGQUb1oY": {
    "loc": "levi",
    "name": "Aurora Cam",
@@ -67,15 +73,27 @@
    "state": "unknown",
    "reason": "This video is unavailable"
   },
-  "FY4GLYiZieE": {
+  "ptZhHJtTqRY": {
    "loc": "yllas",
    "name": "Chairlift",
-   "state": "offline",
-   "reason": "This live stream recording is not available."
+   "state": "unknown",
+   "reason": "This video is unavailable"
   },
   "5Oda5wfGpvw": {
    "loc": "yllas",
    "name": "Summit",
+   "state": "unknown",
+   "reason": "This video is unavailable"
+  },
+  "Cp4RRAEgpeU": {
+   "loc": "rovaniemi",
+   "name": "Santa Claus Village",
+   "state": "unknown",
+   "reason": "This video is unavailable"
+  },
+  "wT8Zhh9MBEE": {
+   "loc": "rovaniemi",
+   "name": "Apukka Resort",
    "state": "unknown",
    "reason": "This video is unavailable"
   },
