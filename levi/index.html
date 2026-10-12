@@ -123,7 +123,7 @@ body.night #stars{opacity:1}
 .place{font-family:var(--serif);font-weight:500;font-optical-sizing:auto;letter-spacing:0;text-transform:none;color:var(--text);font-size:1.2em;line-height:.8}
 #foot-label .wm{display:inline-block;width:6.4em}   /* same space as the old text wordmark */
 #live-txt .wm{margin-right:4px}
-#m-pill,#sky,#m-site,#cam-pick,#m-brand,#about{display:none}
+#m-pill,#sky,#slopes,#m-site,#cam-pick,#m-brand,#about{display:none}
 #b-prog{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--accent);opacity:.7;z-index:2}
 .k-sun{color:var(--sun)}.k-cold{color:var(--accent)}
 #logo{
@@ -503,6 +503,12 @@ html.full,html.full body{cursor:none}
   .stat-l{font-size:11px;letter-spacing:.08em;white-space:nowrap}
   .stat-v{font-size:21px;font-weight:500}
 
+  /* slopes & lifts */
+  #slopes{display:block}
+  #sl-stats{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px}
+  #sl-stats .stat-v small{font-size:.62em;color:var(--dim);font-weight:500}
+  #sl-upd{font-size:12px;color:var(--muted);margin-top:10px}
+
   /* forecast */
   #fc{gap:6px}
   .fc{padding:12px 0 10px;border:0;background:rgba(255,255,255,.04)}
@@ -701,6 +707,17 @@ if (!Object.fromEntries) Object.fromEntries = function(a) {
         <div class="stat off" id="st-wind"><div class="stat-l">Wind</div><div class="stat-v" id="wx-wind">--</div></div>
         <div class="stat off" id="st-cloud"><div class="stat-l">Cloud</div><div class="stat-v" id="wx-cloud">--</div></div>
       </div>
+    </section>
+
+    <!-- Slope & lift status (mobile only; TV screens show it in the ticker) -->
+    <section class="sec off" id="slopes">
+      <div class="kicker">Slopes &amp; lifts <b id="sl-src"></b></div>
+      <div id="sl-stats">
+        <div class="stat off" id="sl-slopes"><div class="stat-l">Slopes open</div><div class="stat-v" id="sl-slopes-v">--</div></div>
+        <div class="stat off" id="sl-lifts"><div class="stat-l">Lifts open</div><div class="stat-v" id="sl-lifts-v">--</div></div>
+        <div class="stat off" id="sl-snow"><div class="stat-l">Snow depth</div><div class="stat-v" id="sl-snow-v">--</div></div>
+      </div>
+      <div id="sl-upd"></div>
     </section>
 
     <section class="sec off" id="fcsec">
@@ -2072,6 +2089,21 @@ async function loadSlopes() {
       if (n(d.slopesOpen) && n(d.slopesTotal) && d.slopesTotal > 0) it.push(`Slopes open ${d.slopesOpen}/${d.slopesTotal}`);
       if (n(d.liftsOpen) && n(d.liftsTotal) && d.liftsTotal > 0) it.push(`Lifts open ${d.liftsOpen}/${d.liftsTotal}`);
       if (n(d.snowDepthCm) && d.snowDepthCm > 0) it.push(`Snow depth ${Math.round(d.snowDepthCm)} cm`);
+    }
+    const show = (id, ok, html) => {
+      $(id).classList.toggle("off", !ok);
+      if (ok) $(id + "-v").innerHTML = html;
+    };
+    const okS = fresh && n(d.slopesOpen) && n(d.slopesTotal) && d.slopesTotal > 0;
+    const okL = fresh && n(d.liftsOpen) && n(d.liftsTotal) && d.liftsTotal > 0;
+    const okN = fresh && n(d.snowDepthCm) && d.snowDepthCm > 0;
+    show("sl-slopes", okS, okS ? `${d.slopesOpen}<small> / ${d.slopesTotal}</small>` : "");
+    show("sl-lifts", okL, okL ? `${d.liftsOpen}<small> / ${d.liftsTotal}</small>` : "");
+    show("sl-snow", okN, okN ? `${Math.round(d.snowDepthCm)}<small> cm</small>` : "");
+    $("slopes").classList.toggle("off", !(okS || okL || okN));
+    if (okS || okL || okN) {
+      const u = d.updated ? hel(new Date(d.updated)) : null;
+      $("sl-upd").textContent = u ? `Updated ${pad(u.h)}:${pad(u.mi)} \xB7 source ${LOC.site.h.toLowerCase()}` : "";
     }
     liveItems = it;
     renderTicker();
