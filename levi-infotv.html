@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<style>html,body{background:#05080f}</style>
+<style>html,body{background:#06111D}</style>
 <base href="/">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#05080f">
+<meta name="theme-color" content="#06111D">
 <!--SEO:start-->
 <title>LeviTV — Your real-time view of Levi</title>
 <meta name="description" content="Live cameras, weather, northern lights and daylight from Levi, Lapland — in real time.">
@@ -26,32 +26,35 @@
 <script src="config.js"></script>
 <style>
 /* ════════════════════════════════════════════════════════════
-   TOKENS
-   One calm navy base for every season; only the accent and the
-   background glow change. Sun = warm gold, aurora = green.
+   TOKENS — LeviTV brand V5 "arctic", dark (kaamos) scope
+   Snow #F2F6FA · midnight #0B1B2B · glacier #76C7EF · mist #ADC4D5,
+   sun #FFB366 only for daylight details. Aurora green and the
+   warning/error colours are data colours and stay as they are.
 ════════════════════════════════════════════════════════════ */
 :root{
-  --ink:#05080f;
-  --glow:#0b1a33;
-  --panel:rgba(10,16,28,.82);
-  --card:rgba(255,255,255,.035);
-  --line:rgba(255,255,255,.08);
-  --text:#f2f5f9;
-  --dim:rgba(232,240,248,.64);
-  --muted:rgba(232,240,248,.40);
-  --accent:#8fd0ff;
-  --sun:#ffc35a;
+  --brand-snow:#F2F6FA;--brand-midnight:#0B1B2B;--brand-glacier:#76C7EF;--brand-mist:#ADC4D5;--brand-sun:#FFB366;
+  --ink:#06111D;
+  --glow:#0B1B2B;
+  --panel:rgba(11,27,43,.84);
+  --card:rgba(242,246,250,.035);
+  --line:rgba(173,196,213,.13);
+  --text:#F2F6FA;
+  --dim:#ADC4D5;
+  --muted:rgba(173,196,213,.64);
+  --accent:#76C7EF;
+  --sun:#FFB366;
   --aurora:#5cf0a8;
   --warn:#ffb057;
   --bad:#ff7a7a;
   --cond:'Barlow Condensed','Arial Narrow',sans-serif;
   --sans:'Barlow',system-ui,sans-serif;
 }
-body.winter{--accent:#8fd0ff;--glow:#0b1a33}
-body.spring{--accent:#86e3cf;--glow:#082022}
-body.summer{--accent:#c8e57e;--glow:#0d1d14}
-body.autumn{--accent:#ffb36b;--glow:#1c1220}
-body.night{--glow:#060d1c}
+/* one arctic accent all year; seasons only shift the background glow a little */
+body.winter{--glow:#0B1B2B}
+body.spring{--glow:#0B1E2C}
+body.summer{--glow:#0D1F2E}
+body.autumn{--glow:#0B1A2A}
+body.night{--glow:#081624}
 
 *{margin:0;padding:0;box-sizing:border-box}
 
@@ -107,6 +110,9 @@ body.night #stars{opacity:1}
 .wm{font-family:var(--cond);font-weight:800;letter-spacing:.12em;color:var(--text);white-space:nowrap}
 .wm i{font-style:normal;color:var(--accent)}
 .wm small{font-size:.72em;font-weight:600;color:var(--dim);letter-spacing:.1em}
+/* LeviTV logo (brand/logo-inverse.svg) in place of the old text wordmark */
+.wm-logo{display:inline-block;height:1.1em;width:auto;vertical-align:-.2em}
+#live-txt .wm,#foot-label .wm{display:inline-block;width:6.4em}   /* same space as the old text wordmark */
 #live-txt .wm{margin-right:4px}
 #m-pill,#sky,#m-site,#cam-pick,#m-brand,#about{display:none}
 #b-prog{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--accent);opacity:.7;z-index:2}
@@ -284,8 +290,8 @@ body.night #stars{opacity:1}
 .bs.t-accent{background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 13%,transparent),transparent 70%)}
 .bs.t-aurora{background:linear-gradient(90deg,rgba(92,240,168,.14),transparent 70%)}
 .bs.t-aurora .bs-tag{background:var(--aurora)}
-.bs.t-sun{background:linear-gradient(90deg,rgba(255,195,90,.12),transparent 70%)}
-.bs.t-sun .bs-tag{background:var(--sun)}
+.bs.t-sun{background:linear-gradient(90deg,rgba(173,196,213,.12),transparent 70%)}
+.bs.t-sun .bs-tag{background:var(--brand-mist)}
 #bsaur-kp{margin-left:auto;font-family:var(--cond);font-size:56px;font-weight:600;color:var(--aurora)}
 
 /* ════════ FOOTER TICKER ════════ */
@@ -401,7 +407,7 @@ html.full,html.full body{cursor:none}
 ════════════════════════════════════════════════════════════ */
 @media (max-width:900px){
   html,body{width:auto;height:auto;overflow-x:hidden;overflow-y:auto}
-  body,body.winter,body.spring,body.summer,body.autumn{position:static;transform:none!important;min-height:100vh;--accent:#5fb4ff}
+  body,body.winter,body.spring,body.summer,body.autumn{position:static;transform:none!important;min-height:100vh;--accent:#76C7EF}
   #app{width:auto;height:auto;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom)}
 
   /* header */
@@ -537,16 +543,17 @@ html.full,html.full body{cursor:none}
     order:6;display:block;text-align:center;text-decoration:none;
     padding:26px 16px 22px;border-bottom:1px solid var(--line);
   }
-  #m-site-h{font-family:var(--cond);font-size:34px;font-weight:700;letter-spacing:.14em;color:var(--sun)}
+  #m-site-h{font-family:var(--cond);font-size:34px;font-weight:700;letter-spacing:.14em;color:var(--accent)}
   #m-site-p{font-family:var(--cond);font-size:14px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);margin-top:6px}
 
   #m-brand{
     order:6;display:block;text-align:center;padding:30px 16px 26px;border-bottom:1px solid var(--line);
   }
   #m-brand .wm{font-size:40px;display:block}
+  #m-brand .wm-logo{height:40px;vertical-align:top}
   #m-brand-tag{font-size:16px;color:var(--dim);margin-top:6px}
   #m-brand-ad{font-size:13px;color:var(--muted);margin-top:14px}
-  #m-brand-ad a{color:var(--sun);text-decoration:none}
+  #m-brand-ad a{color:var(--accent);text-decoration:none}
   #about{
     order:6;display:block;padding:28px 20px 34px;border-bottom:1px solid var(--line);
     color:var(--dim);font-size:16px;line-height:1.6;
@@ -689,15 +696,15 @@ if(!Object.fromEntries)Object.fromEntries=function(a){var o={};Array.from(a).for
       <svg id="sun-svg" viewBox="0 0 400 150">
         <defs>
           <linearGradient id="arcg" x1="0" x2="1">
-            <stop offset="0" stop-color="#ff9a4a"/><stop offset=".5" stop-color="#ffc35a"/><stop offset="1" stop-color="#ff9a4a"/>
+            <stop offset="0" stop-color="#F29B57"/><stop offset=".5" stop-color="#FFB366"/><stop offset="1" stop-color="#F29B57"/>
           </linearGradient>
           <filter id="sglow" x="-2" y="-2" width="5" height="5"><feGaussianBlur stdDeviation="5"/></filter>
         </defs>
         <path id="arc-bg" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="2" stroke-dasharray="3 6"/>
         <path id="arc-fill" fill="none" stroke="url(#arcg)" stroke-width="3" stroke-linecap="round"/>
         <line x1="10" y1="140" x2="390" y2="140" stroke="rgba(255,255,255,.18)" stroke-width="1"/>
-        <circle id="sun-halo" r="16" fill="#ffc35a" opacity=".45" filter="url(#sglow)"/>
-        <circle id="sun-dot" r="8" fill="#ffd27a"/>
+        <circle id="sun-halo" r="16" fill="#FFB366" opacity=".45" filter="url(#sglow)"/>
+        <circle id="sun-dot" r="8" fill="#FFC68A"/>
         <text id="sun-msg" x="200" y="100" text-anchor="middle" fill="rgba(232,240,248,.5)"
               font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="600" font-size="16" letter-spacing="3"></text>
       </svg>
@@ -721,7 +728,7 @@ if(!Object.fromEntries)Object.fromEntries=function(a){var o={};Array.from(a).for
   </a>
 
   <div id="m-brand">
-    <span class="wm">LEVI<i>TV</i><small>.COM</small></span>
+    <span class="wm"><img class="wm-logo" src="brand/logo-inverse.svg" alt="LeviTV.com"></span>
     <div id="m-brand-tag"></div>
     <div id="m-brand-ad">Advertise on LeviTV — <a href="mailto:hello@oomf.fi?subject=LeviTV%20advertising">hello@oomf.fi</a></div>
   </div>
@@ -958,7 +965,7 @@ if(VIEW()!=='mobile'){
 ══════════════════════════════════════════════════════════ */
 (function applyLoc(){
   const q=id=>document.getElementById(id);
-  const WM='<span class="wm">LEVI<i>TV</i><small>.COM</small></span>';
+  const WM='<span class="wm"><img class="wm-logo" src="brand/logo-inverse.svg" alt="LeviTV.com"></span>';
   if(!window.INFOTV_LOC)   // generated location pages keep their SEO title
     document.title = LOC_KEY==='levi' ? 'LeviTV — Your real-time view of Levi' : `${LOC.name} live — LeviTV`;
   q('mark').innerHTML=LOC.mark;
@@ -1466,11 +1473,11 @@ const tvMenu=(()=>{
   setTimeout(()=>location.reload(),6*3600000);   // fresh page every 6 h, like the Android app
   let open=false, sel=0;
   const el=document.createElement('div'); el.id='tv-menu';
-  el.style.cssText='position:fixed;right:40px;top:40px;width:460px;z-index:100;background:rgba(5,8,15,.94);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:22px 0;font:500 26px/1.2 Barlow,sans-serif;color:#dfe8f2;display:none;box-shadow:0 20px 60px rgba(0,0,0,.6)';
+  el.style.cssText='position:fixed;right:40px;top:40px;width:460px;z-index:100;background:rgba(6,17,29,.95);border:1px solid rgba(173,196,213,.22);border-radius:14px;padding:22px 0;font:500 26px/1.2 Barlow,sans-serif;color:#dfe8f2;display:none;box-shadow:0 20px 60px rgba(0,0,0,.6)';
   document.body.appendChild(el);
   function render(){
-    el.innerHTML='<div style="padding:0 28px 14px;font:700 30px Barlow Condensed,sans-serif;letter-spacing:.06em">LEVI<span style="color:#5fb4ff">TV</span> settings</div>'
-      +items.map((it,i)=>`<div style="display:flex;justify-content:space-between;padding:14px 28px;${i===sel?'background:#5fb4ff;color:#05080f':''}"><span>${it.l}</span><b>${it.v()}</b></div>`).join('')
+    el.innerHTML='<div style="padding:0 28px 14px;font:700 30px Barlow Condensed,sans-serif;letter-spacing:.06em">LEVI<span style="color:#76C7EF">TV</span> settings</div>'
+      +items.map((it,i)=>`<div style="display:flex;justify-content:space-between;padding:14px 28px;${i===sel?'background:#76C7EF;color:#0B1B2B':''}"><span>${it.l}</span><b>${it.v()}</b></div>`).join('')
       +`<div style="padding:14px 28px 0;font-size:18px;color:#8aa0b8">Screen: ${P.screen||'-'} · ◀ ▶ camera</div>`;
   }
   function close(force){
@@ -1716,7 +1723,7 @@ function bprog(){
 bprog();
 try{
   document.querySelectorAll('[data-qr]').forEach(el=>
-    new QRCode(el,{text:el.dataset.qr,width:72,height:72,colorDark:'#05080f',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}));
+    new QRCode(el,{text:el.dataset.qr,width:72,height:72,colorDark:'#0B1B2B',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}));
 }catch(e){console.warn('qr',e);}
 
 /* ══════════════════════════════════════════════════════════
