@@ -3,7 +3,7 @@
         id="https://levitv.com/tizen" version="1.0.0" viewmodes="maximized">
     <tizen:application id="LeviTVApp1.LeviTV" package="LeviTVApp1" required_version="4.0"/>
     <name>LeviTV</name>
-    <description>LeviTV.com — your real-time view of Levi: live cameras, weather, northern lights and daylight.</description>
+    <description>LeviTV — your real-time view of Levi: live cameras, weather, northern lights and daylight.</description>
     <author href="https://oomf.fi" email="hello@oomf.fi">OOMF Marketing Oy</author>
     <icon src="icon.png"/>
     <content src="index.html"/>

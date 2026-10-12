@@ -1,0 +1,15 @@
+/* Role examples, NOT known project selectors. Map to existing components.
+   Load/self-host the real Literata font first. No sizes or layout values here. */
+.levitv-editorial {
+ font-family:var(--font-editorial);
+ font-weight:500;
+ font-optical-sizing:auto;
+ font-kerning:normal;
+ letter-spacing:0;
+ text-transform:none;
+}
+.levitv-ui { font-family:var(--font-ui); }
+.levitv-data {
+ font-family:var(--font-ui);
+ font-variant-numeric:tabular-nums lining-nums;
+}

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#F2F6FA">
+<meta name="theme-color" content="#06111D">
 <title>LeviTV — Your real-time view of Levi</title>
 <meta name="description" content="Live cameras, weather, northern lights and daylight from Levi, Lapland — in real time.">
 <meta property="og:title" content="LeviTV — Your real-time view of Levi">
@@ -16,65 +16,69 @@
 <link rel="canonical" href="https://levitv.com/">
 <meta property="og:site_name" content="LeviTV">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://levitv.com/#website", "url": "https://levitv.com/", "name": "LeviTV", "alternateName": ["LeviTV.com", "Levi TV"], "description": "Your real-time view of Levi — live webcams, weather, northern lights and daylight from Levi, Finnish Lapland.", "inLanguage": "en", "publisher": {"@id": "https://levitv.com/#org"}}, {"@type": "Organization", "@id": "https://levitv.com/#org", "name": "OOMF Marketing Oy", "url": "https://levitv.com/", "email": "hello@oomf.fi", "logo": "https://levitv.com/apple-touch-icon.png"}, {"@type": "FAQPage", "@id": "https://levitv.com/#faq", "mainEntity": [{"@type": "Question", "name": "What is LeviTV?", "acceptedAnswer": {"@type": "Answer", "text": "LeviTV (levitv.com) is a real-time view of Levi in Finnish Lapland: live webcams from around Levi Fell, the weather now and a 5-day forecast, northern lights activity (Kp index) and today's sunrise, sunset and day length. It also has live views of Ylläs, Rovaniemi and Helsinki."}}, {"@type": "Question", "name": "Is LeviTV free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. LeviTV is free to watch on a phone, computer or TV and needs no app or login."}}, {"@type": "Question", "name": "Can I show LeviTV on a TV or hotel lobby screen?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Open levitv.com/levi/full/ on the screen's browser for a full-screen 1080p view with the camera, weather, aurora and daylight. Click or press F for full screen."}}, {"@type": "Question", "name": "Where does the data come from?", "acceptedAnswer": {"@type": "Answer", "text": "Cameras are public YouTube live streams (Levi Ski Resort, Ylläs Ski Resort, City of Rovaniemi, Port of Helsinki and others), weather is from the Finnish Meteorological Institute (FMI) and northern lights data from NOAA's Space Weather Prediction Center. Sunrise and sunset are calculated."}}, {"@type": "Question", "name": "How can I advertise on LeviTV?", "acceptedAnswer": {"@type": "Answer", "text": "Contact hello@oomf.fi. Ads appear on LeviTV screens and on the mobile view, with QR codes that are tracked for scans."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://levitv.com/#website", "url": "https://levitv.com/", "name": "LeviTV", "alternateName": ["levitv.com"], "description": "Your real-time view of Levi — live webcams, weather, northern lights and daylight from Levi, Finnish Lapland.", "inLanguage": "en", "publisher": {"@id": "https://levitv.com/#org"}}, {"@type": "Organization", "@id": "https://levitv.com/#org", "name": "OOMF Marketing Oy", "url": "https://levitv.com/", "email": "hello@oomf.fi", "logo": "https://levitv.com/apple-touch-icon.png"}, {"@type": "FAQPage", "@id": "https://levitv.com/#faq", "mainEntity": [{"@type": "Question", "name": "What is LeviTV?", "acceptedAnswer": {"@type": "Answer", "text": "LeviTV (levitv.com) is a real-time view of Levi in Finnish Lapland: live webcams from around Levi Fell, the weather now and a 5-day forecast, northern lights activity (Kp index) and today's sunrise, sunset and day length. It also has live views of Ylläs, Rovaniemi and Helsinki."}}, {"@type": "Question", "name": "Is LeviTV free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. LeviTV is free to watch on a phone, computer or TV and needs no app or login."}}, {"@type": "Question", "name": "Can I show LeviTV on a TV or hotel lobby screen?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Open levitv.com/levi/full/ on the screen's browser for a full-screen 1080p view with the camera, weather, aurora and daylight. Click or press F for full screen."}}, {"@type": "Question", "name": "Where does the data come from?", "acceptedAnswer": {"@type": "Answer", "text": "Cameras are public YouTube live streams (Levi Ski Resort, Ylläs Ski Resort, City of Rovaniemi, Port of Helsinki and others), weather is from the Finnish Meteorological Institute (FMI) and northern lights data from NOAA's Space Weather Prediction Center. Sunrise and sunset are calculated."}}, {"@type": "Question", "name": "How can I advertise on LeviTV?", "acceptedAnswer": {"@type": "Answer", "text": "Contact hello@oomf.fi. Ads appear on LeviTV screens and on the mobile view, with QR codes that are tracked for scans."}}]}]}</script>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script defer src="https://cloud.umami.is/script.js" data-website-id="ced80469-2f42-45f0-8153-00f6fa4c2f66"></script>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/literata/literata-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="fonts/literata/literata.css">
 <style>
 :root{
-  /* LeviTV brand V5 "arctic", light scope (see brand/tokens.css) */
-  --bg:#F2F6FA;--surface:#FFFFFF;--text:#0B1B2B;--dim:#466075;--muted:#466075;--line:#CDDCE7;
-  --action:#76C7EF;--action-text:#0B1B2B;--focus:#145E85;--sun:#FFB366;--sun-text:#9B4A0B;
-  --ink:#0B1B2B;--accent:#145E85;--cond:'Barlow Condensed','Arial Narrow',sans-serif}
+  /* LeviTV brand V9: the same dark arctic theme as the live views (brand/tokens.css) */
+  color-scheme:dark;
+  --bg:#06111D;--surface:#0B1B2B;--text:#F2F6FA;--dim:#ADC4D5;--muted:#ADC4D5;--line:#37556A;--control:#ADC4D5;
+  --action:#76C7EF;--action-text:#0B1B2B;--focus:#76C7EF;--sun:#FFB366;
+  --ink:#06111D;--accent:#76C7EF;
+  --sans:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--cond:var(--sans);
+  --serif:'Literata Variable',Georgia,serif}
 *{margin:0;padding:0;box-sizing:border-box}
 body{
-  min-height:100vh;color:var(--text);font-family:'Barlow',system-ui,sans-serif;
+  min-height:100vh;color:var(--text);font-family:var(--sans);line-height:1.15;
   background:var(--bg);
   padding:calc(48px + env(safe-area-inset-top)) 20px calc(40px + env(safe-area-inset-bottom));
   display:flex;flex-direction:column;align-items:center;
 }
 .wrap{width:100%;max-width:880px}
-.live{display:inline-flex;align-items:center;gap:10px;font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.28em;color:var(--dim)}
+.live{display:inline-flex;align-items:center;gap:10px;font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.08em;color:var(--dim)}
 .live b{width:9px;height:9px;border-radius:50%;background:#ff4d4d;box-shadow:0 0 10px #ff4d4d;animation:p 2s infinite}
 @keyframes p{50%{opacity:.35}}
 .hero{display:flex;align-items:center;gap:22px;margin:22px 0 10px}
 .mark{width:64px;height:64px;flex-shrink:0}
 .hero{min-height:64px}
 .logo{display:block;height:clamp(46.8px,10.8vw,86.4px);width:auto;max-width:100%}   /* = old wordmark height */
-.wm{font-family:var(--cond);font-weight:800;font-size:clamp(52px,12vw,96px);letter-spacing:.1em;line-height:.9}
+.wm{font-family:var(--cond);font-weight:800;font-size:clamp(52px,12vw,96px);letter-spacing:.08em;line-height:.9}
 .wm i{font-style:normal;color:var(--accent)}.wm small{font-size:.4em;color:var(--dim);letter-spacing:.08em}
 .tagline{font-size:clamp(18px,3.4vw,24px);color:var(--dim)}
 
 .main{
-  margin-top:34px;border:1px solid #9FD3EF;border-radius:18px;padding:26px 24px;
+  margin-top:34px;border:1px solid var(--line);border-radius:18px;padding:26px 24px;
   background:var(--surface);
 }
-.main .n{font-family:var(--cond);font-weight:700;font-size:34px;letter-spacing:.14em;text-transform:uppercase}
+.main .n{font-family:var(--serif);font-weight:500;font-optical-sizing:auto;font-size:34px;letter-spacing:0}
 .main .c{color:var(--dim);margin-top:4px}
 .btns{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
 .btn{
   flex:1 1 180px;text-align:center;text-decoration:none;font-family:var(--cond);font-weight:700;
-  font-size:16px;letter-spacing:.18em;text-transform:uppercase;padding:13px 10px;border-radius:999px;
-  border:1px solid var(--line);color:var(--text);transition:border-color .2s,background .2s;
+  font-size:16px;letter-spacing:.08em;text-transform:uppercase;padding:13px 10px;border-radius:999px;
+  border:1px solid var(--control);color:var(--text);transition:border-color .2s,background .2s;
 }
 .btn:hover{border-color:var(--action)}
 .btn:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .btn.primary{background:var(--action);border-color:var(--action);color:var(--action-text)}
 .btn.primary:hover{background:#8FD2F2}
 
-h2{font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin:38px 0 12px}
+h2{font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:38px 0 12px}
 .grid{display:grid;gap:12px}
 @media(min-width:640px){.grid{grid-template-columns:1fr 1fr}}
 .loc{border:1px solid var(--line);border-radius:14px;padding:20px;background:var(--surface)}
-.loc .n{font-family:var(--cond);font-weight:700;font-size:24px;letter-spacing:.14em;text-transform:uppercase}
-.loc .s{font-family:var(--cond);font-size:13px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-top:2px}
+.loc .n{font-family:var(--serif);font-weight:500;font-optical-sizing:auto;font-size:24px;letter-spacing:0}
+.loc .s{font-family:var(--cond);font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-top:2px}
 .loc .c{font-size:14px;color:var(--dim);margin-top:8px}
 .loc .btns{margin-top:14px}
 .loc .btn{font-size:14px;padding:9px 8px;flex-basis:120px}
 
 .tip{margin-top:30px;font-size:14px;color:var(--muted);line-height:1.5}
-.tip code{font-family:ui-monospace,monospace;font-size:12.5px;color:var(--text);background:#E3ECF3;padding:2px 6px;border-radius:5px}
+.tip code{font-family:ui-monospace,monospace;font-size:12.5px;color:var(--text);background:var(--surface);padding:2px 6px;border-radius:5px}
 .about{margin-top:40px;color:var(--dim);line-height:1.65}
 .about h2{margin-top:30px}
 .about p{margin-bottom:12px}
@@ -85,14 +89,15 @@ h2{font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.28em;t
 .about details p{margin:8px 0 0}
 h1.wm{font-size:clamp(52px,12vw,96px);margin:0}
 footer{margin-top:34px;padding-top:20px;border-top:1px solid var(--line);font-size:14px;color:var(--dim);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-footer a{color:var(--focus);text-decoration:none}
+.nm{text-transform:none;letter-spacing:0}   /* product name keeps its spelling LeviTV inside caps labels */
+footer a{color:var(--accent);text-decoration:none}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="live"><b></b>LIVE FROM LAPLAND</div>
   <div class="hero">
-    <h1 class="wm" style="line-height:0"><img class="logo" src="brand/logo-primary.svg" alt="LeviTV.com" width="438" height="100"></h1>
+    <h1 class="wm" style="line-height:0"><img class="logo" src="brand/logo-inverse.svg" alt="LeviTV" width="454" height="104"></h1>
   </div>
   <div class="tagline">Your real-time view of Levi — live cameras, weather, northern lights and daylight.</div>
 
@@ -125,7 +130,7 @@ footer a{color:var(--focus);text-decoration:none}
   </div>
 
   <section class="about">
-    <h2>About LeviTV</h2>
+    <h2>About <span class="nm">LeviTV</span></h2>
     <p>LeviTV is your real-time view of Levi in Finnish Lapland. One screen brings together
       <strong>11 live webcams</strong> from around Levi Fell (including an aurora camera), the
       <strong>weather now</strong> from the Finnish Meteorological Institute, a <strong>5-day forecast</strong>,

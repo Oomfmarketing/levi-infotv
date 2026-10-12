@@ -165,7 +165,7 @@ def about_html(k, L):
     {''.join(f'<p>{E(p)}</p>' for p in L['intro'])}
     <h2>{E(L['cams_title'])}</h2>
     <ul>{''.join(f'<li>{E(c)}</li>' for c in L['cams'])}</ul>
-    <h2>What LeviTV shows</h2>
+    <h2>What <span class="nm">LeviTV</span> shows</h2>
     <ul>{''.join(f'<li><strong>{E(a)}:</strong> {E(b)}</li>' for a, b in L['data'])}</ul>
     <h2>Frequently asked questions</h2>
     {''.join(f'<details><summary>{E(q)}</summary><p>{E(a)}</p></details>' for q, a in L['faq'])}

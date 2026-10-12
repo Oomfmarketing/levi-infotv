@@ -132,12 +132,12 @@ public class MainActivity extends Activity {
         session.open(sRuntime);
 
         view = new GeckoView(this);
-        view.setBackgroundColor(Color.rgb(5, 8, 15));
-        view.coverUntilFirstPaint(Color.rgb(5, 8, 15));       // no white surface before the page
+        view.setBackgroundColor(Color.rgb(6, 17, 29));
+        view.coverUntilFirstPaint(Color.rgb(6, 17, 29));       // no white surface before the page
         view.setFocusable(true);
         view.setSession(session);
         FrameLayout root = new FrameLayout(this);
-        root.setBackgroundColor(Color.rgb(5, 8, 15));
+        root.setBackgroundColor(Color.rgb(6, 17, 29));
         root.addView(view, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         splash = makeSplash();
@@ -180,31 +180,28 @@ public class MainActivity extends Activity {
                 + (prefs.getBoolean("debug", false) ? "&debug=1" : "");
     }
 
-    /** Start-up screen: LEVITV.com wordmark, tagline and a spinner. */
+    /** Start-up screen: LeviTV wordmark, tagline and a spinner. */
     private View makeSplash() {
         LinearLayout box = new LinearLayout(this);
         box.setOrientation(LinearLayout.VERTICAL);
         box.setGravity(Gravity.CENTER);
-        box.setBackgroundColor(Color.rgb(5, 8, 15));
+        box.setBackgroundColor(Color.rgb(6, 17, 29));
         box.setClickable(false);
         box.setFocusable(false);
 
-        SpannableString word = new SpannableString("LEVITV.com");
-        word.setSpan(new ForegroundColorSpan(Color.rgb(95, 180, 255)), 4, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        word.setSpan(new ForegroundColorSpan(Color.rgb(120, 140, 165)), 6, 10, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        SpannableString word = new SpannableString("LeviTV");
         TextView t = new TextView(this);
         t.setText(word);
-        t.setTextColor(Color.WHITE);
+        t.setTextColor(Color.rgb(242, 246, 250));
         t.setTextSize(56);
-        t.setTypeface(Typeface.create("sans-serif-condensed", Typeface.BOLD));
-        t.setLetterSpacing(0.08f);
+        t.setTypeface(Typeface.create("serif", Typeface.NORMAL));
         t.setGravity(Gravity.CENTER);
         box.addView(t);
 
         TextView sub = new TextView(this);
         int li = indexOf(LOC_KEYS, prefs.getString("loc", "levi"));
         sub.setText("your real-time view of " + LOC_NAMES[li < 0 ? 0 : li]);
-        sub.setTextColor(Color.rgb(160, 178, 198));
+        sub.setTextColor(Color.rgb(173, 196, 213));
         sub.setTextSize(20);
         sub.setGravity(Gravity.CENTER);
         sub.setPadding(0, 8, 0, 48);

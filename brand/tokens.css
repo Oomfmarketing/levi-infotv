@@ -1,16 +1,11 @@
-/* LeviTV V5: colors only. Preserve existing layout, fonts, sizes and breakpoints. */
-:root {
- --brand-snow:#F2F6FA; --brand-midnight:#0B1B2B; --brand-glacier:#76C7EF; --brand-mist:#ADC4D5;
- --bg:#F2F6FA; --surface:#FFFFFF; --text:#0B1B2B; --muted:#466075; --border:#CDDCE7;
- --action:#76C7EF; --action-text:#0B1B2B; --focus:#145E85; --error:#A32E28;
+/* LeviTV V6: SAME theme across every view. Preserve current layout. */
+:root, [data-theme="light"], [data-theme="dark"] {
+ color-scheme:dark;
+ --brand-snow:#F2F6FA; --brand-midnight:#0B1B2B; --brand-glacier:#76C7EF;
+ --brand-mist:#ADC4D5; --brand-sun:#FFB366;
+ --bg:#06111D; --surface:#0B1B2B; --text:#F2F6FA; --muted:#ADC4D5;
+ --border:#37556A; --border-control:#ADC4D5; --action:#76C7EF; --action-text:#0B1B2B;
+ --focus:#76C7EF; --sun:#FFB366; --sun-text:#FFB366; --error:#FFAAA3;
+ --font-editorial:"Literata Variable",Georgia,serif;
+ --font-ui:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
-/* Map this to the existing live/TV scope. Do not add a theme switch. */
-[data-theme="dark"] {
- --bg:#06111D; --surface:#0B1B2B; --text:#F2F6FA; --muted:#ADC4D5; --border:#37556A;
- --action:#76C7EF; --action-text:#0B1B2B; --focus:#76C7EF; --error:#FFAAA3;
-}
-/* Decorative borders only; retain contrast for meaningful control outlines. */
-
-/* Small sunlight accents in existing elements only. */
-:root { --brand-sun:#FFB366; --brand-sun-ink:#9B4A0B; --sun:#FFB366; --sun-text:#9B4A0B; }
-[data-theme="dark"] { --sun-text:#FFB366; }

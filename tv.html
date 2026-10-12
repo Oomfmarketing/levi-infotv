@@ -21,14 +21,14 @@
 <!--SEO:end-->
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/literata/literata-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="fonts/literata/literata.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="config.js"></script>
 <style>
 /* ════════════════════════════════════════════════════════════
-   TOKENS — LeviTV brand V5 "arctic", dark (kaamos) scope
+   TOKENS — LeviTV brand V9: one dark arctic theme for every view (brand/tokens.css)
+   Literata for place names & content headings, system sans for UI and data.
    Snow #F2F6FA · midnight #0B1B2B · glacier #76C7EF · mist #ADC4D5,
    sun #FFB366 only for daylight details. Aurora green and the
    warning/error colours are data colours and stay as they are.
@@ -37,9 +37,9 @@
   --brand-snow:#F2F6FA;--brand-midnight:#0B1B2B;--brand-glacier:#76C7EF;--brand-mist:#ADC4D5;--brand-sun:#FFB366;
   --ink:#06111D;
   --glow:#0B1B2B;
-  --panel:rgba(11,27,43,.84);
+  --panel:rgba(11,27,43,.88);
   --card:rgba(242,246,250,.035);
-  --line:rgba(173,196,213,.13);
+  --line:#37556A;
   --text:#F2F6FA;
   --dim:#ADC4D5;
   --muted:rgba(173,196,213,.64);
@@ -48,15 +48,13 @@
   --aurora:#5cf0a8;
   --warn:#ffb057;
   --bad:#ff7a7a;
-  --cond:'Barlow Condensed','Arial Narrow',sans-serif;
-  --sans:'Barlow',system-ui,sans-serif;
+  --sans:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --cond:var(--sans);
+  --serif:'Literata Variable',Georgia,serif;
 }
 /* one arctic accent all year; seasons only shift the background glow a little */
-body.winter{--glow:#0B1B2B}
-body.spring{--glow:#0B1E2C}
-body.summer{--glow:#0D1F2E}
-body.autumn{--glow:#0B1A2A}
-body.night{--glow:#081624}
+body.winter,body.spring,body.summer,body.autumn{--glow:#0B1B2B}
+body.night{--glow:#0B1B2B}
 
 *{margin:0;padding:0;box-sizing:border-box}
 
@@ -65,7 +63,8 @@ html{width:100%;height:100%;overflow:hidden;background:var(--ink)}
 body{width:1920px;height:1080px;overflow:hidden}
 body{
   position:absolute;transform-origin:top left;
-  color:var(--text);font-family:var(--sans);
+  color:var(--text);font-family:var(--sans);font-variant-numeric:tabular-nums lining-nums;
+  line-height:1.15;   /* = the old font's line boxes, so the font change doesn't move anything */
   background:
     radial-gradient(1200px 700px at 85% -10%,var(--glow) 0%,transparent 70%),
     radial-gradient(900px 600px at 0% 110%,var(--glow) 0%,transparent 70%),
@@ -107,36 +106,36 @@ body.night #stars{opacity:1}
   position:relative;
 }
 #brand{display:flex;align-items:center;gap:22px}
-#mark{width:46px;height:46px;fill:none;stroke:var(--accent);stroke-width:1.6;stroke-linecap:round;flex-shrink:0}
-/* LeviTV wordmark */
-.wm{font-family:var(--cond);font-weight:800;letter-spacing:.12em;color:var(--text);white-space:nowrap}
-.wm i{font-style:normal;color:var(--accent)}
-.wm small{font-size:.72em;font-weight:600;color:var(--dim);letter-spacing:.1em}
-/* LeviTV logo (brand/logo-inverse.svg) in place of the old text wordmark */
+#mark{width:46px;height:46px;flex-shrink:0;display:block}
+/* LeviTV name in small brand badges (Literata, exact spelling) */
+.wm{font-family:var(--serif);font-weight:500;font-optical-sizing:auto;letter-spacing:0;text-transform:none;color:var(--text);white-space:nowrap;font-size:1.12em;line-height:.9}
+/* LeviTV logo (brand/logo-inverse.svg) */
 .wm-logo{display:inline-block;height:1.1em;width:auto;vertical-align:-.2em}
-#live-txt .wm,#foot-label .wm{display:inline-block;width:6.4em}   /* same space as the old text wordmark */
+.nm{text-transform:none;letter-spacing:0}   /* product name keeps its spelling LeviTV inside caps labels */
+.place{font-family:var(--serif);font-weight:500;font-optical-sizing:auto;letter-spacing:0;text-transform:none;color:var(--text);font-size:1.2em;line-height:.8}
+#foot-label .wm{display:inline-block;width:6.4em}   /* same space as the old text wordmark */
 #live-txt .wm{margin-right:4px}
 #m-pill,#sky,#m-site,#cam-pick,#m-brand,#about{display:none}
 #b-prog{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--accent);opacity:.7;z-index:2}
 .k-sun{color:var(--sun)}.k-cold{color:var(--accent)}
 #logo{
-  font-family:var(--cond);font-weight:800;font-size:46px;
-  letter-spacing:.1em;line-height:1;
+  font-family:var(--serif);font-weight:500;font-optical-sizing:auto;font-size:46px;
+  letter-spacing:0;line-height:1;
 }
 #brand-meta{display:flex;flex-direction:column;gap:3px;padding-left:22px;border-left:1px solid var(--line)}
 #brand-sub{
   font-family:var(--cond);font-size:15px;font-weight:600;
-  letter-spacing:.28em;text-transform:uppercase;color:var(--dim);
+  letter-spacing:.08em;text-transform:uppercase;color:var(--dim);
 }
 #coords{
   font-family:var(--cond);font-size:15px;font-weight:600;
-  letter-spacing:.14em;color:var(--accent);
+  letter-spacing:.08em;color:var(--accent);
 }
 #live-pill{
   position:absolute;left:50%;transform:translateX(-50%);
   display:flex;align-items:center;gap:10px;
   font-family:var(--cond);font-size:15px;font-weight:600;
-  letter-spacing:.24em;text-transform:uppercase;color:var(--dim);
+  letter-spacing:.08em;text-transform:uppercase;color:var(--dim);
   padding:7px 18px;border:1px solid var(--line);border-radius:999px;
   background:var(--card);
 }
@@ -150,7 +149,7 @@ body.night #stars{opacity:1}
 #clock-sec{font-size:24px;color:var(--muted);margin-left:2px}
 #clock-date{
   font-family:var(--cond);font-size:14px;font-weight:500;
-  letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:4px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:4px;
 }
 
 /* ════════ CAMERA ════════ */
@@ -176,7 +175,7 @@ body.night #stars{opacity:1}
 #cam-cover{
   position:absolute;top:0;right:0;bottom:0;left:0;z-index:2;background:#000;
   display:flex;align-items:center;justify-content:center;
-  font-family:var(--cond);font-size:18px;letter-spacing:.4em;
+  font-family:var(--cond);font-size:18px;letter-spacing:.08em;
   text-transform:uppercase;color:var(--muted);transition:opacity .9s;
   background-size:cover;background-position:center;
 }
@@ -196,11 +195,11 @@ body.night #stars{opacity:1}
   display:flex;flex-direction:column;gap:2px;
 }
 #cam-kicker{
-  font-family:var(--cond);font-size:13px;font-weight:600;letter-spacing:.3em;
+  font-family:var(--cond);font-size:13px;font-weight:600;letter-spacing:.08em;
   text-transform:uppercase;color:var(--accent);
 }
 #cam-name{
-  font-family:var(--cond);font-size:30px;font-weight:600;letter-spacing:.04em;
+  font-family:var(--serif);font-size:30px;font-weight:480;font-optical-sizing:auto;letter-spacing:0;
   text-shadow:0 2px 10px rgba(0,0,0,.6);
 }
 #cam-dots{position:absolute;right:28px;bottom:32px;z-index:4;display:flex;gap:7px}
@@ -219,10 +218,10 @@ body.night #stars{opacity:1}
 .kicker{
   display:flex;justify-content:space-between;align-items:baseline;
   font-family:var(--cond);font-size:14px;font-weight:600;
-  letter-spacing:.24em;text-transform:uppercase;color:var(--muted);
+  letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
   margin-bottom:14px;
 }
-.kicker b{font-weight:600;color:var(--accent);letter-spacing:.14em}
+.kicker b{font-weight:600;color:var(--accent);letter-spacing:.08em}
 
 /* weather */
 #wx-row{display:flex;align-items:center;gap:20px}
@@ -234,13 +233,13 @@ body.night #stars{opacity:1}
 #wx-desc{font-size:19px;color:var(--dim);margin-top:10px}
 #wx-stats{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:10px;margin-top:16px}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
-.stat-l{font-family:var(--cond);font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.stat-l{font-family:var(--cond);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .stat-v{font-family:var(--cond);font-size:26px;font-weight:600;margin-top:2px;font-variant-numeric:tabular-nums}
 
 /* forecast */
 #fc{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 .fc{text-align:center;padding:10px 0 8px;border-radius:10px;background:var(--card);border:1px solid var(--line)}
-.fc-d{font-family:var(--cond);font-size:14px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.fc-d{font-family:var(--cond);font-size:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
 .fc-i{width:34px;height:34px;margin:6px auto 4px;display:block;color:var(--text)}
 .fc-t{font-family:var(--cond);font-size:22px;font-weight:600}
 .fc-t small{font-size:16px;color:var(--muted);margin-left:3px}
@@ -250,7 +249,7 @@ body.night #stars{opacity:1}
 .off{display:none!important}
 #aur-row{display:flex;align-items:flex-end;justify-content:space-between}
 #aur-kp{font-family:var(--cond);font-size:64px;font-weight:600;line-height:.9;color:var(--aurora)}
-#aur-kp small{font-size:22px;color:var(--muted);margin-right:6px;letter-spacing:.1em}
+#aur-kp small{font-size:22px;color:var(--muted);margin-right:6px;letter-spacing:.08em}
 #aur-level{font-family:var(--cond);font-size:24px;font-weight:600;text-align:right}
 #aur-note{font-size:15px;color:var(--dim);text-align:right;margin-top:2px}
 #aur-scale{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;margin-top:16px}
@@ -263,14 +262,14 @@ body.night #stars{opacity:1}
 #sun-row{display:flex;justify-content:space-between;margin-top:6px}
 .sun-c{text-align:center}
 .sun-c:first-child{text-align:left}.sun-c:last-child{text-align:right}
-.sun-l{font-family:var(--cond);font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.sun-l{font-family:var(--cond);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .sun-v{font-family:var(--cond);font-size:26px;font-weight:600;font-variant-numeric:tabular-nums}
 #sun-mid .sun-v{color:var(--sun)}
 
 #tag{
   margin-top:auto;padding:14px 32px;text-align:center;
   font-family:var(--cond);font-size:18px;font-weight:600;
-  letter-spacing:.32em;color:var(--muted);
+  letter-spacing:.08em;color:var(--muted);
 }
 
 /* ════════ BANNER ════════ */
@@ -282,7 +281,7 @@ body.night #stars{opacity:1}
 .bs.on{opacity:1}
 .bs-tag{
   flex-shrink:0;font-family:var(--cond);font-size:13px;font-weight:700;
-  letter-spacing:.24em;text-transform:uppercase;
+  letter-spacing:.08em;text-transform:uppercase;
   padding:6px 12px;border-radius:6px;background:var(--accent);color:var(--ink);
 }
 .bs-h{font-family:var(--cond);font-size:30px;font-weight:700;letter-spacing:.02em;line-height:1.05}
@@ -304,7 +303,7 @@ body.night #stars{opacity:1}
 }
 #foot-label{
   flex-shrink:0;height:100%;display:flex;align-items:center;padding:0 24px 0 36px;
-  font-family:var(--cond);font-size:15px;font-weight:700;letter-spacing:.28em;
+  font-family:var(--cond);font-size:15px;font-weight:700;letter-spacing:.08em;
   text-transform:uppercase;color:var(--accent);border-right:1px solid var(--line);
 }
 #foot-track{flex:1;overflow:hidden;
@@ -353,9 +352,8 @@ html.full #header{
 html.full #brand{gap:6px 14px;flex-wrap:wrap}
 html.full #mark{width:40px;height:40px}
 html.full #logo{font-size:40px}
-html.full.longname #logo{font-size:34px;letter-spacing:.12em}
 html.full #brand-meta{flex-basis:100%;flex-direction:row;gap:14px;border:0;padding:0;white-space:nowrap}
-html.full #brand-sub{font-size:13px;letter-spacing:.2em}
+html.full #brand-sub{font-size:13px;letter-spacing:.08em}
 html.full #coords{font-size:13px;letter-spacing:.08em}
 html.full #live-pill{display:none}
 html.full #clock{display:flex;align-items:baseline;gap:14px;text-align:left}
@@ -376,11 +374,11 @@ html.full #wx-temp{font-size:80px}
 html.full #wx-desc{font-size:16px;margin-top:6px}
 html.full #wx-stats{gap:8px;margin-top:14px}
 html.full .stat{padding:8px 10px}
-html.full .stat-l{font-size:11px;letter-spacing:.14em}
+html.full .stat-l{font-size:11px;letter-spacing:.08em}
 html.full .stat-v{font-size:22px}
 html.full #fc{gap:6px}
 html.full .fc{padding:8px 0 6px}
-html.full .fc-d{font-size:12px;letter-spacing:.12em}
+html.full .fc-d{font-size:12px;letter-spacing:.08em}
 html.full .fc-i{width:28px;height:28px;margin:5px auto 3px}
 html.full .fc-t{font-size:19px}
 html.full .fc-t small{display:block;font-size:13px;margin:0}
@@ -419,23 +417,21 @@ html.full,html.full body{cursor:none}
   }
   #brand{gap:14px;align-items:center}
   #mark{width:44px;height:44px}
-  #logo{font-size:30px;letter-spacing:.16em}
-  html.longname #logo{font-size:24px;letter-spacing:.1em}
+  #logo{font-size:30px;letter-spacing:.08em}
   #brand-meta{border:0;padding:0;gap:0}
   #brand>#logo{display:none}
   #brand-meta::before{
-    content:attr(data-name);font-family:var(--cond);font-weight:700;font-size:30px;
-    letter-spacing:.18em;line-height:1;color:var(--text);
+    content:attr(data-name);font-family:var(--serif);font-weight:500;font-optical-sizing:auto;font-size:30px;
+    letter-spacing:0;line-height:1;color:var(--text);
   }
-  html.longname #brand-meta::before{font-size:24px;letter-spacing:.1em}
   html.longname #m-site-h{font-size:clamp(20px,7vw,34px);letter-spacing:.06em;overflow-wrap:anywhere}
-  #brand-sub{font-size:11px;letter-spacing:.2em;color:var(--accent);margin-top:4px;white-space:nowrap}
+  #brand-sub{font-size:11px;letter-spacing:.08em;color:var(--accent);margin-top:4px;white-space:nowrap}
   #coords{display:none}
   #live-pill{display:none}
   #clock{display:flex;flex-direction:column-reverse;align-items:flex-end}
-  #clock-time{font-size:30px;font-weight:500;white-space:nowrap}
-  #clock-sec{font-size:30px;color:var(--text)}
-  #clock-date{font-size:11px;letter-spacing:.12em;margin:0 0 6px;color:var(--dim);white-space:nowrap}
+  #clock-time{font-size:26px;font-weight:500;white-space:nowrap}   /* system sans is wider than the old condensed face */
+  #clock-sec{font-size:26px;color:var(--text)}
+  #clock-date{font-size:10px;letter-spacing:.04em;margin:0 0 6px;color:var(--dim);white-space:nowrap}
 
   #m-pill{
     display:flex;gap:6px;margin:0 16px 14px;padding:5px;border-radius:999px;
@@ -447,8 +443,8 @@ html.full,html.full body{cursor:none}
   #m-pill a{
     flex:1 0 auto;display:flex;align-items:center;justify-content:center;gap:8px;
     padding:8px 10px;border-radius:999px;text-decoration:none;
-    font-family:var(--cond);font-size:13px;font-weight:600;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--dim);white-space:nowrap;
+    font-family:var(--cond);font-size:14px;font-weight:600;letter-spacing:.01em;
+    text-transform:none;color:var(--dim);white-space:nowrap;   /* place names as names: Levi, Ylläs … */
   }
   #m-pill a.on{background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--text)}
   #m-pill svg{width:16px;height:16px;fill:none;stroke:var(--accent);stroke-width:1.8}
@@ -456,7 +452,7 @@ html.full,html.full body{cursor:none}
   /* camera */
   #camera{width:100%;aspect-ratio:16/9;height:auto;border-top:1px solid var(--line)}
   #cam-label{left:14px;bottom:12px}
-  #cam-kicker{font-size:10px;letter-spacing:.24em}
+  #cam-kicker{font-size:10px;letter-spacing:.08em}
   #cam-name{font-size:18px}
   #cam-dots{right:14px;bottom:16px;gap:5px}
   .cam-dot{width:5px;height:5px}.cam-dot.on{width:14px}
@@ -469,7 +465,7 @@ html.full,html.full body{cursor:none}
   #cam-pick::-webkit-scrollbar{display:none}
   #cam-pick a{
     flex-shrink:0;padding:8px 14px;border-radius:999px;text-decoration:none;white-space:nowrap;
-    font-family:var(--cond);font-size:14px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    font-family:var(--cond);font-size:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
     color:var(--dim);border:1px solid var(--line);background:rgba(255,255,255,.03);
   }
   #cam-pick a.on{color:var(--text);border-color:color-mix(in srgb,var(--accent) 55%,transparent);
@@ -485,7 +481,7 @@ html.full,html.full body{cursor:none}
     grid-column:1/-1;margin:0;padding:18px;
     border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);
   }
-  .kicker{font-size:13px;letter-spacing:.22em;color:var(--dim);margin-bottom:14px}
+  .kicker{font-size:13px;letter-spacing:.08em;color:var(--dim);margin-bottom:14px}
   .kicker b{display:none}
 
   /* weather */
@@ -496,20 +492,20 @@ html.full,html.full body{cursor:none}
   #wx-row>div{order:1}
   #wx-stats{gap:8px;margin-top:14px}
   .stat{padding:9px 10px;border-radius:10px}
-  .stat-l{font-size:11px;letter-spacing:.1em;white-space:nowrap}
+  .stat-l{font-size:11px;letter-spacing:.08em;white-space:nowrap}
   .stat-v{font-size:21px;font-weight:500}
 
   /* forecast */
   #fc{gap:6px}
   .fc{padding:12px 0 10px;border:0;background:rgba(255,255,255,.04)}
-  .fc-d{font-size:13px;font-weight:500;letter-spacing:.14em}
+  .fc-d{font-size:13px;font-weight:500;letter-spacing:.08em}
   .fc-i{width:30px;height:30px;margin:10px auto 8px}
   .fc-t{font-size:21px;font-weight:500}.fc-t small{display:block;font-size:13px;margin:0}
 
   /* aurora + sky side by side */
   #aur,#sky{grid-column:auto;padding:16px}
   #aur.off+#sky,#aur:has(+#sky.off){grid-column:1/-1}
-  #aur .kicker,#sky .kicker{font-size:11px;letter-spacing:.18em;margin-bottom:10px}
+  #aur .kicker,#sky .kicker{font-size:11px;letter-spacing:.08em;margin-bottom:10px}
   #aur-row{flex-direction:column;align-items:flex-start;gap:4px}
   #aur-kp{font-size:46px;font-weight:500}
   #aur-kp small{display:none}
@@ -545,8 +541,8 @@ html.full,html.full body{cursor:none}
     order:6;display:block;text-align:center;text-decoration:none;
     padding:26px 16px 22px;border-bottom:1px solid var(--line);
   }
-  #m-site-h{font-family:var(--cond);font-size:34px;font-weight:700;letter-spacing:.14em;color:var(--accent)}
-  #m-site-p{font-family:var(--cond);font-size:14px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);margin-top:6px}
+  #m-site-h{font-family:var(--cond);font-size:34px;font-weight:700;letter-spacing:.08em;color:var(--accent)}
+  #m-site-p{font-family:var(--cond);font-size:14px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-top:6px}
 
   #m-brand{
     order:6;display:block;text-align:center;padding:30px 16px 26px;border-bottom:1px solid var(--line);
@@ -560,8 +556,8 @@ html.full,html.full body{cursor:none}
     order:6;display:block;padding:28px 20px 34px;border-bottom:1px solid var(--line);
     color:var(--dim);font-size:16px;line-height:1.6;
   }
-  #about h1{font-family:var(--cond);font-weight:700;font-size:28px;letter-spacing:.04em;line-height:1.15;color:var(--text);margin-bottom:12px}
-  #about h2{font-family:var(--cond);font-weight:600;font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin:26px 0 10px}
+  #about h1{font-family:var(--serif);font-weight:500;font-optical-sizing:auto;font-size:28px;letter-spacing:0;line-height:1.15;color:var(--text);margin-bottom:12px}
+  #about h2{font-family:var(--cond);font-weight:600;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:26px 0 10px}
   #about p{margin-bottom:10px}
   #about ul{padding-left:20px;margin-bottom:10px}
   #about li{margin-bottom:4px}
@@ -649,7 +645,7 @@ if (!Object.fromEntries) Object.fromEntries = function(a) {
 
   <header id="header">
     <div id="brand">
-      <svg id="mark" viewBox="0 0 48 48" aria-hidden="true"></svg>
+      <img id="mark" src="brand/mark-inverse.svg" alt="">
       <div id="logo"></div>
       <div id="brand-meta">
         <div id="brand-sub"></div>
@@ -761,7 +757,7 @@ if (!Object.fromEntries) Object.fromEntries = function(a) {
   </a>
 
   <div id="m-brand">
-    <span class="wm"><img class="wm-logo" src="brand/logo-inverse.svg" alt="LeviTV.com"></span>
+    <span class="wm"><img class="wm-logo" src="brand/logo-inverse.svg" alt="LeviTV"></span>
     <div id="m-brand-tag"></div>
     <div id="m-brand-ad">Advertise on LeviTV — <a href="mailto:hello@oomf.fi?subject=LeviTV%20advertising">hello@oomf.fi</a></div>
   </div>
@@ -823,7 +819,7 @@ const LOCS = {
       { id: "9NxBGQUb1oY", n: "Aurora Cam", l: "Aurora Cam \u2014 Levi Igloos" }
     ],
     ticker: [
-      "LeviTV.com \u2014 your real-time view of Levi",
+      "LeviTV \u2014 your real-time view of Levi",
       "Welcome to Levi \xB7 Tervetuloa Leviin",
       "Live cameras from around Levi Fell",
       "Slope & lift status: levi.fi",
@@ -1079,14 +1075,13 @@ if (VIEW() !== "mobile") {
 }
 (function applyLoc() {
   const q = (id) => document.getElementById(id);
-  const WM = '<span class="wm"><img class="wm-logo" src="brand/logo-inverse.svg" alt="LeviTV.com"></span>';
+  const WM = '<span class="wm">LeviTV</span>';
   if (!window.INFOTV_LOC)
     document.title = LOC_KEY === "levi" ? "LeviTV \u2014 Your real-time view of Levi" : `${LOC.name} live \u2014 LeviTV`;
-  q("mark").innerHTML = LOC.mark;
-  q("logo").textContent = LOC.name.toUpperCase();
+  q("logo").textContent = "LeviTV";
+  q("brand-meta").dataset.name = "LeviTV";
   if (LOC.name.length > 7) document.documentElement.classList.add("longname");
-  q("brand-meta").dataset.name = LOC.name.toUpperCase();
-  q("brand-sub").textContent = LOC.sub;
+  q("brand-sub").innerHTML = `<span class="place">${LOC.name}</span> \xB7 ${LOC.sub}`;
   const ns = (v, p, n) => `${Math.abs(v).toFixed(2)}\xB0${v >= 0 ? p : n}`;
   q("coords").textContent = `${ns(LOC.lat, "N", "S")} \xB7 ${ns(LOC.lon, "E", "W")}`;
   q("live-txt").innerHTML = WM + " \xB7 " + LOC.live;
@@ -1655,10 +1650,10 @@ const tvMenu = (() => {
   let open = false, sel = 0;
   const el = document.createElement("div");
   el.id = "tv-menu";
-  el.style.cssText = "position:fixed;right:40px;top:40px;width:460px;z-index:100;background:rgba(6,17,29,.95);border:1px solid rgba(173,196,213,.22);border-radius:14px;padding:22px 0;font:500 26px/1.2 Barlow,sans-serif;color:#dfe8f2;display:none;box-shadow:0 20px 60px rgba(0,0,0,.6)";
+  el.style.cssText = "position:fixed;right:40px;top:40px;width:460px;z-index:100;background:rgba(6,17,29,.95);border:1px solid rgba(173,196,213,.22);border-radius:14px;padding:22px 0;font:500 26px/1.2 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#dfe8f2;display:none;box-shadow:0 20px 60px rgba(0,0,0,.6)";
   document.body.appendChild(el);
   function render() {
-    el.innerHTML = '<div style="padding:0 28px 14px;font:700 30px Barlow Condensed,sans-serif;letter-spacing:.06em">LEVI<span style="color:#76C7EF">TV</span> settings</div>' + items.map((it, i) => `<div style="display:flex;justify-content:space-between;padding:14px 28px;${i === sel ? "background:#76C7EF;color:#0B1B2B" : ""}"><span>${it.l}</span><b>${it.v()}</b></div>`).join("") + `<div style="padding:14px 28px 0;font-size:18px;color:#8aa0b8">Screen: ${P.screen || "-"} \xB7 \u25C0 \u25B6 camera</div>`;
+    el.innerHTML = '<div style="padding:0 28px 14px;font:500 30px Literata Variable,Georgia,serif">LeviTV settings</div>' + items.map((it, i) => `<div style="display:flex;justify-content:space-between;padding:14px 28px;${i === sel ? "background:#76C7EF;color:#0B1B2B" : ""}"><span>${it.l}</span><b>${it.v()}</b></div>`).join("") + `<div style="padding:14px 28px 0;font-size:18px;color:#8aa0b8">Screen: ${P.screen || "-"} \xB7 \u25C0 \u25B6 camera</div>`;
   }
   function close(force) {
     open = false;
