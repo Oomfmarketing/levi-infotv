@@ -76,16 +76,23 @@ At the top of the `<script>` block:
 
 ## Slope & lift status in the ticker
 
-levi.fi loads slope and lift status in the browser, and there is no public API.
-The ticker is ready for a feed: set `SLOPE_FEED_URL` to a URL that returns
+An external bot writes `slopes.json` to the **`data` branch** of this repo (not `main`,
+so the site is not rebuilt on every update). The page reads it from
+`https://raw.githubusercontent.com/Oomfmarketing/levi-infotv/data/slopes.json`
+every 10 minutes and shows e.g. "Slopes open 12/43 · Lifts open 8/26 · Snow depth 45 cm"
+first in the ticker. Missing numbers or data older than 6 hours are not shown.
 
 ```json
-{"slopesOpen": 12, "slopesTotal": 43, "liftsOpen": 8, "liftsTotal": 26}
+{
+  "updated": "2026-12-01T08:15:00Z",
+  "levi":  {"updated": "2026-12-01T08:15:00Z", "slopesOpen": 12, "slopesTotal": 43,
+            "liftsOpen": 8, "liftsTotal": 26, "snowDepthCm": 45, "source": "https://www.levi.fi/"},
+  "yllas": {"updated": "2026-12-01T08:15:00Z", "slopesOpen": 20, "slopesTotal": 63,
+            "liftsOpen": 10, "liftsTotal": 29, "snowDepthCm": 52, "source": "https://www.yllas.fi/"}
+}
 ```
 
-and the ticker shows "Slopes open 12/43 · Lifts open 8/26" first, refreshed every 10 minutes.
-The feed can be a small Cloudflare Worker that reads Levi's own data source
-(with Levi Ski Resort's permission) and returns that JSON with CORS enabled.
+Keys are the location keys (`levi`, `yllas`, …). Every field is optional.
 
 ## TV apps
 

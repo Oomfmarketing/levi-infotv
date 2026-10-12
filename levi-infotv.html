@@ -890,7 +890,8 @@ const LOC = LOCS[LOC_KEY] || LOCS.levi;
 
 // Optional live slope/lift feed (Levi, see README). Leave empty to disable.
 // Expected JSON: {"slopesOpen":12,"slopesTotal":43,"liftsOpen":8,"liftsTotal":26}
-const SLOPE_FEED_URL = '';
+// Slope & lift status, written by an external bot to the `data` branch (see README → Slope & lift status)
+const SLOPE_FEED_URL = 'https://raw.githubusercontent.com/Oomfmarketing/levi-infotv/data/slopes.json';
 
 const TICKER = LOC.ticker;
 const LAT = LOC.lat, LON = LOC.lon;
@@ -1732,10 +1733,18 @@ function renderTicker(){
 async function loadSlopes(){
   if(!SLOPE_FEED_URL) return;
   try{
-    const d=await (await fetch(SLOPE_FEED_URL,{cache:'no-store'})).json();
+    const r=await fetch(SLOPE_FEED_URL,{cache:'no-store'});
+    if(!r.ok) return;
+    const all=await r.json();
+    const d=all[LOC_KEY]||(all.slopesTotal?all:null);        // per location, or one flat object
     const it=[];
-    if(d.slopesTotal) it.push(`Slopes open ${d.slopesOpen}/${d.slopesTotal}`);
-    if(d.liftsTotal)  it.push(`Lifts open ${d.liftsOpen}/${d.liftsTotal}`);
+    const fresh=d&&(!d.updated||Date.now()-Date.parse(d.updated)<6*3600e3);   // stale data is not shown
+    const n=v=>typeof v==='number'&&isFinite(v);
+    if(fresh){
+      if(n(d.slopesOpen)&&n(d.slopesTotal)&&d.slopesTotal>0) it.push(`Slopes open ${d.slopesOpen}/${d.slopesTotal}`);
+      if(n(d.liftsOpen)&&n(d.liftsTotal)&&d.liftsTotal>0)    it.push(`Lifts open ${d.liftsOpen}/${d.liftsTotal}`);
+      if(n(d.snowDepthCm)&&d.snowDepthCm>0)                  it.push(`Snow depth ${Math.round(d.snowDepthCm)} cm`);
+    }
     liveItems=it;renderTicker();
   }catch(e){console.warn('slopes',e);}
 }

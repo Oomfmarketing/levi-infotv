@@ -1029,7 +1029,7 @@ const LOCS = {
 };
 const LOC_KEY = (new URLSearchParams(location.search).get("loc") || window.INFOTV_LOC || "levi").toLowerCase().replace("\xE4", "a");
 const LOC = LOCS[LOC_KEY] || LOCS.levi;
-const SLOPE_FEED_URL = "";
+const SLOPE_FEED_URL = "https://raw.githubusercontent.com/Oomfmarketing/levi-infotv/data/slopes.json";
 const TICKER = LOC.ticker;
 const LAT = LOC.lat, LON = LOC.lon;
 const CAM_INTERVAL = 15e3;
@@ -2059,10 +2059,18 @@ function renderTicker() {
 async function loadSlopes() {
   if (!SLOPE_FEED_URL) return;
   try {
-    const d = await (await fetch(SLOPE_FEED_URL, { cache: "no-store" })).json();
+    const r = await fetch(SLOPE_FEED_URL, { cache: "no-store" });
+    if (!r.ok) return;
+    const all = await r.json();
+    const d = all[LOC_KEY] || (all.slopesTotal ? all : null);
     const it = [];
-    if (d.slopesTotal) it.push(`Slopes open ${d.slopesOpen}/${d.slopesTotal}`);
-    if (d.liftsTotal) it.push(`Lifts open ${d.liftsOpen}/${d.liftsTotal}`);
+    const fresh = d && (!d.updated || Date.now() - Date.parse(d.updated) < 6 * 36e5);
+    const n = (v) => typeof v === "number" && isFinite(v);
+    if (fresh) {
+      if (n(d.slopesOpen) && n(d.slopesTotal) && d.slopesTotal > 0) it.push(`Slopes open ${d.slopesOpen}/${d.slopesTotal}`);
+      if (n(d.liftsOpen) && n(d.liftsTotal) && d.liftsTotal > 0) it.push(`Lifts open ${d.liftsOpen}/${d.liftsTotal}`);
+      if (n(d.snowDepthCm) && d.snowDepthCm > 0) it.push(`Snow depth ${Math.round(d.snowDepthCm)} cm`);
+    }
     liveItems = it;
     renderTicker();
   } catch (e) {
