@@ -508,6 +508,12 @@ html.full,html.full body{cursor:none}
   #sl-stats{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px}
   #sl-stats .stat-v small{font-size:.62em;color:var(--dim);font-weight:500}
   #sl-upd{font-size:12px;color:var(--muted);margin-top:10px}
+  .sl-list{margin-top:14px}
+  .sl-names{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .sl-names span{font-size:14px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--text);white-space:nowrap}
+  .sl-names i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+  .sl-names i.green{background:#4cc38a}.sl-names i.blue{background:#4a9eff}
+  .sl-names i.red{background:#ff5a5a}.sl-names i.black{background:#0b0b0b;box-shadow:0 0 0 1px var(--dim)}
 
   /* forecast */
   #fc{gap:6px}
@@ -717,6 +723,8 @@ if (!Object.fromEntries) Object.fromEntries = function(a) {
         <div class="stat off" id="sl-lifts"><div class="stat-l">Lifts open</div><div class="stat-v" id="sl-lifts-v">--</div></div>
         <div class="stat off" id="sl-snow"><div class="stat-l">Snow depth</div><div class="stat-v" id="sl-snow-v">--</div></div>
       </div>
+      <div class="sl-list off" id="sl-ls"><div class="stat-l">Open slopes</div><div class="sl-names" id="sl-ls-v"></div></div>
+      <div class="sl-list off" id="sl-ll"><div class="stat-l">Open lifts</div><div class="sl-names" id="sl-ll-v"></div></div>
       <div id="sl-upd"></div>
     </section>
 
@@ -2075,6 +2083,12 @@ function renderTicker() {
   el.innerHTML = items + items;
   requestAnimationFrame(() => el.style.setProperty("--dur", el.scrollWidth / 2 / 70 + "s"));
 }
+const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+function names(arr) {
+  if (!Array.isArray(arr)) return [];
+  const C = { green: "green", vihre\u00E4: "green", easy: "green", blue: "blue", sininen: "blue", red: "red", punainen: "red", black: "black", musta: "black" };
+  return arr.map((x) => typeof x === "string" ? { n: x } : x && x.name ? { n: x.name, c: C[String(x.difficulty || "").toLowerCase()] || "" } : null).filter((x) => x && x.n && String(x.n).trim()).slice(0, 80);
+}
 async function loadSlopes() {
   if (!SLOPE_FEED_URL) return;
   try {
@@ -2089,6 +2103,8 @@ async function loadSlopes() {
       if (n(d.slopesOpen) && n(d.slopesTotal) && d.slopesTotal > 0) it.push(`Slopes open ${d.slopesOpen}/${d.slopesTotal}`);
       if (n(d.liftsOpen) && n(d.liftsTotal) && d.liftsTotal > 0) it.push(`Lifts open ${d.liftsOpen}/${d.liftsTotal}`);
       if (n(d.snowDepthCm) && d.snowDepthCm > 0) it.push(`Snow depth ${Math.round(d.snowDepthCm)} cm`);
+      const sn = names(d.openSlopes);
+      if (sn.length) it.push("Open slopes: " + (sn.length > 15 ? sn.slice(0, 15).map((x) => x.n).join(", ") + ` +${sn.length - 15} more` : sn.map((x) => x.n).join(", ")));
     }
     const show = (id, ok, html) => {
       $(id).classList.toggle("off", !ok);
@@ -2100,8 +2116,15 @@ async function loadSlopes() {
     show("sl-slopes", okS, okS ? `${d.slopesOpen}<small> / ${d.slopesTotal}</small>` : "");
     show("sl-lifts", okL, okL ? `${d.liftsOpen}<small> / ${d.liftsTotal}</small>` : "");
     show("sl-snow", okN, okN ? `${Math.round(d.snowDepthCm)}<small> cm</small>` : "");
-    $("slopes").classList.toggle("off", !(okS || okL || okN));
-    if (okS || okL || okN) {
+    const list = (id, arr) => {
+      const a = fresh ? names(arr) : [];
+      $(id).classList.toggle("off", !a.length);
+      $(id + "-v").innerHTML = a.map((x) => `<span>${x.c ? `<i class="${x.c}"></i>` : ""}${esc(x.n)}</span>`).join("");
+      return a.length;
+    };
+    const nl = list("sl-ls", d && d.openSlopes) + list("sl-ll", d && d.openLifts);
+    $("slopes").classList.toggle("off", !(okS || okL || okN || nl));
+    if (okS || okL || okN || nl) {
       const u = d.updated ? hel(new Date(d.updated)) : null;
       $("sl-upd").textContent = u ? `Updated ${pad(u.h)}:${pad(u.mi)} \xB7 source ${LOC.site.h.toLowerCase()}` : "";
     }

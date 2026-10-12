@@ -92,6 +92,15 @@ first in the ticker. Missing numbers or data older than 6 hours are not shown.
 }
 ```
 
+Optional lists of what is open (shown as chips on the mobile card, and as
+"Open slopes: …" in the ticker):
+
+```json
+"openSlopes": [{"name": "Front Slope 1", "difficulty": "blue"}, {"name": "Zero Point", "difficulty": "red"}],
+"openLifts":  [{"name": "Gondola 2000"}, {"name": "Front Express"}]
+```
+
+`difficulty` is `green`, `blue`, `red` or `black` (plain strings also work).
 Keys are the location keys (`levi`, `yllas`, …). Every field is optional.
 
 ## TV apps
