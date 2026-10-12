@@ -504,6 +504,7 @@ html.full,html.full body{cursor:none}
   .sl-names{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
   .sl-names span{font-size:14px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--text);max-width:100%}
   .sl-names small{font-size:12px;color:var(--dim)}
+  .sl-names .hrs{font-weight:500;font-size:12px;color:var(--accent);margin-left:2px}
   .sl-names i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
   .sl-names i.green{background:#4cc38a}.sl-names i.blue{background:#4a9eff}
   .sl-names i.red{background:#ff5a5a}.sl-names i.black{background:#0b0b0b;box-shadow:0 0 0 1px var(--dim)}
@@ -2068,7 +2069,8 @@ const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&l
 function names(arr) {
   if (!Array.isArray(arr)) return [];
   const C = { green: "green", vihre\u00E4: "green", easy: "green", blue: "blue", sininen: "blue", red: "red", punainen: "red", black: "black", musta: "black" };
-  return arr.map((x) => typeof x === "string" ? { n: x } : x && x.name ? { n: x.name, c: C[String(x.difficulty || "").toLowerCase()] || "" } : null).filter((x) => x && x.n && String(x.n).trim()).slice(0, 80);
+  const hrs = (h) => /^\d{1,2}[:.]\d{2}\s*[-–]\s*\d{1,2}[:.]\d{2}$/.test(String(h || "").trim()) ? String(h).trim().replace(/\s*[-–]\s*/, "\u2013").replace(/\./g, ":") : "";
+  return arr.map((x) => typeof x === "string" ? { n: x } : x && x.name ? { n: x.name, c: C[String(x.difficulty || "").toLowerCase()] || "", h: hrs(x.hours) } : null).filter((x) => x && x.n && String(x.n).trim()).slice(0, 80);
 }
 async function loadSlopes() {
   if (!SLOPE_FEED_URL) return;
@@ -2102,7 +2104,7 @@ async function loadSlopes() {
       $(id).classList.toggle("off", !a.length);
       $(id + "-v").innerHTML = a.map((x) => {
         const m = String(x.n).match(/^(.*?)\s*(\(.*\))$/);
-        return `<span>${x.c ? `<i class="${x.c}"></i>` : ""}${m ? `${esc(m[1])} <small>${esc(m[2])}</small>` : esc(x.n)}</span>`;
+        return `<span>${x.c ? `<i class="${x.c}"></i>` : ""}${m ? `${esc(m[1])} <small>${esc(m[2])}</small>` : esc(x.n)}${x.h ? ` <b class="hrs">${x.h}</b>` : ""}</span>`;
       }).join("");
       return a.length;
     };

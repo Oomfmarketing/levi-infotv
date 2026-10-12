@@ -96,11 +96,11 @@ Optional lists of what is open (shown as chips on the mobile card, and as
 "Open slopes: …" in the ticker):
 
 ```json
-"openSlopes": [{"name": "Front Slope 1", "difficulty": "blue"}, {"name": "Zero Point", "difficulty": "red"}],
-"openLifts":  [{"name": "Gondola 2000"}, {"name": "Front Express"}]
+"openSlopes": [{"name": "N.1", "difficulty": "red", "hours": "09:30-19:00"}],
+"openLifts":  [{"name": "Express gondoli", "hours": "09:30-19:00"}]
 ```
 
-`difficulty` is `green`, `blue`, `red` or `black` (plain strings also work).
+`difficulty` is `green`, `blue`, `red` or `black`; `hours` is today's opening time "HH:MM-HH:MM" (plain strings also work).
 Keys are the location keys (`levi`, `yllas`, …). Every field is optional.
 
 ## TV apps
