@@ -502,7 +502,8 @@ html.full,html.full body{cursor:none}
   #sl-upd{font-size:12px;color:var(--muted);margin-top:10px}
   .sl-list{margin-top:14px}
   .sl-names{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-  .sl-names span{font-size:14px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--text);white-space:nowrap}
+  .sl-names span{font-size:14px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--text);max-width:100%}
+  .sl-names small{font-size:12px;color:var(--dim)}
   .sl-names i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
   .sl-names i.green{background:#4cc38a}.sl-names i.blue{background:#4a9eff}
   .sl-names i.red{background:#ff5a5a}.sl-names i.black{background:#0b0b0b;box-shadow:0 0 0 1px var(--dim)}
@@ -2099,7 +2100,10 @@ async function loadSlopes() {
     const list = (id, arr) => {
       const a = fresh ? names(arr) : [];
       $(id).classList.toggle("off", !a.length);
-      $(id + "-v").innerHTML = a.map((x) => `<span>${x.c ? `<i class="${x.c}"></i>` : ""}${esc(x.n)}</span>`).join("");
+      $(id + "-v").innerHTML = a.map((x) => {
+        const m = String(x.n).match(/^(.*?)\s*(\(.*\))$/);
+        return `<span>${x.c ? `<i class="${x.c}"></i>` : ""}${m ? `${esc(m[1])} <small>${esc(m[2])}</small>` : esc(x.n)}</span>`;
+      }).join("");
       return a.length;
     };
     const nl = list("sl-ls", d && d.openSlopes) + list("sl-ll", d && d.openLifts);
