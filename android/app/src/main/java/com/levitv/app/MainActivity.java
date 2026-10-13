@@ -64,6 +64,19 @@ public class MainActivity extends Activity {
     private int skipCounter = 0;
     private View splash;
     private final Runnable hideSplash = this::hideSplash;
+    private boolean painted = false;          // has the current page drawn anything?
+    private long pausedAt = 0;                // when the TV went to standby / app went to background
+    private int paintRetries = 0;
+    private static final long PAINT_TIMEOUT_MS = 30_000;
+    private static final long RELOAD_AFTER_PAUSE_MS = 2 * 60_000;
+    // Nothing on screen after 30 s → reload (keeps the start screen up instead of a black screen)
+    private final Runnable paintWatchdog = new Runnable() {
+        @Override public void run() {
+            if (painted) return;
+            paintRetries++;
+            load();
+        }
+    };
 
     private final Runnable periodicReload = new Runnable() {
         @Override public void run() {
@@ -117,7 +130,7 @@ public class MainActivity extends Activity {
             @Override
             public void onPageStop(GeckoSession s, boolean success) {
                 if (!success && pageUrl.startsWith(SITE)) showOffline();
-                else handler.postDelayed(hideSplash, 2500);     // fallback if no paint event
+                else if (success && painted) handler.postDelayed(hideSplash, 2500);
             }
         });
 
@@ -125,6 +138,8 @@ public class MainActivity extends Activity {
         session.setContentDelegate(new GeckoSession.ContentDelegate() {
             @Override
             public void onFirstContentfulPaint(GeckoSession s) {
+                painted = true; paintRetries = 0;
+                handler.removeCallbacks(paintWatchdog);
                 handler.postDelayed(hideSplash, 600);
             }
         });
@@ -219,7 +234,6 @@ public class MainActivity extends Activity {
         splash.setAlpha(1f);
         splash.setVisibility(View.VISIBLE);
         handler.removeCallbacks(hideSplash);
-        handler.postDelayed(hideSplash, 20_000);              // never stay forever
     }
 
     private void hideSplash() {
@@ -231,13 +245,16 @@ public class MainActivity extends Activity {
 
     private void load() {
         showSplash();
+        painted = false;
+        handler.removeCallbacks(paintWatchdog);
+        handler.postDelayed(paintWatchdog, PAINT_TIMEOUT_MS * Math.min(1 + paintRetries, 4));
         handler.removeCallbacks(retry);
         pageUrl = url();
         session.loadUri(pageUrl);
     }
 
     private void showOffline() {
-        String html = "<html><body style='margin:0;background:#05080f;color:#c9d6e3;font-family:sans-serif;"
+        String html = "<html><body style='margin:0;background:#06111D;color:#ADC4D5;font-family:sans-serif;"
                 + "display:flex;align-items:center;justify-content:center;height:100vh;text-align:center'>"
                 + "<div><div style='font-size:48px;font-weight:800;letter-spacing:6px;color:#fff'>LEVI<span style='color:#5fb4ff'>TV</span></div>"
                 + "<p style='font-size:22px'>No connection — retrying in 30 seconds…</p></div></body></html>";
@@ -386,11 +403,19 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         if (session != null) session.setActive(true);
+        // Back from TV standby / another app: the video players and the drawing surface
+        // may be stale, so start fresh instead of showing a black screen.
+        if (pausedAt > 0 && (System.currentTimeMillis() - pausedAt > RELOAD_AFTER_PAUSE_MS || !painted)) {
+            paintRetries = 0;
+            load();
+        }
+        pausedAt = 0;
     }
 
     @Override
     protected void onPause() {
         if (session != null) session.setActive(false);
+        pausedAt = System.currentTimeMillis();
         super.onPause();
     }
 

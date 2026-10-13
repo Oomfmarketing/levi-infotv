@@ -1693,6 +1693,16 @@ function makePlayer(i,videoId,play){
     }
   });
 }
+// TV screens: back from standby / a hidden tab after 10+ min → reload, so stale
+// (paused or black) video players are rebuilt instead of showing a black picture
+(()=>{ if(!document.documentElement.classList.contains('tv')) return;
+  let hiddenAt=0;
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden){ hiddenAt=Date.now(); return; }
+    if(hiddenAt&&Date.now()-hiddenAt>10*60000) location.reload();
+    hiddenAt=0;
+  });
+})();
 // Watchdog: whatever happens, never sit on one camera for long
 setInterval(()=>{
   if(!firstShown||CAMS.length<2||manual||waitVis) return;   // a loading camera has its own timer

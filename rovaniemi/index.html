@@ -2009,6 +2009,18 @@ function makePlayer(i, videoId, play) {
     }
   });
 }
+(() => {
+  if (!document.documentElement.classList.contains("tv")) return;
+  let hiddenAt = 0;
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      hiddenAt = Date.now();
+      return;
+    }
+    if (hiddenAt && Date.now() - hiddenAt > 10 * 6e4) location.reload();
+    hiddenAt = 0;
+  });
+})();
 setInterval(() => {
   if (!firstShown || CAMS.length < 2 || manual || waitVis) return;
   if (Date.now() - lastSwitch > dwell() + 3e4) {
