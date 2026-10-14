@@ -86,3 +86,25 @@ jobs:
             levitv.apk
             levitv.aab
           make_latest: true
+
+      # Google Play internal testing — runs only when the PLAY_SERVICE_ACCOUNT_JSON secret exists
+      # and the build is signed with the upload key. Release status comes from the repo variable
+      # PLAY_RELEASE_STATUS ("draft" until the app has been reviewed once, then "completed").
+      - name: Check Google Play upload
+        id: play
+        env:
+          PLAY_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          if [ -n "$PLAY_JSON" ] && [ -n "$KEYSTORE_FILE" ]; then echo "go=1" >> "$GITHUB_OUTPUT";
+          else echo "::notice title=Google Play::Upload skipped (no PLAY_SERVICE_ACCOUNT_JSON secret or unsigned build)"; fi
+
+      - name: Upload to Google Play (internal testing)
+        if: steps.play.outputs.go == '1'
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.levitv.app
+          releaseFiles: levitv.aab
+          releaseName: 1.0.${{ github.run_number }}
+          track: internal
+          status: ${{ vars.PLAY_RELEASE_STATUS || 'draft' }}
