@@ -81,5 +81,8 @@ jobs:
           body: |
             LeviTV for Android TV — your real-time view of Levi.
             Install on the TV with the Downloader app: levitv.com/app
-          files: levitv.apk
+            Google Play: upload levitv.aab (signed with the LeviTV upload key).
+          files: |
+            levitv.apk
+            levitv.aab
           make_latest: true
