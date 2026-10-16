@@ -1,7 +1,7 @@
 {
-  "updated": "2026-10-15T16:50:01Z",
+  "updated": "2026-10-16T03:48:58Z",
   "levi": {
-    "updated": "2026-10-15T16:50:05Z",
+    "updated": "2026-10-16T03:49:02Z",
     "slopesOpen": 0,
     "slopesTotal": 44,
     "liftsOpen": 0,
@@ -11,7 +11,7 @@
     "source": "https://levi-CloudProd-agent.frendsapp.com/api/statistics/v1/today"
   },
   "yllas": {
-    "updated": "2026-10-15T13:58:56Z",
+    "updated": "2026-10-16T03:49:11Z",
     "slopesOpen": 0,
     "liftsOpen": 0,
     "openSlopes": [],
