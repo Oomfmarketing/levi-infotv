@@ -1,4 +1,3 @@
 # Cloudflare Pages redirects (ignored by GitHub Pages)
 /app      https://github.com/Oomfmarketing/levi-infotv/releases/latest/download/levitv.apk  302
 /app/     https://github.com/Oomfmarketing/levi-infotv/releases/latest/download/levitv.apk  302
-https://www.levitv.com/*  https://levitv.com/:splat  301
