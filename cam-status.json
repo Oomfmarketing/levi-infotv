@@ -1,5 +1,5 @@
 {
- "checked": "2026-10-17T08:34Z",
+ "checked": "2026-10-18T08:51Z",
  "cams": {
   "LwihxyJ4V20": {
    "loc": "levi",
@@ -71,7 +71,7 @@
    "loc": "yllas",
    "name": "Gondola",
    "state": "live",
-   "reason": ""
+   "reason": " (kept from last check)"
   },
   "ptZhHJtTqRY": {
    "loc": "yllas",
