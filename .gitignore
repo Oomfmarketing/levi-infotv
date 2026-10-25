@@ -1,2 +1,4 @@
 .stream-offline-count
 stream-report.md
+.wrangler/
+node_modules/

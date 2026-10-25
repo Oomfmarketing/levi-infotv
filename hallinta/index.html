@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LeviTV-hallinta</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#06111D">
+<link rel="stylesheet" href="/fonts/literata/literata.css">
+<link rel="stylesheet" href="/hallinta/hallinta.css">
+<script src="/config.js"></script>
+</head>
+<body>
+<header class="top">
+  <a href="/" class="brand"><img src="/brand/logo-inverse.svg" alt="LeviTV"></a>
+  <span class="crumb">Hallinta</span>
+  <span class="sp"></span>
+  <span id="who" class="muted"></span>
+</header>
+
+<main id="main">
+  <p id="boot" class="muted">Ladataan…</p>
+
+  <section id="nolink" class="card hide">
+    <h1>Kirjaudu hallintaan</h1>
+    <p>Avaa henkilökohtainen hallintalinkki, jonka sait OOMF:lta sähköpostilla. Linkki kirjaa sinut sisään tälle laitteelle.</p>
+    <p class="muted">Eikö linkkiä löydy tai se ei toimi? Pyydä uusi: <a href="mailto:hello@oomf.fi?subject=LeviTV%20hallintalinkki">hello@oomf.fi</a></p>
+  </section>
+
+  <div id="app" class="hide">
+    <section class="card code-card">
+      <div>
+        <div class="lbl">Näyttökoodi</div>
+        <div id="code" class="code"></div>
+      </div>
+      <div class="howto">
+        <b>Näin koodi otetaan käyttöön TV:ssä</b>
+        <ol>
+          <li>Avaa LeviTV-sovellus ja paina kaukosäätimen <b>OK</b>-painiketta.</li>
+          <li>Valitse <b>Customer code</b> ja syötä koodi.</li>
+          <li>Kaikki tällä koodilla olevat näytöt näyttävät saman sisällön. Muutokset näkyvät TV:ssä noin viidessä minuutissa.</li>
+        </ol>
+        <a id="preview" class="btn ghost" target="_blank" rel="noopener">Avaa esikatselu ↗</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Perustiedot</h2>
+      <div class="grid2">
+        <label>Kohteen nimi<input id="f-name" maxlength="60" placeholder="Esim. Hotelli Tunturi"></label>
+        <label>Paikkakunta<select id="f-loc">
+          <option value="levi">Levi</option><option value="yllas">Ylläs</option>
+          <option value="rovaniemi">Rovaniemi</option><option value="helsinki">Helsinki</option></select></label>
+      </div>
+      <div class="logo-row">
+        <div id="logo-box" class="logo-box"><span class="muted">Ei logoa</span></div>
+        <div>
+          <div class="lbl">Logo</div>
+          <p class="muted small">Näkyy TV:n oikeassa alakulmassa. Paras on PNG läpinäkyvällä taustalla, vaalea tai valkoinen logo.</p>
+          <label class="btn ghost file">Valitse kuva<input type="file" id="f-logo" accept="image/png,image/jpeg,image/webp"></label>
+          <button class="btn link" id="logo-del" type="button">Poista logo</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="row">
+        <h2>Sisältö</h2><span class="sp"></span>
+        <span id="now" class="muted small"></span>
+      </div>
+      <p class="muted small">Bannerit näkyvät kameran alla vuorotellen (15 s kukin). Kun sinulla on bannereita näkyvissä, ne korvaavat LeviTV:n omat mainokset. Juokseva teksti näkyy ruudun alareunassa.</p>
+      <div id="items"></div>
+      <div class="adds">
+        <button class="btn" type="button" data-add="banner">+ Banneri (tarjous tai tiedote)</button>
+        <button class="btn ghost" type="button" data-add="ticker">+ Juokseva teksti</button>
+      </div>
+    </section>
+
+    <p class="muted small foot">Tarvitsetko apua? <a href="mailto:hello@oomf.fi?subject=LeviTV%20hallinta">hello@oomf.fi</a> · <a href="/privacy/">Tietosuoja</a> · <a href="#" id="logout">Kirjaudu ulos tältä laitteelta</a></p>
+  </div>
+</main>
+
+<div id="savebar" class="savebar hide">
+  <span id="save-msg">Tallentamattomia muutoksia</span>
+  <span class="sp"></span>
+  <button class="btn ghost" id="undo" type="button">Peru</button>
+  <button class="btn" id="save" type="button">Tallenna</button>
+</div>
+<div id="toast" class="toast"></div>
+
+<template id="tpl-item">
+  <article class="item">
+    <div class="item-head">
+      <span class="kind"></span>
+      <span class="state"></span>
+      <span class="sp"></span>
+      <label class="switch" title="Näytetäänkö tämä"><input type="checkbox" data-k="on"><span></span></label>
+      <button type="button" class="icon" data-act="up" title="Siirrä ylös">↑</button>
+      <button type="button" class="icon" data-act="down" title="Siirrä alas">↓</button>
+      <button type="button" class="icon danger" data-act="del" title="Poista">✕</button>
+    </div>
+    <div class="banner-only grid-tag">
+      <label>Merkki<input data-k="tag" maxlength="24" placeholder="Esim. Lounas"></label>
+      <label>Otsikko<input data-k="title" maxlength="90" placeholder="Esim. Päivän lounas 14,90 €"></label>
+    </div>
+    <label><span class="t-lbl">Teksti</span><input data-k="text" maxlength="220" placeholder="Esim. Arkisin klo 11–14 ravintola Kammissa"></label>
+    <div class="banner-only grid2">
+      <label>Linkki QR-koodiin (valinnainen)<input data-k="url" type="url" maxlength="300" placeholder="https://"></label>
+      <div>
+        <div class="lbl">Kuva (valinnainen)</div>
+        <div class="img-row"><div class="thumb"></div>
+          <label class="btn ghost file small">Valitse<input type="file" data-img accept="image/png,image/jpeg,image/webp"></label>
+          <button class="btn link small" type="button" data-act="noimg">Poista</button></div>
+      </div>
+    </div>
+    <details class="sched">
+      <summary>Ajastus: <span class="sched-txt"></span></summary>
+      <div class="days"></div>
+      <div class="grid4">
+        <label>Alkaen klo<input data-k="from" type="time"></label>
+        <label>Päättyen klo<input data-k="to" type="time"></label>
+        <label>Ensimmäinen päivä<input data-k="start" type="date"></label>
+        <label>Viimeinen päivä<input data-k="end" type="date"></label>
+      </div>
+      <p class="muted small">Jätä tyhjäksi, jos ajastusta ei tarvita. Esimerkiksi lounas ma–pe klo 11–14 tai after ski joka päivä klo 15–18.</p>
+    </details>
+    <div class="banner-only pv"><div class="pv-bs"></div></div>
+  </article>
+</template>
+
+<script src="/hallinta/schedule.js"></script>
+<script>
+'use strict';
+const API = ((window.INFOTV||{}).api||'').replace(/\/$/,'');
+const $ = s => document.querySelector(s);
+const esc = t => String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const DAYS = ['ma','ti','ke','to','pe','la','su'];
+const LS = 'levitv.mgmt';
+let token = '', saved = null, data = null;
+
+function toast(msg, bad){ const t=$('#toast'); t.textContent=msg; t.className='toast on'+(bad?' bad':''); clearTimeout(toast.t); toast.t=setTimeout(()=>t.className='toast',3500); }
+async function api(path, opt={}){
+  const r = await fetch(API+'/api'+path, {...opt, headers:{Authorization:'Bearer '+token, ...(opt.headers||{})}});
+  let j=null; try{ j=await r.json(); }catch(_){}
+  if(!r.ok) throw Object.assign(new Error((j&&j.error)||('HTTP '+r.status)),{status:r.status});
+  return j;
+}
+
+// ── login: #t=<token> in the link → remembered on this device ─────
+(function(){
+  const m = location.hash.match(/[#&]t=([\w-]{20,})/);
+  if(m){ try{localStorage.setItem(LS,m[1]);}catch(_){} history.replaceState(null,'',location.pathname); token=m[1]; }
+  else { try{ token=localStorage.getItem(LS)||''; }catch(_){} }
+})();
+
+async function boot(){
+  if(!API){ $('#boot').textContent='Palvelua ei ole vielä otettu käyttöön (config.js → api).'; return; }
+  if(!token){ $('#boot').remove(); $('#nolink').classList.remove('hide'); return; }
+  try{ data = await api('/me'); }
+  catch(e){
+    $('#boot').remove();
+    if(e.status===401){ try{localStorage.removeItem(LS);}catch(_){} $('#nolink').classList.remove('hide');
+      $('#nolink p').textContent='Linkki ei ole enää voimassa. Pyydä uusi hallintalinkki OOMF:lta.'; }
+    else { $('#main').insertAdjacentHTML('beforeend',`<p class="card">Yhteysvirhe: ${esc(e.message)}. Yritä hetken päästä uudelleen.</p>`); }
+    return;
+  }
+  saved = JSON.stringify(pick(data));
+  $('#boot').remove(); $('#app').classList.remove('hide');
+  render();
+}
+
+const pick = d => ({name:d.name, loc:d.loc, logo:d.logo, items:d.items});
+const imgUrl = k => k ? `${API}/api/img/${k}` : '';
+function dirty(){ const d=JSON.stringify(pick(data))!==saved; $('#savebar').classList.toggle('hide',!d); return d; }
+
+function render(){
+  $('#who').textContent = data.name;
+  $('#code').textContent = data.code;
+  $('#preview').href = `/levi-infotv.html?loc=${data.loc}&view=tv&c=${data.code}`;
+  $('#f-name').value = data.name; $('#f-loc').value = data.loc;
+  $('#logo-box').innerHTML = data.logo ? `<img src="${esc(imgUrl(data.logo))}" alt="">` : '<span class="muted">Ei logoa</span>';
+  $('#logo-del').style.display = data.logo ? '' : 'none';
+  if(data.until) $('#who').textContent += ` · kausi voimassa ${fiDate(data.until)} asti`;
+  renderItems();
+}
+const fiDate = s => { const [y,m,d]=s.split('-'); return `${+d}.${+m}.${y}`; };
+
+function schedText(it){
+  const p=[];
+  if(it.days&&it.days.length&&it.days.length<7) p.push(dayRange(it.days));
+  if(it.from||it.to) p.push(`klo ${it.from||'00:00'}–${it.to||'24:00'}`);
+  if(it.start||it.end) p.push(`${it.start?fiDate(it.start):''}–${it.end?fiDate(it.end):''}`);
+  return p.length ? p.join(', ') : 'aina';
+}
+function dayRange(ds){
+  const s=[...ds].sort(); const out=[]; let a=s[0], b=s[0];
+  for(let i=1;i<=s.length;i++){ if(s[i]===b+1){b=s[i];continue;} out.push(a===b?DAYS[a-1]:(b===a+1?DAYS[a-1]+', '+DAYS[b-1]:DAYS[a-1]+'–'+DAYS[b-1])); a=b=s[i]; }
+  return out.join(', ');
+}
+
+function renderItems(){
+  const box=$('#items'); box.innerHTML='';
+  if(!data.items.length) box.innerHTML='<p class="empty muted">Ei vielä sisältöä. Lisää ensimmäinen banneri alta.</p>';
+  data.items.forEach((it,i)=>box.appendChild(itemEl(it,i)));
+  updateStates();
+}
+function itemEl(it,i){
+  const el=$('#tpl-item').content.firstElementChild.cloneNode(true);
+  el.dataset.i=i; el.classList.add(it.place);
+  el.querySelector('.kind').textContent = it.place==='ticker' ? 'Juokseva teksti' : 'Banneri';
+  if(it.place==='ticker') el.querySelector('.t-lbl').textContent='Teksti (näkyy ruudun alareunassa)';
+  el.querySelectorAll('[data-k]').forEach(inp=>{
+    const k=inp.dataset.k;
+    if(inp.type==='checkbox') inp.checked = it[k]!==false; else inp.value = it[k]||'';
+    inp.addEventListener('input',()=>{ it[k] = inp.type==='checkbox' ? inp.checked : inp.value.trim(); refreshItem(el,it); dirty(); });
+  });
+  const days=el.querySelector('.days');
+  DAYS.forEach((d,j)=>{ const n=j+1, b=document.createElement('button'); b.type='button'; b.textContent=d;
+    b.className='day'+((it.days||[]).includes(n)?' on':'');
+    b.onclick=()=>{ it.days=(it.days||[]).includes(n)?it.days.filter(x=>x!==n):[...(it.days||[]),n].sort(); b.classList.toggle('on'); refreshItem(el,it); dirty(); };
+    days.appendChild(b); });
+  if(it.days&&it.days.length||it.from||it.to||it.start||it.end) el.querySelector('details').open = false;
+  el.querySelector('[data-img]').addEventListener('change',async e=>{
+    const f=e.target.files[0]; e.target.value=''; if(!f) return;
+    try{ it.img = await upload(f, 1200); refreshItem(el,it); dirty(); }catch(err){ toast('Kuvan lataus epäonnistui: '+err.message,true); }
+  });
+  el.addEventListener('click',e=>{
+    const a=e.target.closest('[data-act]'); if(!a) return;
+    const act=a.dataset.act, L=data.items;
+    if(act==='del'){ if(!confirm('Poistetaanko tämä sisältö?')) return; L.splice(i,1); }
+    else if(act==='up'&&i>0) [L[i-1],L[i]]=[L[i],L[i-1]];
+    else if(act==='down'&&i<L.length-1) [L[i+1],L[i]]=[L[i],L[i+1]];
+    else if(act==='noimg'){ it.img=''; }
+    else return;
+    renderItems(); dirty();
+  });
+  refreshItem(el,it);
+  return el;
+}
+function refreshItem(el,it){
+  el.querySelector('.sched-txt').textContent = schedText(it);
+  const th=el.querySelector('.thumb');
+  th.innerHTML = it.img ? `<img src="${esc(imgUrl(it.img))}" alt="">` : '';
+  el.querySelector('[data-act="noimg"]').style.display = it.img ? '' : 'none';
+  el.querySelector('.pv-bs').innerHTML =
+    `<span class="pv-tag">${esc(it.tag||'Tarjous')}</span>${it.img?`<img class="pv-img" src="${esc(imgUrl(it.img))}" alt="">`:''}
+     <div class="pv-txt"><div class="pv-h">${esc(it.title||'Otsikko')}</div><div class="pv-p">${esc(it.text||'')}</div></div>
+     ${it.url?'<span class="pv-qr" title="QR-koodi linkkiin">QR</span>':''}`;
+  updateStates();
+}
+function updateStates(){
+  const now=new Date();
+  $('#now').textContent = 'Nyt '+LeviSchedule.helNow(now).label;
+  document.querySelectorAll('.item').forEach(el=>{
+    const it=data.items[+el.dataset.i]; if(!it) return;
+    const s=el.querySelector('.state');
+    if(it.on===false){ s.textContent='Pois päältä'; s.className='state off'; }
+    else if(LeviSchedule.active(it,now)){ s.textContent='● Näkyy nyt'; s.className='state live'; }
+    else { s.textContent='Ajastettu'; s.className='state wait'; }
+  });
+}
+setInterval(()=>{ if(data) updateStates(); },30000);
+
+// ── images: shrink in the browser before upload ───────────────────
+async function upload(file, max){
+  const blob = await shrink(file, max);
+  const r = await api('/me/image',{method:'POST',headers:{'Content-Type':blob.type},body:blob});
+  return r.key;
+}
+function shrink(file, max){
+  return new Promise((ok,bad)=>{
+    const img=new Image(), url=URL.createObjectURL(file);
+    img.onload=()=>{
+      URL.revokeObjectURL(url);
+      const s=Math.min(1,max/Math.max(img.width,img.height));
+      const c=document.createElement('canvas'); c.width=Math.round(img.width*s); c.height=Math.round(img.height*s);
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      const png=file.type==='image/png';
+      c.toBlob(b=>b?ok(b):bad(new Error('kuvaa ei voitu käsitellä')), png?'image/png':'image/jpeg', .85);
+    };
+    img.onerror=()=>{URL.revokeObjectURL(url);bad(new Error('tiedosto ei ole kuva'));};
+    img.src=url;
+  });
+}
+
+// ── base fields, add, save ────────────────────────────────────────
+$('#f-name').addEventListener('input',e=>{ data.name=e.target.value.trim(); dirty(); });
+$('#f-loc').addEventListener('change',e=>{ data.loc=e.target.value; $('#preview').href=`/levi-infotv.html?loc=${data.loc}&view=tv&c=${data.code}`; dirty(); });
+$('#f-logo').addEventListener('change',async e=>{
+  const f=e.target.files[0]; e.target.value=''; if(!f) return;
+  try{ data.logo = await upload(f, 600); render(); dirty(); }catch(err){ toast('Logon lataus epäonnistui: '+err.message,true); }
+});
+$('#logo-del').onclick=()=>{ data.logo=''; render(); dirty(); };
+document.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{
+  if(data.items.length>=30){ toast('Enintään 30 sisältöä',true); return; }
+  data.items.push({place:b.dataset.add,on:true,tag:'',title:'',text:'',url:'',img:'',days:[],from:'',to:'',start:'',end:''});
+  renderItems(); dirty();
+  const last=[...document.querySelectorAll('.item')].pop(); last.scrollIntoView({behavior:'smooth',block:'center'});
+  last.querySelector(b.dataset.add==='ticker'?'[data-k=text]':'[data-k=tag]').focus();
+});
+async function save(){
+  const empty=data.items.filter(it=>!(it.title||it.text));
+  if(empty.length){ toast('Täytä jokaiseen sisältöön otsikko tai teksti, tai poista tyhjät.',true); return; }
+  const btn=$('#save'); btn.disabled=true; $('#save-msg').textContent='Tallennetaan…';
+  try{
+    data = await api('/me',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(pick(data))});
+    saved = JSON.stringify(pick(data)); render(); dirty();
+    toast('Tallennettu. Muutokset näkyvät TV:ssä noin viidessä minuutissa.');
+  }catch(e){ toast('Tallennus epäonnistui: '+e.message,true); $('#save-msg').textContent='Tallentamattomia muutoksia'; }
+  btn.disabled=false;
+}
+$('#save').onclick=save;
+$('#undo').onclick=()=>{ Object.assign(data,JSON.parse(saved)); render(); dirty(); };
+addEventListener('keydown',e=>{ if((e.ctrlKey||e.metaKey)&&e.key==='s'){ e.preventDefault(); if(dirty()) save(); } });
+addEventListener('beforeunload',e=>{ if(data&&dirty()){ e.preventDefault(); e.returnValue=''; } });
+$('#logout').onclick=e=>{ e.preventDefault(); if(!confirm('Kirjaudutaanko ulos tältä laitteelta? Tarvitset hallintalinkin kirjautuaksesi uudelleen.')) return;
+  try{localStorage.removeItem(LS);}catch(_){} location.reload(); };
+boot();
+</script>
+</body>
+</html>

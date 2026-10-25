@@ -33,6 +33,7 @@ window.INFOTV_LOC = "rovaniemi";
 <link rel="stylesheet" href="fonts/literata/literata.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="config.js"></script>
+<script src="hallinta/schedule.js"></script>
 <style>
 /* ════════════════════════════════════════════════════════════
    TOKENS — LeviTV brand V9: one dark arctic theme for every view (brand/tokens.css)
@@ -296,6 +297,10 @@ body.night #stars{opacity:1}
 .bs-p{font-size:17px;color:var(--dim);margin-top:3px}
 .bs-p b{color:var(--text);font-weight:600}
 .bs-qr{margin-left:auto;flex-shrink:0;background:#fff;padding:5px;border-radius:6px;line-height:0}
+.bs-img{height:72px;max-width:128px;object-fit:cover;border-radius:6px;flex-shrink:0}
+#tag.cx{padding:12px 24px;color:var(--text);font-family:var(--serif,'Literata Variable',Georgia,serif);font-size:22px;letter-spacing:0}
+#tag.cx img{display:block;margin:0 auto;max-width:300px;max-height:78px;object-fit:contain}
+.bs.cx-off{display:none}
 .bs.t-accent{background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 13%,transparent),transparent 70%)}
 .bs.t-aurora{background:linear-gradient(90deg,rgba(92,240,168,.14),transparent 70%)}
 .bs.t-aurora .bs-tag{background:var(--aurora)}
@@ -1690,6 +1695,11 @@ const tvMenu = (() => {
     { l: "Layout", v: () => VIEWN[P.view || "full"], go: () => {
       P.view = cyc(VIEWN, P.view || "full");
     } },
+    { l: "Customer code", v: () => P.code || "None", go: () => {
+      edit = (P.code || "").split("");
+      while (edit.length < 6) edit.push("");
+      pos = 0;
+    } },
     { l: "Diagnostics", v: () => P.debug ? "On" : "Off", go: () => {
       P.debug = !P.debug;
     } },
@@ -1701,12 +1711,17 @@ const tvMenu = (() => {
     } }
   ];
   setTimeout(() => location.reload(), 6 * 36e5);
-  let open = false, sel = 0;
+  let open = false, sel = 0, edit = null, pos = 0;
+  const ABC = ["", "A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "2", "3", "4", "5", "6", "7", "8", "9"];
   const el = document.createElement("div");
   el.id = "tv-menu";
   el.style.cssText = "position:fixed;right:40px;top:40px;width:460px;z-index:100;background:rgba(6,17,29,.95);border:1px solid rgba(173,196,213,.22);border-radius:14px;padding:22px 0;font:500 26px/1.2 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#dfe8f2;display:none;box-shadow:0 20px 60px rgba(0,0,0,.6)";
   document.body.appendChild(el);
   function render() {
+    if (edit) {
+      el.innerHTML = '<div style="padding:0 28px 10px;font:500 30px Literata Variable,Georgia,serif">Customer code</div><div style="display:flex;gap:10px;padding:10px 28px 16px">' + edit.map((c, i) => `<div style="width:54px;height:70px;border-radius:8px;display:flex;align-items:center;justify-content:center;font:600 38px ui-monospace,monospace;${i === pos ? "background:#76C7EF;color:#0B1B2B" : "border:1px solid #37556A"}">${c || "\xB7"}</div>`).join("") + '</div><div style="padding:0 28px;font-size:18px;line-height:1.5;color:#8aa0b8">\u25B2 \u25BC change \xB7 \u25C0 \u25B6 move \xB7 digits type<br>OK save \xB7 Back cancel \xB7 empty code = none</div>';
+      return;
+    }
     el.innerHTML = '<div style="padding:0 28px 14px;font:500 30px Literata Variable,Georgia,serif">LeviTV settings</div>' + items.map((it, i) => `<div style="display:flex;justify-content:space-between;padding:14px 28px;${i === sel ? "background:#76C7EF;color:#0B1B2B" : ""}"><span>${it.l}</span><b>${it.v()}</b></div>`).join("") + `<div style="padding:14px 28px 0;font-size:18px;color:#8aa0b8">Screen: ${P.screen || "-"} \xB7 \u25C0 \u25B6 camera</div>`;
   }
   function close(force) {
@@ -1734,6 +1749,28 @@ const tvMenu = (() => {
           return true;
         }
         return false;
+      }
+      if (edit) {
+        const n = ABC.length, i = ABC.indexOf(edit[pos]);
+        if (k === 38) edit[pos] = ABC[(i + 1) % n];
+        else if (k === 40) edit[pos] = ABC[(i + n - 1) % n];
+        else if (k === 37) pos = Math.max(0, pos - 1);
+        else if (k === 39) pos = Math.min(5, pos + 1);
+        else if (k >= 48 && k <= 57) {
+          const ch = String(k - 48);
+          if (ABC.indexOf(ch) >= 0) {
+            edit[pos] = ch;
+            pos = Math.min(5, pos + 1);
+          }
+        } else if (k === 13) {
+          const c = edit.join("");
+          if (c.length === 6 || c.length === 0) {
+            P.code = c;
+            edit = null;
+          }
+        } else if (k === 10009 || k === 461 || k === 27 || k === 8) edit = null;
+        render();
+        return true;
       }
       if (k === 38) sel = (sel + items.length - 1) % items.length;
       else if (k === 40) sel = (sel + 1) % items.length;
@@ -2097,36 +2134,105 @@ window.onYouTubeIframeAPIReady = () => {
     }
   }, 15e3);
 })();
-const BS = [...document.querySelectorAll(".bs")], BT = BS.map((el) => el.id === "bs-aur" ? 1e4 : 12e3);
-let bi = 0;
-(function rot() {
-  setTimeout(() => {
-    BS[bi].classList.remove("on");
-    let n = (bi + 1) % BS.length, k = 0;
-    while (BS[n].dataset.skip === "1" && k++ < BS.length) n = (n + 1) % BS.length;
-    bi = n;
-    BS[bi].classList.add("on");
+let bcur = document.querySelector("#banner .bs.on"), btimer = 0;
+const btime = (el) => el.id === "bs-aur" ? 1e4 : +el.dataset.ms || 12e3;
+function bannerNext() {
+  clearTimeout(btimer);
+  const ok = [...document.querySelectorAll("#banner .bs")].filter((e) => e.dataset.skip !== "1" && !e.classList.contains("cx-off"));
+  if (ok.length) {
+    const nx = ok[(ok.indexOf(bcur) + 1) % ok.length];
+    document.querySelectorAll("#banner .bs.on").forEach((e) => {
+      if (e !== nx) e.classList.remove("on");
+    });
+    bcur = nx;
+    bcur.classList.add("on");
     bprog();
-    rot();
-  }, BT[bi]);
-})();
+  }
+  btimer = setTimeout(bannerNext, bcur ? btime(bcur) : 3e3);
+}
 function bprog() {
   const p = $("b-prog");
   p.style.transition = "none";
   p.style.width = "0";
   p.offsetWidth;
-  p.style.transition = `width ${BT[bi]}ms linear`;
+  p.style.transition = `width ${bcur ? btime(bcur) : 0}ms linear`;
   p.style.width = "100%";
 }
+btimer = setTimeout(bannerNext, bcur ? btime(bcur) : 3e3);
 bprog();
-try {
-  document.querySelectorAll("[data-qr]").forEach((el) => new QRCode(el, { text: el.dataset.qr, width: 72, height: 72, colorDark: "#0B1B2B", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M }));
-} catch (e) {
-  console.warn("qr", e);
+function makeQR(root) {
+  try {
+    root.querySelectorAll("[data-qr]:empty").forEach((el) => new QRCode(el, { text: el.dataset.qr, width: 72, height: 72, colorDark: "#0B1B2B", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M }));
+  } catch (e) {
+    console.warn("qr", e);
+  }
 }
+makeQR(document);
+const CUST = (() => {
+  if (VIEW() === "mobile") return null;
+  let code = (new URLSearchParams(location.search).get("c") || "").toUpperCase();
+  if (!code) {
+    try {
+      code = (JSON.parse(localStorage.getItem("levitv.app") || "{}").code || "").toUpperCase();
+    } catch (_) {
+    }
+  }
+  const api = (CFG.api || "").replace(/\/$/, "");
+  return /^[A-Z0-9]{6}$/.test(code) && api ? { code, url: `${api}/api/screen/${code}` } : null;
+})();
+let cxData = null, cxKey = "";
+async function loadCustomer() {
+  if (!CUST) return;
+  try {
+    const r = await fetch(CUST.url, { cache: "no-store" });
+    if (r.status === 404) {
+      cxData = null;
+      log("customer code not found", CUST.code);
+    } else if (r.ok) {
+      const d = await r.json();
+      cxData = d.off ? null : d;
+    } else return;
+  } catch (e) {
+    log("customer content offline", e && e.message);
+    return;
+  }
+  applyCustomer();
+}
+function applyCustomer() {
+  const d = cxData, now = /* @__PURE__ */ new Date();
+  const items = d ? (d.items || []).filter((it) => window.LeviSchedule && LeviSchedule.active(it, now)) : [];
+  const key = JSON.stringify([d && d.name, d && d.logo, items]);
+  if (key === cxKey) return;
+  cxKey = key;
+  const tag = $("tag");
+  if (d && (d.logo || d.name)) {
+    tag.classList.add("cx");
+    tag.innerHTML = d.logo ? `<img src="${esc(d.logo)}" alt="${esc(d.name || "")}">` : esc(d.name);
+  } else if (tag.classList.contains("cx")) {
+    tag.classList.remove("cx");
+    tag.textContent = LOC.tag;
+  }
+  const ban = $("banner");
+  ban.querySelectorAll(".bs[data-cx]").forEach((el) => el.remove());
+  const bn = items.filter((it) => it.place !== "ticker");
+  ban.querySelectorAll(".bs[data-ad]").forEach((el) => el.classList.toggle("cx-off", bn.length > 0));
+  ban.insertAdjacentHTML("afterbegin", bn.map((it) => `<div class="bs t-accent" data-cx="1" data-ms="15000">${it.tag ? `<span class="bs-tag">${esc(it.tag)}</span>` : ""}
+      ${it.img ? `<img class="bs-img" src="${esc(it.img)}" alt="">` : ""}
+      <div><div class="bs-h">${esc(it.title)}</div>${it.text ? `<div class="bs-p">${esc(it.text)}</div>` : ""}</div>
+      ${it.url ? `<div class="bs-qr" data-qr="${esc(it.url)}"></div>` : ""}</div>`).join(""));
+  makeQR(ban);
+  if (!bcur || !bcur.isConnected || bcur.classList.contains("cx-off") || bcur.dataset.skip === "1") {
+    bcur = null;
+    bannerNext();
+  }
+  cxTicker = items.filter((it) => it.place === "ticker").map((it) => esc([it.title, it.text].filter(Boolean).join(" \u2014 ")));
+  renderTicker();
+  track("customer_content", { code: CUST.code, banners: bn.length });
+}
+let cxTicker = [];
 let liveItems = [];
 function renderTicker() {
-  const items = [...liveItems.map((t) => `<span class="live">${t}</span>`), ...TICKER.map((t) => `<span>${t}</span>`)].join("");
+  const items = [...cxTicker.map((t) => `<span class="live cx">${t}</span>`), ...liveItems.map((t) => `<span class="live">${t}</span>`), ...TICKER.map((t) => `<span>${t}</span>`)].join("");
   const el = $("ticker");
   el.innerHTML = items + items;
   requestAnimationFrame(() => el.style.setProperty("--dur", el.scrollWidth / 2 / 70 + "s"));
@@ -2189,6 +2295,11 @@ async function loadSlopes() {
 renderTicker();
 loadSlopes();
 setInterval(loadSlopes, 10 * 6e4);
+if (CUST) {
+  loadCustomer();
+  setInterval(loadCustomer, 5 * 6e4);
+  setInterval(applyCustomer, 6e4);
+}
 </script>
 </body>
 </html>

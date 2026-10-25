@@ -14,10 +14,13 @@ import android.view.View;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -38,6 +41,9 @@ import org.mozilla.geckoview.GeckoView;
  * Uses GeckoView (Mozilla's Firefox engine) instead of Android's WebView:
  * YouTube refuses to play embedded live streams inside an Android WebView
  * (error 150), but plays them in a regular browser engine.
+ *
+ * Customer code (menu → Customer code) shows a hotel's / restaurant's own
+ * banners and logo, managed at levitv.com/hallinta/.
  *
  * Remote: OK / Menu = settings, Left / Right = previous / next camera,
  * Back twice = exit.
@@ -192,8 +198,11 @@ public class MainActivity extends Activity {
         }
         return SITE + "levi-infotv.html?loc=" + loc + "&view=" + (full ? "full" : "tv")
                 + "&screen=" + Uri.encode(screen) + "&app=androidtv&engine=gecko"
+                + (code().isEmpty() ? "" : "&c=" + code())
                 + (prefs.getBoolean("debug", false) ? "&debug=1" : "");
     }
+
+    private String code() { return prefs.getString("code", ""); }
 
     /** Start-up screen: LeviTV wordmark, tagline and a spinner. */
     private View makeSplash() {
@@ -319,6 +328,7 @@ public class MainActivity extends Activity {
         String[] items = {
                 "Location: " + LOC_NAMES[locIdx],
                 "Layout: " + VIEW_NAMES[prefs.getInt("view", 0)],
+                "Customer code: " + (code().isEmpty() ? "None" : code()),
                 "Start on boot: " + (boot ? "On" : "Off"),
                 "Reload",
                 "Screen name: " + prefs.getString("screen", "-"),
@@ -331,15 +341,16 @@ public class MainActivity extends Activity {
                     switch (which) {
                         case 0: chooseLocation(); break;
                         case 1: chooseView(); break;
-                        case 2: prefs.edit().putBoolean("autostart", !boot).apply();
+                        case 2: enterCode(); break;
+                        case 3: prefs.edit().putBoolean("autostart", !boot).apply();
                                 Toast.makeText(this, "Start on boot: " + (!boot ? "On" : "Off"), Toast.LENGTH_SHORT).show();
                                 break;
-                        case 3: load(); break;
-                        case 4: Toast.makeText(this, "This screen appears in analytics as \""
+                        case 4: load(); break;
+                        case 5: Toast.makeText(this, "This screen appears in analytics as \""
                                 + prefs.getString("screen", "-") + "\"", Toast.LENGTH_LONG).show(); break;
-                        case 5: prefs.edit().putBoolean("debug", !prefs.getBoolean("debug", false)).apply();
+                        case 6: prefs.edit().putBoolean("debug", !prefs.getBoolean("debug", false)).apply();
                                 load(); break;
-                        case 6: finish(); break;
+                        case 7: finish(); break;
                     }
                 })
                 .setOnDismissListener(d -> { hideSystemUi(); view.requestFocus(); })
@@ -357,6 +368,46 @@ public class MainActivity extends Activity {
                 })
                 .setOnDismissListener(d -> { hideSystemUi(); view.requestFocus(); })
                 .show();
+    }
+
+    /** Customer code: six letters / digits from the customer's LeviTV admin page. */
+    private void enterCode() {
+        EditText in = new EditText(this);
+        in.setText(code());
+        in.setSelectAllOnFocus(true);
+        in.setSingleLine(true);
+        in.setHint("e.g. K7M4QX");
+        in.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
+                | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+        in.setFilters(new InputFilter[]{new InputFilter.AllCaps(), new InputFilter.LengthFilter(6)});
+        in.setTextSize(28);
+        in.setLetterSpacing(0.2f);
+        FrameLayout box = new FrameLayout(this);
+        box.setPadding(48, 16, 48, 0);
+        box.addView(in);
+        AlertDialog d = new AlertDialog.Builder(this)
+                .setTitle("Customer code")
+                .setMessage("Enter the code from your LeviTV admin page to show your own offers and logo. Leave empty to show LeviTV only.")
+                .setView(box)
+                .setPositiveButton("Save", (dlg, w) -> {
+                    String c = in.getText().toString().trim().toUpperCase();
+                    if (!c.isEmpty() && !c.matches("[A-Z0-9]{6}")) {
+                        Toast.makeText(this, "The code has 6 letters or digits", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    prefs.edit().putString("code", c).apply();
+                    Toast.makeText(this, c.isEmpty() ? "Customer code removed" : "Customer code " + c + " saved", Toast.LENGTH_SHORT).show();
+                    load();
+                })
+                .setNeutralButton("Remove", (dlg, w) -> {
+                    prefs.edit().remove("code").apply();
+                    load();
+                })
+                .setNegativeButton("Cancel", null)
+                .setOnDismissListener(dlg -> { hideSystemUi(); view.requestFocus(); })
+                .create();
+        d.show();
+        in.requestFocus();
     }
 
     private void chooseView() {

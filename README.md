@@ -103,6 +103,34 @@ Optional lists of what is open (shown as chips on the mobile card, and as
 `difficulty` is `green`, `blue`, `red` or `black`; `hours` is today's opening time "HH:MM-HH:MM" (plain strings also work).
 Keys are the location keys (`levi`, `yllas`, …). Every field is optional.
 
+## Customer content (hallinta)
+
+Hotels, restaurants and other businesses can show their own banners, ticker lines and logo on LeviTV screens.
+
+- **OOMF admin:** `levitv.com/hallinta/admin.html` (log in with `ADMIN_KEY`). Create a customer; you get a
+  six-character **screen code** and a one-time **management link** (`/hallinta/#t=…`) to send to the customer.
+  "Uusi linkki" makes a new link and stops the old one. Season end date and on/off are set here.
+- **Customer:** opens the management link → `/hallinta/`. Name, location, logo, banners and ticker lines,
+  each with an optional schedule (weekdays, time of day, date range). Images are shrunk in the browser.
+- **Screens:** Android TV menu → *Customer code*; Samsung / LG menu (OK) → *Customer code*; any browser:
+  `levi-infotv.html?view=tv&c=CODE`. Content refreshes every 5 min, schedules every minute. While a customer
+  has banners showing, LeviTV's own ads are hidden.
+- **Backend:** `functions/api/[[path]].js` (Cloudflare Pages Functions) with one KV namespace. `config.js → api`
+  tells the pages where it runs.
+
+### Cloudflare setup (once)
+1. Cloudflare → Workers & Pages → Create → Pages → *Connect to Git* → `Oomfmarketing/levi-infotv`.
+   Project name `levitv`, production branch `main`, framework *None*, build command empty, output directory `/`.
+2. Settings → Builds → Branch control: *Preview branches: None* (the `data` branch updates every 30 min).
+3. Workers & Pages → KV → create namespace `levitv`. Then the project → Settings → Bindings → *KV namespace*:
+   variable name `DB`, namespace `levitv`.
+4. Settings → Variables and secrets → add **secret** `ADMIN_KEY` (a long random password, keep it in the password manager).
+5. Deployments → *Retry deployment* so the bindings take effect. Check `https://levitv.pages.dev/api/screen/AAAAAA`
+   answers `{"error":"unknown code"}`.
+6. If the project got another address than `levitv.pages.dev`, change `api` in `config.js`.
+
+Local test: `npx wrangler pages dev . --kv DB --binding ADMIN_KEY=<16+ chars>` and point `config.js → api` at it.
+
 ## TV apps
 
 - **Android TV / Google TV**: `android/` (built by GitHub Actions → levitv.com/app).

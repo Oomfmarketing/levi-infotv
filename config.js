@@ -7,6 +7,11 @@ window.INFOTV = {
   //   Plausible:    provider:'plausible', id:'<your domain, e.g. levi.tv>'
   analytics: { provider: 'umami', id: 'ced80469-2f42-45f0-8153-00f6fa4c2f66', src: '' },
 
+  // Customer content API (Cloudflare Pages Functions, see functions/api and README).
+  // Screens with a customer code load their banners and logo from here; /hallinta/ edits them.
+  // After levitv.com itself moves to Cloudflare this can be 'https://levitv.com'.
+  api: 'https://levitv.pages.dev',
+
   // How often each TV/full screen reports that it is online (minutes).
   heartbeatMinutes: 60,
 

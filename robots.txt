@@ -2,6 +2,7 @@
 User-agent: *
 Allow: /
 Disallow: /go.html
+Disallow: /hallinta/
 
 # AI search & assistant crawlers (explicitly allowed)
 User-agent: GPTBot

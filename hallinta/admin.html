@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LeviTV-asiakkaat</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#06111D">
+<link rel="stylesheet" href="/fonts/literata/literata.css">
+<link rel="stylesheet" href="/hallinta/hallinta.css">
+<script src="/config.js"></script>
+</head>
+<body>
+<header class="top">
+  <a href="/" class="brand"><img src="/brand/logo-inverse.svg" alt="LeviTV"></a>
+  <span class="crumb">Asiakkaat · OOMF</span>
+  <span class="sp"></span>
+  <a href="#" id="logout" class="muted small hide">Kirjaudu ulos</a>
+</header>
+<main>
+  <section id="login" class="card hide">
+    <h1>OOMF-ylläpito</h1>
+    <form id="login-f">
+      <label>Ylläpitoavain (ADMIN_KEY)<input id="key" type="password" autocomplete="current-password" required></label>
+      <button class="btn">Kirjaudu</button>
+    </form>
+  </section>
+
+  <div id="app" class="hide">
+    <section class="card">
+      <h2>Uusi asiakas</h2>
+      <form id="new-f">
+        <div class="grid2">
+          <label>Kohteen nimi<input name="name" required maxlength="60" placeholder="Hotelli Tunturi"></label>
+          <label>Yhteyshenkilön sähköposti<input name="email" type="email" maxlength="120" placeholder="nimi@hotelli.fi"></label>
+          <label>Paikkakunta<select name="loc"><option value="levi">Levi</option><option value="yllas">Ylläs</option><option value="rovaniemi">Rovaniemi</option><option value="helsinki">Helsinki</option></select></label>
+          <label>Kausi voimassa asti<input name="until" type="date" value="2027-05-31"></label>
+        </div>
+        <button class="btn">Luo asiakas ja hallintalinkki</button>
+      </form>
+      <div id="linkbox"></div>
+    </section>
+
+    <section class="card">
+      <div class="row"><h2>Asiakkaat</h2><span class="sp"></span><span id="count" class="muted small"></span></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Nimi</th><th>Paikka</th><th>Koodi</th><th>Kausi asti</th><th>Päällä</th><th>Sisältöjä</th><th>Muokattu</th><th></th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table></div>
+      <p class="muted small">Hallintalinkki näytetään vain kerran. Jos asiakas hukkaa sen, luo uusi linkki: vanha lakkaa toimimasta. Näyttökoodi pysyy samana.</p>
+    </section>
+  </div>
+</main>
+<div id="toast" class="toast"></div>
+<script>
+'use strict';
+const API=((window.INFOTV||{}).api||'').replace(/\/$/,'');
+const $=s=>document.querySelector(s);
+const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const LOCN={levi:'Levi',yllas:'Ylläs',rovaniemi:'Rovaniemi',helsinki:'Helsinki'};
+const LS='levitv.admin';
+let key=''; try{ key=sessionStorage.getItem(LS)||''; }catch(_){}
+
+function toast(m,bad){const t=$('#toast');t.textContent=m;t.className='toast on'+(bad?' bad':'');clearTimeout(toast.t);toast.t=setTimeout(()=>t.className='toast',4000);}
+async function api(path,opt={}){
+  const r=await fetch(API+'/api/admin'+path,{...opt,headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'}});
+  let j=null;try{j=await r.json();}catch(_){}
+  if(!r.ok) throw Object.assign(new Error((j&&j.error)||('HTTP '+r.status)),{status:r.status});
+  return j;
+}
+async function load(){
+  let list;
+  try{ list=await api('/customers'); }
+  catch(e){ if(e.status===401){ try{sessionStorage.removeItem(LS);}catch(_){} key=''; show(false); toast('Väärä avain',true); } else toast(e.message,true); return; }
+  show(true);
+  $('#count').textContent=list.length+' asiakasta';
+  $('#rows').innerHTML=list.map(c=>`<tr data-id="${c.id}">
+    <td><b>${esc(c.name)}</b><div class="muted small">${esc(c.email||'')}</div></td>
+    <td>${LOCN[c.loc]||c.loc}</td>
+    <td class="mono">${c.code}</td>
+    <td><input type="date" value="${c.until||''}" data-f="until"></td>
+    <td><label class="switch"><input type="checkbox" data-f="active" ${c.active?'checked':''}><span></span></label></td>
+    <td>${c.items}</td>
+    <td class="muted small">${new Date(c.updated).toLocaleDateString('fi-FI')}</td>
+    <td style="white-space:nowrap"><button class="btn ghost small" data-a="link">Uusi linkki</button>
+      <a class="btn link small" target="_blank" rel="noopener" href="/levi-infotv.html?loc=${c.loc}&view=tv&c=${c.code}">Esikatsele</a>
+      <button class="btn link small" data-a="del">Poista</button></td></tr>`).join('')
+    || '<tr><td colspan="8" class="muted">Ei vielä asiakkaita.</td></tr>';
+}
+function show(on){ $('#login').classList.toggle('hide',on); $('#app').classList.toggle('hide',!on); $('#logout').classList.toggle('hide',!on); }
+function showLink(c){
+  const link=`${location.origin}/hallinta/#t=${c.token}`;
+  const body=`Hei,\n\ntässä LeviTV-hallintasi. Linkin kautta voit päivittää TV-näyttöjenne logon, tarjoukset ja tiedotteet:\n${link}\n\nTV:n näyttökoodi: ${c.code}\nAvaa LeviTV-sovellus, paina kaukosäätimen OK-painiketta, valitse Customer code ja syötä koodi.\n\nPidäthän linkin omana tietonanne: sillä pääsee muokkaamaan näyttöjen sisältöä.\n\nTerveisin\nOOMF / LeviTV\nhello@oomf.fi`;
+  $('#linkbox').innerHTML=`<div class="linkbox"><b>${esc(c.name)}</b> · koodi <span class="mono">${c.code}</span><br>
+    Hallintalinkki (näytetään vain nyt):<br><code id="lnk">${esc(link)}</code>
+    <div class="row" style="margin-top:10px;gap:8px;flex-wrap:wrap">
+      <button class="btn small" id="cp">Kopioi linkki</button>
+      ${c.email?`<a class="btn ghost small" href="mailto:${encodeURIComponent(c.email)}?subject=${encodeURIComponent('LeviTV-hallinta: '+c.name)}&body=${encodeURIComponent(body)}">Lähetä sähköpostilla</a>`:''}
+      <button class="btn link small" id="cpm">Kopioi koko viesti</button></div></div>`;
+  $('#cp').onclick=()=>navigator.clipboard.writeText(link).then(()=>toast('Linkki kopioitu'));
+  $('#cpm').onclick=()=>navigator.clipboard.writeText(body).then(()=>toast('Viesti kopioitu'));
+  $('#linkbox').scrollIntoView({behavior:'smooth',block:'center'});
+}
+$('#login-f').onsubmit=e=>{ e.preventDefault(); key=$('#key').value.trim(); try{sessionStorage.setItem(LS,key);}catch(_){} load(); };
+$('#logout').onclick=e=>{ e.preventDefault(); try{sessionStorage.removeItem(LS);}catch(_){} location.reload(); };
+$('#new-f').onsubmit=async e=>{
+  e.preventDefault(); const f=Object.fromEntries(new FormData(e.target));
+  try{ const c=await api('/customers',{method:'POST',body:JSON.stringify(f)}); e.target.reset(); e.target.until.value='2027-05-31'; showLink(c); load(); }
+  catch(err){ toast(err.message,true); }
+};
+$('#rows').addEventListener('change',async e=>{
+  const tr=e.target.closest('tr'), f=e.target.dataset.f; if(!f) return;
+  try{ await api('/customers/'+tr.dataset.id,{method:'PUT',body:JSON.stringify({[f]:e.target.type==='checkbox'?e.target.checked:e.target.value})}); toast('Tallennettu'); }
+  catch(err){ toast(err.message,true); load(); }
+});
+$('#rows').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-a]'); if(!b) return;
+  const tr=b.closest('tr'), name=tr.querySelector('b').textContent;
+  if(b.dataset.a==='link'){
+    if(!confirm(`Luodaanko asiakkaalle ${name} uusi hallintalinkki? Vanha linkki lakkaa toimimasta.`)) return;
+    try{ showLink(await api('/customers/'+tr.dataset.id+'/link',{method:'POST',body:'{}'})); }catch(err){ toast(err.message,true); }
+  }
+  if(b.dataset.a==='del'){
+    if(!confirm(`Poistetaanko ${name} pysyvästi? Sisältö ja kuvat poistetaan, ja näytöt palaavat LeviTV:n perusnäkymään.`)) return;
+    try{ await api('/customers/'+tr.dataset.id,{method:'DELETE'}); toast('Poistettu'); load(); }catch(err){ toast(err.message,true); }
+  }
+});
+if(!API) document.querySelector('main').innerHTML='<p class="card">Palvelua ei ole vielä otettu käyttöön (config.js → api).</p>';
+else if(key) load(); else show(false);
+</script>
+</body>
+</html>
