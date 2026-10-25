@@ -1652,7 +1652,9 @@ function hardNext(skip){
   if(manual) renderPick();
 }
 
+let lastVideoAt=Date.now();                  // last time any camera was actually playing
 function onPlaying(i){
+  lastVideoAt=Date.now();
   try{players[i].mute();}catch(_){}
   clearTimeout(settle[i]);
   settle[i]=setTimeout(()=>{
@@ -1696,6 +1698,20 @@ function makePlayer(i,videoId,play){
     }
   });
 }
+// TV screens: no camera has played for 4 minutes → the browser's video pipeline is stuck
+// (seen on TV boxes after days of uptime). Reload the page; at most once per 15 min.
+(()=>{ if(!document.documentElement.classList.contains('tv')) return;
+  setInterval(()=>{
+    if(document.hidden||!CAMS.length) return;
+    try{ const st=players.map(p=>p&&p.getPlayerState?p.getPlayerState():-9); if(st.includes(1)) lastVideoAt=Date.now(); }catch(_){}
+    if(Date.now()-lastVideoAt<4*60000) return;
+    let last=0; try{ last=+sessionStorage.getItem('levitv.stuckReload')||0; }catch(_){}
+    if(Date.now()-last<15*60000) return;
+    try{ sessionStorage.setItem('levitv.stuckReload',String(Date.now())); }catch(_){}
+    log('no video for 4 min → reload'); track('cam_stuck',{state:'reload'});
+    location.reload();
+  },30000);
+})();
 // TV screens: back from standby / a hidden tab after 10+ min → reload, so stale
 // (paused or black) video players are rebuilt instead of showing a black picture
 (()=>{ if(!document.documentElement.classList.contains('tv')) return;

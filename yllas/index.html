@@ -1942,7 +1942,9 @@ function hardNext(skip) {
   }, single ? LOAD_TIMEOUT * 2 : LOAD_TIMEOUT);
   if (manual) renderPick();
 }
+let lastVideoAt = Date.now();
 function onPlaying(i) {
+  lastVideoAt = Date.now();
   try {
     players[i].mute();
   } catch (_) {
@@ -2016,6 +2018,31 @@ function makePlayer(i, videoId, play) {
     }
   });
 }
+(() => {
+  if (!document.documentElement.classList.contains("tv")) return;
+  setInterval(() => {
+    if (document.hidden || !CAMS.length) return;
+    try {
+      const st = players.map((p) => p && p.getPlayerState ? p.getPlayerState() : -9);
+      if (st.includes(1)) lastVideoAt = Date.now();
+    } catch (_) {
+    }
+    if (Date.now() - lastVideoAt < 4 * 6e4) return;
+    let last = 0;
+    try {
+      last = +sessionStorage.getItem("levitv.stuckReload") || 0;
+    } catch (_) {
+    }
+    if (Date.now() - last < 15 * 6e4) return;
+    try {
+      sessionStorage.setItem("levitv.stuckReload", String(Date.now()));
+    } catch (_) {
+    }
+    log("no video for 4 min \u2192 reload");
+    track("cam_stuck", { state: "reload" });
+    location.reload();
+  }, 3e4);
+})();
 (() => {
   if (!document.documentElement.classList.contains("tv")) return;
   let hiddenAt = 0;
