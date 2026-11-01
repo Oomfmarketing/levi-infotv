@@ -1,6 +1,7 @@
 # LeviTV — notes for Claude
 
-> This repo is public (and served by GitHub Pages): keep prices, customer data and secrets out of it.
+> This repo is public (and served by GitHub Pages): keep customer data, prospect lists, internal notes and secrets out of it.
+> Public list prices live on `/yrityksille/` (B2B page, Finnish); change them only when Lassi says so.
 
 LeviTV (levitv.com) is a real-time info TV for Levi, Ylläs, Rovaniemi and Helsinki: live cameras, weather,
 aurora, daylight, slope status, ads, and (new) each business customer's own content. Owner: Lassi Nummi,

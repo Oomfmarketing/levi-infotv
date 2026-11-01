@@ -267,7 +267,7 @@ for k, L in LOCATIONS.items():
 
 # sitemap
 today = datetime.date.today().isoformat()
-urls = [f'{SITE}/'] + [f'{SITE}/{k}/' for k in LOCATIONS]
+urls = [f'{SITE}/'] + [f'{SITE}/{k}/' for k in LOCATIONS] + [f'{SITE}/yrityksille/']
 open(os.path.join(ROOT, 'sitemap.xml'), 'w', encoding='utf-8').write(
   '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
   + ''.join(f'  <url><loc>{u}</loc><lastmod>{today}</lastmod><changefreq>daily</changefreq>'
