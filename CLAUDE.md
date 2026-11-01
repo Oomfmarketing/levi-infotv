@@ -55,10 +55,15 @@ Older than 6 h is hidden. Never push to `data` yourself.
 - Don't publish store releases, change Play Console / Cloudflare settings, or send anything on Lassi's behalf without asking.
 - After changes: run `build.py`, check the page renders (Playwright screenshot at 1920×1080 and a phone width), then commit and push to `main`.
 
-## Open items (25 Oct 2026)
-1. **Google Play production:** fill App content + store listing (EN default, FI translation), add Android TV form factor,
-   create the production release with **1.0.25** (has customer code), send for review. Give Google a demo customer code under "Sign-in details".
-2. **Cloudflare:** Worker `levitv` (Workers Builds on `main`, `https://levitv.flat-cloud-8d4c.workers.dev`), KV `levitv` bound as `DB`, secret `ADMIN_KEY`.
-   Steps in README → "Customer content". Later: move levitv.com DNS (GoDaddy) to Cloudflare, then `api` can be `https://levitv.com`.
+## Two places work on this repo
+Lassi uses both a cloud Claude session (planning, docs, assets) and Claude Code on his Mac (Cloudflare, local tests, TV).
+GitHub `main` is the only source of truth: **always `git pull` before starting and push when done**; never force-push.
+
+## Open items (1 Nov 2026)
+1. **Google Play production:** listing texts, answers and screenshots are prepared (Grok bot fills the Console). Production release
+   with **1.0.25**, Android TV form factor, then Lassi sends for review himself. Add a demo customer code under "Sign-in details".
+2. **Cloudflare:** live. Worker `levitv` (Workers Builds on `main`, `https://levitv.flat-cloud-8d4c.workers.dev`), KV `levitv` as `DB`,
+   secret `ADMIN_KEY`. Test customer "Levihovi 1" exists. Later: move levitv.com DNS (GoDaddy) to Cloudflare, then `api` can be `https://levitv.com`.
 3. After Play approval: point `levitv.com/app` to the Play listing (now redirects to the APK).
-4. Open question for sales: agreement with Levi ski resort on slope data / brand use.
+4. B2B page `/yrityksille/` is live (Finnish). Possible next: English `/business/`.
+5. Open question for sales: agreement with Levi ski resort on slope data / brand use.
