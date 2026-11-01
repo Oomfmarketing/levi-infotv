@@ -38,6 +38,10 @@ Older than 6 h is hidden. Never push to `data` yourself.
 - `.assetsignore` lists what the Worker must not serve: add anything new that should stay private. `levitv.pages.dev` is an unrelated third-party site, never use it.
 - `/hallinta/` customer admin (login = one-time link `#t=<token>`), `/hallinta/admin.html` OOMF admin (ADMIN_KEY),
   `hallinta/schedule.js` shared ES5 schedule logic (also loaded by the TV page).
+- `/hallinta/ohje.html` customer guide (sizes: logo 600×160 PNG, banner image 16:9 640×360, tag ≤14, title ≤45, text ≤100, ticker ≤120 chars).
+  The admin form shows counters with the same limits; the TV clamps titles to one line and texts to two.
+- Lead form on `/yrityksille/#yhteys` → `POST /api/lead` (KV `lead:*`, honeypot `website`, 5/hour per IP). Leads show in `admin.html` → Yhteydenotot.
+  No email notification yet (option: Cloudflare Email Routing `send_email` to hello@oomf.fi).
 - TV page: `?c=CODE` or the app setting → `loadCustomer()`; customer banners replace LeviTV ads (`.cx-off`), logo goes to `#tag`,
   ticker lines go first. All customer text is escaped.
 - Local test: `npx wrangler dev --var ADMIN_KEY:<16+ chars>` and point `config.js → api` at it. `.wrangler/` is gitignored.
@@ -49,7 +53,8 @@ Older than 6 h is hidden. Never push to `data` yourself.
   optional Play internal upload if secret `PLAY_SERVICE_ACCOUNT_JSON` exists (`vars.PLAY_RELEASE_STATUS`, default draft).
 - **Samsung Tizen** (`tizen/`) and **LG webOS** (`webos/`, workflow `webos.yml` → `lg-v1.0.N`): start screen →
   `tv.html?app=tizen|webos`; settings menu inside the page (OK key), incl. customer code entry.
-- Play assets: `android/play-assets/` (icon 512, feature graphic, TV banner).
+- Play assets: `android/play-assets/` (icon 512, feature graphic, TV banner, `screenshots/` 1920×1080 with the ski-resort logo blurred,
+  `play-listing.md` = every Play Console answer and the EN/FI store texts).
 
 ## Rules
 - **Never commit keystores, `*.jks`, passwords, service-account JSON or ADMIN_KEY.** The upload keystore
@@ -61,11 +66,20 @@ Older than 6 h is hidden. Never push to `data` yourself.
 Lassi uses both a cloud Claude session (planning, docs, assets) and Claude Code on his Mac (Cloudflare, local tests, TV).
 GitHub `main` is the only source of truth: **always `git pull` before starting and push when done**; never force-push.
 
-## Open items (1 Nov 2026)
-1. **Google Play production:** listing texts, answers and screenshots are prepared (Grok bot fills the Console). Production release
-   with **1.0.25**, Android TV form factor, then Lassi sends for review himself. Add a demo customer code under "Sign-in details".
+## B2B page `/yrityksille/` (Finnish)
+How it works, who it is for, pricing (485 € + VAT self-installed, 585 € installed, device 125 €; season 1.11.–31.5.), requirements,
+advertising, FAQ, lead form. **No launch offer / free installation** (Lassi said no). No customer logos until a real customer agrees.
+Product image `yrityksille/levitv-yrityksille.jpg` is a real screenshot with an example banner and a "Your logo" placeholder.
+
+## Open items (1 Nov 2026, evening)
+1. **Google Play production:** everything prepared in `android/play-assets/` (Grok bot fills the Console). Release **1.0.25**,
+   Android TV form factor, Lassi sends for review himself. Add a demo customer code under "Sign-in details".
 2. **Cloudflare:** live. Worker `levitv` (Workers Builds on `main`, `https://levitv.flat-cloud-8d4c.workers.dev`), KV `levitv` as `DB`,
-   secret `ADMIN_KEY`. Test customer "Levihovi 1" exists. Later: move levitv.com DNS (GoDaddy) to Cloudflare, then `api` can be `https://levitv.com`.
-3. After Play approval: point `levitv.com/app` to the Play listing (now redirects to the APK).
-4. B2B page `/yrityksille/` is live (Finnish). Possible next: English `/business/`.
-5. Open question for sales: agreement with Levi ski resort on slope data / brand use.
+   secret `ADMIN_KEY`. Test customer "Levihovi 1" (code E68CWB). Verify `/api/lead` works after deploy (send a test from the page).
+   Later: move levitv.com DNS (GoDaddy) to Cloudflare, then `api` can be `https://levitv.com`.
+3. Lead notifications by email to hello@oomf.fi (needs Cloudflare Email Routing setup).
+4. Phone number for the B2B page: waiting for Lassi.
+5. Demo customer "LeviTV Demo" with sample banners for sales and Google review.
+6. After Play approval: point `levitv.com/app` to the Play listing (now redirects to the APK).
+7. Possible: English `/business/` page; proof section once a first customer agrees.
+8. Open question for sales: agreement with Levi ski resort on slope data / brand use.
