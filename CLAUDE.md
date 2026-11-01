@@ -78,7 +78,7 @@ Product image `yrityksille/levitv-yrityksille.jpg` is a real screenshot with an 
    secret `ADMIN_KEY`. Test customer "Levihovi 1" (code E68CWB). Verify `/api/lead` works after deploy (send a test from the page).
    Later: move levitv.com DNS (GoDaddy) to Cloudflare, then `api` can be `https://levitv.com`.
 3. Lead notifications by email to hello@oomf.fi (needs Cloudflare Email Routing setup).
-4. Phone number for the B2B page: waiting for Lassi.
+4. B2B page phone: 040 513 2723 (header "Soita" on mobile, contact section, footer).
 5. Demo customer "LeviTV Demo" with sample banners for sales and Google review.
 6. After Play approval: point `levitv.com/app` to the Play listing (now redirects to the APK).
 7. Possible: English `/business/` page; proof section once a first customer agrees.

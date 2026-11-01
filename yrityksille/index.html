@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="/fonts/literata/literata.css">
 <script src="/config.js"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[
-{"@type":"Service","name":"LeviTV yrityksille","serviceType":"Infonäyttö / digital signage","areaServed":["Levi","Ylläs","Rovaniemi"],"provider":{"@type":"Organization","name":"OOMF Marketing Oy","email":"hello@oomf.fi","url":"https://levitv.com/"},
+{"@type":"Service","name":"LeviTV yrityksille","serviceType":"Infonäyttö / digital signage","areaServed":["Levi","Ylläs","Rovaniemi"],"provider":{"@type":"Organization","name":"OOMF Marketing Oy","email":"hello@oomf.fi","telephone":"+358405132723","url":"https://levitv.com/"},
  "offers":[
   {"@type":"Offer","name":"LeviTV-kausi","price":"485","priceCurrency":"EUR","valueAddedTaxIncluded":false,"description":"Talvikausi, itse asennettuna"},
   {"@type":"Offer","name":"LeviTV-kausi asennettuna","price":"585","priceCurrency":"EUR","valueAddedTaxIncluded":false,"description":"Talvikausi 1.11.–31.5., OOMF asentaa paikan päällä."},
@@ -142,6 +142,12 @@ section{scroll-margin-top:66px}
 .seg input:checked+span{background:var(--glacier);border-color:var(--glacier);color:#06111D}
 .seg input:focus-visible+span{outline:2px solid var(--glacier);outline-offset:2px}
 .form-msg{margin-top:12px;font-size:15px;min-height:1px}.form-msg.ok{color:var(--ok)}.form-msg.bad{color:#FF7B7B}
+.top nav a.tel{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums}
+@media(max-width:700px){.top nav{gap:8px}.top nav a.tel{display:inline-block;font-size:0;border:1px solid var(--glacier);border-radius:999px;padding:7px 13px}.top nav a.tel:before{content:'Soita';font-size:14px;color:var(--glacier)}.top .cta-s{white-space:nowrap;font-size:14px}}
+@media(max-width:380px){.top .wrap{gap:10px}.top img{height:22px;width:auto}.top .cta-s{padding:7px 11px;font-size:13px}.top nav a.tel{padding:6px 11px}}
+.call{display:inline-flex;flex-direction:column;margin-top:4px;padding:12px 18px;border-radius:12px;border:1px solid var(--line);background:var(--surface);text-decoration:none;color:var(--text);font-size:22px;font-weight:600;font-variant-numeric:tabular-nums}
+.call span{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--glacier)}
+.call:hover{border-color:var(--glacier)}
 footer{border-top:1px solid rgba(55,85,106,.45);padding:26px 0 40px;font-size:14px;color:var(--muted)}
 footer .wrap{display:flex;gap:14px;justify-content:space-between;flex-wrap:wrap}
 footer a{color:var(--dim)}
@@ -154,6 +160,7 @@ footer a{color:var(--dim)}
     <a href="#miten">Näin se toimii</a>
     <a href="#hinnasto">Hinnasto</a>
     <a href="#tarvitaan">Mitä tarvitaan</a>
+    <a class="tel" href="tel:+358405132723" data-umami-event="b2b_call" data-umami-event-at="top">040 513 2723</a>
     <a class="cta-s" href="#yhteys" data-umami-event="b2b_cta" data-umami-event-at="top">Pyydä demokoodi</a>
   </nav>
 </div></header>
@@ -278,7 +285,8 @@ footer a{color:var(--dim)}
         <li>Vastaamme yleensä saman päivän aikana</li>
         <li>Talvikausi 1.11.2026–31.5.2027</li>
       </ul>
-      <p class="muted-s">Mieluummin sähköpostilla? <a href="mailto:hello@oomf.fi?subject=LeviTV%20yrityksille">hello@oomf.fi</a></p>
+      <a class="call" href="tel:+358405132723" data-umami-event="b2b_call" data-umami-event-at="form"><span>Soita suoraan</span>040 513 2723</a>
+      <p class="muted-s">Tai sähköpostilla: <a href="mailto:hello@oomf.fi?subject=LeviTV%20yrityksille">hello@oomf.fi</a></p>
     </div>
     <form id="lead" class="card" novalidate>
       <div class="seg" role="radiogroup" aria-label="Mitä haluat">
@@ -303,7 +311,7 @@ footer a{color:var(--dim)}
 </main>
 
 <footer><div class="wrap">
-  <span>LeviTV · OOMF Marketing Oy · <a href="mailto:hello@oomf.fi">hello@oomf.fi</a></span>
+  <span>LeviTV · OOMF Marketing Oy · <a href="mailto:hello@oomf.fi">hello@oomf.fi</a> · <a href="tel:+358405132723">040 513 2723</a></span>
   <span><a href="/">Live-näkymät</a> · <a href="/privacy/">Tietosuoja</a></span>
 </div></footer>
 <script>
