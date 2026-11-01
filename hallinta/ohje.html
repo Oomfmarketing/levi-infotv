@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LeviTV-ohjeet</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#06111D">
+<link rel="stylesheet" href="/fonts/literata/literata.css">
+<link rel="stylesheet" href="/hallinta/hallinta.css">
+<style>
+main{max-width:860px}
+h1{font-size:32px}h2{margin-top:6px}h3{color:var(--text);font-size:16px;margin:18px 0 6px}
+p,li{line-height:1.6}
+.lead{font-size:17px;color:var(--dim)}
+/* TV layout sketch, 1920×1080 → percentages */
+.tv{position:relative;aspect-ratio:16/9;border:2px solid #37556A;border-radius:10px;overflow:hidden;background:#06111D;font:600 12px/1.25 system-ui,sans-serif;color:#06111D;margin:14px 0 6px}
+.tv div{position:absolute;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;border-radius:3px}
+.z-cam{left:0;top:0;width:79.2%;height:79.2%;background:#2a4a63;color:#cfe3f1}
+.z-name{left:0;top:79.2%;width:79.2%;height:5.2%;background:#0B1B2B;color:#8aa3b6;font-weight:500}
+.z-ban{left:0;top:84.4%;width:79.2%;height:8.9%;background:#76C7EF}
+.z-tick{left:0;top:93.3%;width:79.2%;height:6.7%;background:#FFB366}
+.z-side{left:79.2%;top:0;width:20.8%;height:86%;background:#10243A;color:#8aa3b6;font-weight:500}
+.z-logo{left:79.2%;top:86%;width:20.8%;height:14%;background:#5CF0A8}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--dim)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.spec{width:100%;border-collapse:collapse;font-size:14.5px}
+.spec th,.spec td{text-align:left;padding:10px 8px;border-bottom:1px solid rgba(55,85,106,.5);vertical-align:top}
+.spec th{color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.spec td:first-child{color:var(--text);font-weight:600;white-space:nowrap}
+.ex{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:8px;background:linear-gradient(90deg,rgba(118,199,239,.13),transparent 70%),#06111D;border-top:1px solid #37556A;margin:8px 0}
+.ex .t{flex-shrink:0;font:700 11px system-ui;letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;border-radius:5px;background:#76C7EF;color:#0B1B2B}
+.ex .h{font:700 19px/1.1 system-ui;color:#F2F6FA}.ex .p{font-size:13px;color:#ADC4D5;margin-top:2px}
+.good{color:var(--ok)}.bad{color:var(--bad)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:640px){.two{grid-template-columns:1fr}}
+code{background:#06111D;border:1px solid #37556A;border-radius:5px;padding:1px 6px;color:var(--text)}
+</style>
+</head>
+<body>
+<header class="top">
+  <a href="/" class="brand"><img src="/brand/logo-inverse.svg" alt="LeviTV"></a>
+  <span class="crumb">Ohjeet</span><span class="sp"></span>
+  <a href="/hallinta/" class="small">← Takaisin hallintaan</a>
+</header>
+<main>
+  <h1>Näin teet hyvän LeviTV-sisällön</h1>
+  <p class="lead">Ruutua katsotaan ohimennen, usein metrien päästä. Lyhyt otsikko, yksi asia per banneri ja selkeä logo toimivat parhaiten.</p>
+
+  <section class="card">
+    <h2>Mihin sisältö tulee TV:ssä</h2>
+    <div class="tv" role="img" aria-label="TV-ruudun alueet">
+      <div class="z-cam">Live-kamera (LeviTV)</div>
+      <div class="z-name">kameran nimi</div>
+      <div class="z-ban">Sinun bannerisi</div>
+      <div class="z-tick">Sinun juokseva tekstisi</div>
+      <div class="z-side">Sää, revontulet, päivänvalo (LeviTV)</div>
+      <div class="z-logo">Sinun logosi</div>
+    </div>
+    <div class="legend"><span><i style="background:#76C7EF"></i>Banneri, 15 s kerrallaan</span><span><i style="background:#FFB366"></i>Juokseva teksti</span><span><i style="background:#5CF0A8"></i>Logo</span></div>
+    <p class="small muted">TV-näkymä on 1920 × 1080 pikseliä. Banneri on noin 1500 × 95 px:n kaista kameran alla. Kun bannereitasi on näkyvissä, LeviTV:n omat mainokset eivät näy näytöilläsi.</p>
+  </section>
+
+  <section class="card" id="mitat">
+    <h2>Mitat ja pituudet</h2>
+    <table class="spec">
+      <thead><tr><th>Kohta</th><th>Suositus</th><th>Näkyy TV:ssä</th></tr></thead>
+      <tbody>
+        <tr id="logo"><td>Logo</td><td>Vaakalogo, <b>PNG läpinäkyvällä taustalla</b>, valkoinen tai vaalea. 600 × 160 px (suhde noin 4:1).</td><td>enintään 300 × 78 px, tummalla pohjalla</td></tr>
+        <tr><td>Bannerin kuva</td><td>Vaakakuva <b>16:9</b>, esim. 640 × 360 px, JPG. Yksi selkeä aihe, ei tekstiä kuvassa.</td><td>128 × 72 px</td></tr>
+        <tr><td>Merkki</td><td>1–2 sanaa, <b>enintään 14 merkkiä</b>. Esim. LUNCH, AFTER SKI, NEWS.</td><td>isoin kirjaimin, värillinen lappu</td></tr>
+        <tr><td>Otsikko</td><td><b>Enintään 45 merkkiä.</b> Pidempi katkeaa (…).</td><td>yksi rivi, iso lihavoitu</td></tr>
+        <tr><td>Teksti</td><td><b>Enintään 100 merkkiä.</b> Aika, paikka, hinta.</td><td>enintään 2 riviä</td></tr>
+        <tr><td>Linkki (QR)</td><td>Lyhyt <code>https://</code>-osoite, esim. varaus- tai menusivu.</td><td>QR-koodi bannerin oikeassa reunassa</td></tr>
+        <tr><td>Juokseva teksti</td><td><b>Enintään 120 merkkiä.</b> Lyhyt ilmoitus.</td><td>liukuu ruudun alareunassa</td></tr>
+      </tbody>
+    </table>
+    <p class="small muted">Hallinta pienentää isot kuvat automaattisesti. Sallitut muodot: JPG, PNG ja WebP, enintään 1,5 Mt.</p>
+  </section>
+
+  <section class="card">
+    <h2>Esimerkkejä</h2>
+    <div class="ex"><span class="t">Lunch</span><div><div class="h">Lunch buffet 14.90 €</div><div class="p">Mon–Fri 11–14 at Restaurant Kammi · soup, salad & dessert</div></div></div>
+    <div class="ex"><span class="t">Tonight</span><div><div class="h">Live music from 21:00</div><div class="p">Free entry · Lobby bar, 1st floor</div></div></div>
+    <div class="ex"><span class="t">Sauna</span><div><div class="h">Private sauna – book at reception</div><div class="p">Daily 16–22 · 2 hours for up to 6 people</div></div></div>
+    <div class="two" style="margin-top:14px">
+      <div><h3 class="good">✔ Näin</h3><ul class="small">
+        <li>Yksi asia per banneri</li><li>Otsikkoon tärkein: mitä ja paljonko</li><li>Tekstiin milloin ja missä</li><li>3–5 banneria kerrallaan, jolloin kierros kestää noin minuutin</li><li>Ajasta lounas, after ski ja illan tapahtumat oikeisiin aikoihin</li></ul></div>
+      <div><h3 class="bad">✘ Vältä</h3><ul class="small">
+        <li>Pitkiä lauseita ja kokonaisia kappaleita</li><li>Kuvia, joissa on tekstiä tai pieniä yksityiskohtia</li><li>Valkoista logoa valkoisella taustalla (JPG)</li><li>Yli 10 banneria: yksittäinen banneri näkyy silloin harvoin</li><li>Vanhentuneita tarjouksia: aseta viimeinen päivä</li></ul></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Kieli</h2>
+    <p>Suurin osa katsojista on matkailijoita, joten <b>englanti tavoittaa eniten</b>. Voit tehdä saman bannerin myös suomeksi ja näyttää molemmat vuorotellen. LeviTV:n oma sisältö on englanniksi.</p>
+  </section>
+
+  <section class="card">
+    <h2>Ajastus</h2>
+    <ul>
+      <li><b>Päivät:</b> valitse viikonpäivät. Jos et valitse yhtään, sisältö näkyy joka päivä.</li>
+      <li><b>Kellonaika:</b> esim. 11:00–14:00. Myös yön yli toimii, esim. 22:00–02:00.</li>
+      <li><b>Päivämäärät:</b> ensimmäinen ja viimeinen päivä, esim. joulun tai pääsiäisen tarjoukset.</li>
+      <li>Kytkimellä voit piilottaa sisällön poistamatta sitä.</li>
+    </ul>
+    <p class="small muted">Ajat ovat Suomen aikaa. Muutokset näkyvät TV:ssä noin viidessä minuutissa tallennuksen jälkeen.</p>
+  </section>
+
+  <section class="card">
+    <h2>Koodi TV:hen</h2>
+    <ul>
+      <li><b>Android TV / Google TV:</b> avaa LeviTV, paina <b>OK</b> → <b>Customer code</b> → syötä koodi → Save.</li>
+      <li><b>Samsung ja LG:</b> paina <b>OK</b> → <b>Customer code</b>. Vaihda merkkiä ylös/alas-nuolilla ja siirry vasemmalle/oikealle. Numerot voi näppäillä suoraan. Tallenna painamalla OK.</li>
+      <li><b>Selain tai infonäyttö:</b> <code>levitv.com/levi/full/?c=KOODI</code></li>
+    </ul>
+    <p class="small muted">Sama koodi toimii kaikissa näytöissäsi.</p>
+  </section>
+
+  <section class="card">
+    <h2>Hyvä tietää</h2>
+    <ul class="small">
+      <li>Vastaat siitä, että sinulla on oikeus käyttää lisäämiäsi kuvia ja logoja.</li>
+      <li>Alkoholin mainonnassa noudata alkoholilakia. Esimerkiksi happy hour -tyyppisiä hinnanalennuksia ei saa markkinoida kaikkialla.</li>
+      <li>Hallintalinkki on henkilökohtainen. Jos se päätyy vääriin käsiin, pyydä uusi, jolloin vanha lakkaa toimimasta.</li>
+      <li>Apua ja kysymykset: <a href="mailto:hello@oomf.fi?subject=LeviTV">hello@oomf.fi</a></li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>

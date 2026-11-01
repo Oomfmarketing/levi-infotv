@@ -58,7 +58,7 @@
         <div id="logo-box" class="logo-box"><span class="muted">Ei logoa</span></div>
         <div>
           <div class="lbl">Logo</div>
-          <p class="muted small">Näkyy TV:n oikeassa alakulmassa. Paras on PNG läpinäkyvällä taustalla, vaalea tai valkoinen logo.</p>
+          <p class="muted small">Näkyy TV:n oikeassa alakulmassa tummalla pohjalla. <b>Vaakalogo, PNG läpinäkyvällä taustalla, valkoinen tai vaalea.</b> Suositus 600 × 160 px (näkyy TV:ssä enintään 300 × 78 px). Jos logossa ei ole läpinäkyvää taustaa, käytä logon tummaa versiota tummalla taustalla. <a href="/hallinta/ohje.html#logo" target="_blank">Lisää ohjeita</a></p>
           <label class="btn ghost file">Valitse kuva<input type="file" id="f-logo" accept="image/png,image/jpeg,image/webp"></label>
           <button class="btn link" id="logo-del" type="button">Poista logo</button>
         </div>
@@ -70,7 +70,7 @@
         <h2>Sisältö</h2><span class="sp"></span>
         <span id="now" class="muted small"></span>
       </div>
-      <p class="muted small">Bannerit näkyvät kameran alla vuorotellen (15 s kukin). Kun sinulla on bannereita näkyvissä, ne korvaavat LeviTV:n omat mainokset. Juokseva teksti näkyy ruudun alareunassa.</p>
+      <p class="muted small"><a href="/hallinta/ohje.html" target="_blank"><b>Ohjeet, mitat ja vinkit ↗</b></a><br>Bannerit näkyvät kameran alla vuorotellen (15 s kukin). Kun sinulla on bannereita näkyvissä, ne korvaavat LeviTV:n omat mainokset. Juokseva teksti näkyy ruudun alareunassa.</p>
       <div id="items"></div>
       <div class="adds">
         <button class="btn" type="button" data-add="banner">+ Banneri (tarjous tai tiedote)</button>
@@ -102,17 +102,18 @@
       <button type="button" class="icon danger" data-act="del" title="Poista">✕</button>
     </div>
     <div class="banner-only grid-tag">
-      <label>Merkki<input data-k="tag" maxlength="24" placeholder="Esim. Lounas"></label>
-      <label>Otsikko<input data-k="title" maxlength="90" placeholder="Esim. Päivän lounas 14,90 €"></label>
+      <label>Merkki <span class="cnt" data-c="tag" data-rec="14"></span><input data-k="tag" maxlength="24" placeholder="Esim. Lunch"></label>
+      <label>Otsikko <span class="cnt" data-c="title" data-rec="45"></span><input data-k="title" maxlength="90" placeholder="Esim. Lunch buffet 14.90 €"></label>
     </div>
-    <label><span class="t-lbl">Teksti</span><input data-k="text" maxlength="220" placeholder="Esim. Arkisin klo 11–14 ravintola Kammissa"></label>
+    <label><span class="t-lbl">Teksti</span> <span class="cnt" data-c="text" data-rec="100"></span><input data-k="text" maxlength="220" placeholder="Esim. Mon–Fri 11–14 at Restaurant Kammi · soup, salad & dessert"></label>
     <div class="banner-only grid2">
-      <label>Linkki QR-koodiin (valinnainen)<input data-k="url" type="url" maxlength="300" placeholder="https://"></label>
+      <label>Linkki QR-koodiin (valinnainen)<input data-k="url" type="url" maxlength="300" placeholder="https://"><span class="hint">Lyhyt https-osoite, esim. varaussivu. Katsoja skannaa QR-koodin puhelimella.</span></label>
       <div>
         <div class="lbl">Kuva (valinnainen)</div>
         <div class="img-row"><div class="thumb"></div>
           <label class="btn ghost file small">Valitse<input type="file" data-img accept="image/png,image/jpeg,image/webp"></label>
           <button class="btn link small" type="button" data-act="noimg">Poista</button></div>
+        <span class="hint">Vaakakuva 16:9, esim. 640 × 360 px. Näkyy TV:ssä pienenä (128 × 72 px): ei tekstiä kuvaan, yksi selkeä aihe.</span>
       </div>
     </div>
     <details class="sched">
@@ -210,7 +211,7 @@ function itemEl(it,i){
   const el=$('#tpl-item').content.firstElementChild.cloneNode(true);
   el.dataset.i=i; el.classList.add(it.place);
   el.querySelector('.kind').textContent = it.place==='ticker' ? 'Juokseva teksti' : 'Banneri';
-  if(it.place==='ticker') el.querySelector('.t-lbl').textContent='Teksti (näkyy ruudun alareunassa)';
+  if(it.place==='ticker'){ el.querySelector('.t-lbl').textContent='Teksti (näkyy ruudun alareunassa)'; el.querySelector('[data-c=text]').dataset.rec='120'; }
   el.querySelectorAll('[data-k]').forEach(inp=>{
     const k=inp.dataset.k;
     if(inp.type==='checkbox') inp.checked = it[k]!==false; else inp.value = it[k]||'';
@@ -241,6 +242,9 @@ function itemEl(it,i){
 }
 function refreshItem(el,it){
   el.querySelector('.sched-txt').textContent = schedText(it);
+  el.querySelectorAll('.cnt').forEach(c=>{ const n=(it[c.dataset.c]||'').length, r=+c.dataset.rec;
+    c.textContent = n ? `${n}/${r}` : ''; c.classList.toggle('over', n>r);
+    c.title = n>r ? 'Pidempi kuin suositus: voi katketa TV:ssä' : ''; });
   const th=el.querySelector('.thumb');
   th.innerHTML = it.img ? `<img src="${esc(imgUrl(it.img))}" alt="">` : '';
   el.querySelector('[data-act="noimg"]').style.display = it.img ? '' : 'none';
