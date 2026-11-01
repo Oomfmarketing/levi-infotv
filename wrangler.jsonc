@@ -14,5 +14,8 @@
   },
   "kv_namespaces": [
     { "binding": "DB", "id": "a9d0ab299b7d426897f49b286cc4efa5" }
+  ],
+  "send_email": [
+    { "name": "MAIL", "destination_address": "hello@oomf.fi" }
   ]
 }

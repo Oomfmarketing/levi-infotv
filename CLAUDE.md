@@ -19,6 +19,7 @@ commit messages and on-screen texts in English (TV UI is English; customer admin
   Literata (self-hosted, `fonts/literata`) for headings, system sans for UI. Product name is always **"LeviTV"**;
   the place goes in the brand-sub row. Logos in `brand/`.
 - Hosting today: **GitHub Pages** (`CNAME` → levitv.com). The Cloudflare Worker `levitv` serves the same files plus the API, and uses `_headers` / `_redirects`.
+- DNS: levitv.com is registered at GoDaddy, nameservers and records at Cloudflare. A and `www` records must stay **DNS only** (grey cloud), the site is served by GitHub Pages. oomf.fi mail (Google) is separate.
 
 ## Cameras
 - YouTube IFrame API, double buffer with single-player fallback, thumbnail cover while buffering, watchdogs,
@@ -41,7 +42,7 @@ Older than 6 h is hidden. Never push to `data` yourself.
 - `/hallinta/ohje.html` customer guide (sizes: logo 600×160 PNG, banner image 16:9 640×360, tag ≤14, title ≤45, text ≤100, ticker ≤120 chars).
   The admin form shows counters with the same limits; the TV clamps titles to one line and texts to two.
 - Lead form on `/yrityksille/#yhteys` → `POST /api/lead` (KV `lead:*`, honeypot `website`, 5/hour per IP). Leads show in `admin.html` → Yhteydenotot.
-  No email notification yet (option: Cloudflare Email Routing `send_email` to hello@oomf.fi).
+  Each lead also emails hello@oomf.fi from leads@levitv.com (`send_email` binding `MAIL`, restricted to that address; needs Email Routing, free). A failed email never loses the lead.
 - TV page: `?c=CODE` or the app setting → `loadCustomer()`; customer banners replace LeviTV ads (`.cx-off`), logo goes to `#tag`,
   ticker lines go first. All customer text is escaped.
 - Local test: `npx wrangler dev --var ADMIN_KEY:<16+ chars>` and point `config.js → api` at it. `.wrangler/` is gitignored.
@@ -76,8 +77,8 @@ Product image `yrityksille/levitv-yrityksille.jpg` is a real screenshot with an 
    Android TV form factor, Lassi sends for review himself. Add a demo customer code under "Sign-in details".
 2. **Cloudflare:** live. Worker `levitv` (Workers Builds on `main`, `https://levitv.flat-cloud-8d4c.workers.dev`), KV `levitv` as `DB`,
    secret `ADMIN_KEY`. Test customer "Levihovi 1" (code E68CWB). Verify `/api/lead` works after deploy (send a test from the page).
-   Later: move levitv.com DNS (GoDaddy) to Cloudflare, then `api` can be `https://levitv.com`.
-3. Lead notifications by email to hello@oomf.fi (needs Cloudflare Email Routing setup).
+   Later: if the site moves from GitHub Pages to the Worker, `api` can be `https://levitv.com`.
+3. Lead notifications by email: live once a test email has reached hello@oomf.fi.
 4. B2B page phone: 040 513 2723 (header "Soita" on mobile, contact section, footer).
 5. Demo customer "LeviTV Demo" with sample banners for sales and Google review.
 6. After Play approval: point `levitv.com/app` to the Play listing (now redirects to the APK).

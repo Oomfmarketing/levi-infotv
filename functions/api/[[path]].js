@@ -3,6 +3,7 @@
  * Bindings (KV in wrangler.jsonc; secret in Cloudflare dashboard → the levitv Worker → Settings):
  *   DB         KV namespace  (customers, codes, images)
  *   ADMIN_KEY  secret        (OOMF admin page; at least 16 characters)
+ *   MAIL       send_email    (lead notifications; only delivers to hello@oomf.fi)
  *
  * Public
  *   GET  /api/screen/:code      content for TV screens using that customer code
@@ -195,7 +196,28 @@ async function customer(env, req, rest) {
 }
 
 // ── public lead form (yrityksille page) ───────────────────────────
-async function lead(env, req) {
+const LEAD_FROM = { email: 'leads@levitv.com', name: 'LeviTV' };
+const LEAD_WANT = { demo: 'Demokoodi', offer: 'Tarjous', ads: 'Mainospaikka' };
+const LEAD_LOC = { levi: 'Levi', yllas: 'Ylläs', rovaniemi: 'Rovaniemi', helsinki: 'Muu' };
+const isEmail = s => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+
+function notifyLead(env, l) {
+  const want = LEAD_WANT[l.want] || l.want || 'Yhteydenotto';
+  const row = (k, v) => v ? k + ': ' + v + '\n' : '';
+  return env.MAIL.send({
+    to: 'hello@oomf.fi',
+    from: LEAD_FROM,
+    ...(isEmail(l.email) ? { replyTo: l.email } : {}),
+    subject: ('LeviTV-yhteydenotto: ' + want + ' / ' + l.company).replace(/\s+/g, ' '),
+    text: 'Uusi yhteydenotto sivulta levitv.com/yrityksille/\n\n'
+      + row('Pyyntö', want) + row('Yritys', l.company) + row('Nimi', l.name) + row('Sähköposti', l.email)
+      + row('Puhelin', l.phone) + row('Paikkakunta', LEAD_LOC[l.loc]) + row('Näyttöjä', l.screens)
+      + (l.msg ? '\nViesti:\n' + l.msg + '\n' : '')
+      + '\nKaikki yhteydenotot: https://levitv.com/hallinta/admin.html\n',
+  });
+}
+
+async function lead(env, req, ctx) {
   let b; try { b = await req.json(); } catch { return fail(400, 'invalid JSON'); }
   if (str(b.website, 100)) return json({ ok: true });                 // honeypot: bots fill every field
   const l = {
@@ -204,7 +226,7 @@ async function lead(env, req) {
     msg: str(b.msg, 1000), at: new Date().toISOString(),
   };
   if (!l.company) return fail(400, 'Kerro yrityksen tai kohteen nimi.');
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(l.email) && l.phone.replace(/\D/g, '').length < 7)
+  if (!isEmail(l.email) && l.phone.replace(/\D/g, '').length < 7)
     return fail(400, 'Anna sähköposti tai puhelinnumero.');
   const ip = req.headers.get('CF-Connecting-IP') || '';
   if (ip) {                                                             // at most a few posts per address per hour
@@ -214,6 +236,7 @@ async function lead(env, req) {
   }
   const id = l.at.replace(/[-:.TZ]/g, '').slice(0, 14) + '-' + rand(4, CODE_ABC.toLowerCase());
   await env.DB.put('lead:' + id, JSON.stringify({ id, ...l }));
+  if (env.MAIL) ctx.waitUntil(notifyLead(env, l).catch(e => console.error('lead mail failed', e.code, e.message)));   // the lead is already saved
   return json({ ok: true }, 201);
 }
 
@@ -295,7 +318,7 @@ export async function onRequest(ctx) {
     if ((m = path.match(/^\/api\/screen\/([^/]+)$/)) && req.method === 'GET') return await screen(env, m[1], req, ctx);
     if ((m = path.match(/^\/api\/img\/([^/]+)$/)) && req.method === 'GET') return await image(env, m[1]);
     if ((m = path.match(/^\/api\/me(\/image)?$/))) return await customer(env, req, m[1] || '');
-    if (path === '/api/lead' && req.method === 'POST') return await lead(env, req);
+    if (path === '/api/lead' && req.method === 'POST') return await lead(env, req, ctx);
     if ((m = path.match(/^\/api\/admin(\/.*)?$/))) return await admin(env, req, m[1] || '');
     return fail(404, 'not found');
   } catch (e) {
