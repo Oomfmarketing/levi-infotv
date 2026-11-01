@@ -68,7 +68,7 @@ Lassi uses both a cloud Claude session (planning, docs, assets) and Claude Code 
 GitHub `main` is the only source of truth: **always `git pull` before starting and push when done**; never force-push.
 
 ## B2B page `/yrityksille/` (Finnish)
-How it works, who it is for, pricing (485 € + VAT self-installed, 585 € installed, device 125 €; season 1.11.–31.5.), requirements,
+How it works, who it is for, pricing (485 € + VAT self-installed, 585 € installed, device 125 €; season 1.11.–31.5.; season price is per site, number of screens not limited), requirements,
 advertising, FAQ, lead form. **No launch offer / free installation** (Lassi said no). No customer logos until a real customer agrees.
 Product image `yrityksille/levitv-yrityksille.jpg` is a real screenshot with an example banner and a "Your logo" placeholder.
 
