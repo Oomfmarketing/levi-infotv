@@ -1,0 +1,177 @@
+# LeviTV: full guide
+
+> LeviTV (levitv.com) is a free, independent real-time view of Levi in Finnish Lapland, with live views of Ylläs, Rovaniemi and Helsinki. Made by OOMF Marketing Oy. Works on phones, computers and TVs with no login.
+
+## Levi (https://levitv.com/levi/)
+
+LeviTV shows Levi in Finnish Lapland in real time: live cameras from around Levi Fell, the current weather on the fell, a 5-day forecast, northern lights activity and today's daylight — on one screen.
+Levi is a fell and ski resort in Kittilä, Finnish Lapland, about 170 km north of the Arctic Circle. The summit is 531 m above sea level.
+
+### Live cameras in Levi
+
+- Zero Point (Levi Center)
+- South Point (South Slopes)
+- Village View
+- Levi Black (Gondola Area)
+- Levi West (West Slopes)
+- Glacier Express
+- Top of Levi (summit, 531 m)
+- Lifts 13 & 14 (North)
+- Elves Village (Tonttula)
+- Aurora Cam (Levi Igloos)
+
+### What LeviTV shows
+
+- Weather now: observations from the Finnish Meteorological Institute (FMI) station Kittilä Kenttärova, refreshed every 10 minutes
+- Forecast: 5-day FMI forecast for Levi with daily highs, lows and cloud cover
+- Slopes and lifts: how many slopes and lifts are open and the snow depth, when reported; data older than 6 hours is hidden
+- Northern lights: live planetary Kp index and 12-hour Kp forecast from NOAA, rated for Levi's latitude (67.8°N), plus tonight's cloud cover
+- Daylight: sunrise, sunset and day length for Levi, calculated for today
+
+### Questions and answers
+
+**Where can I watch Levi webcams live?**
+On LeviTV (levitv.com/levi/). It rotates through 10 live cameras around Levi Fell — Levi Center, the slopes, the gondola area, the summit and an aurora camera — and you can pick a single camera on your phone.
+
+**What is the weather in Levi right now?**
+LeviTV shows the latest observation from the FMI weather station Kittilä Kenttärova near Levi, with temperature, feels-like temperature, wind and cloud cover, plus a 5-day forecast.
+
+**How many slopes are open in Levi today?**
+LeviTV shows the number of open slopes and lifts in Levi and the snow depth when they are reported, and hides data older than 6 hours. For the official slope status see levi.fi.
+
+**Can you see the northern lights in Levi?**
+Yes. Levi lies under the auroral zone, so northern lights are common from late August to April whenever the sky is dark and clear. Even a moderate Kp index of 2–3 can be enough at Levi's latitude. LeviTV shows the live Kp index, the Kp forecast, tonight's cloud cover and when it gets dark.
+
+**When does the sun rise and set in Levi?**
+LeviTV calculates sunrise, sunset and day length for Levi every day. In midsummer the sun does not set (midnight sun) and in midwinter it stays below the horizon for a few weeks (polar night, kaamos).
+
+**Is LeviTV an official Levi service?**
+No. LeviTV is an independent real-time view of Levi made by OOMF Marketing Oy. The camera streams are public YouTube live streams, weather comes from FMI and aurora data from NOAA. For tickets, slopes and events see levi.fi.
+
+### Levi live — webkamerat, sää ja revontulet
+
+LeviTV näyttää Levin reaaliajassa: 10 live-kameraa Levitunturilta (myös revontulikamera), Levin sää nyt ja 5 päivän ennuste (Ilmatieteen laitos), avoimet rinteet ja hissit, revontuliennuste (Kp-indeksi) sekä auringonnousu ja -lasku.
+
+**Missä näen Levin webkamerat livenä?**
+LeviTV:ssä (levitv.com/levi/). Sivu kierrättää 10 live-kameraa Levitunturilta: Levin keskusta, rinteet, gondolialue, huippu ja revontulikamera. Puhelimella voit valita yksittäisen kameran.
+
+**Mikä on Levin sää nyt?**
+LeviTV näyttää Ilmatieteen laitoksen Kittilän Kenttärovan havaintoaseman tuoreimman havainnon: lämpötilan, tuntuvan lämpötilan, tuulen ja pilvisyyden sekä 5 päivän ennusteen.
+
+**Montako rinnettä Levillä on auki?**
+LeviTV näyttää avoimien rinteiden ja hissien määrän sekä lumensyvyyden, kun tiedot on ilmoitettu. Yli 6 tuntia vanhoja tietoja ei näytetä. Virallinen rinnetilanne on osoitteessa levi.fi.
+
+**Näkyvätkö revontulet Levillä?**
+Kyllä. Levi on revontulivyöhykkeellä, joten revontulia näkyy yleisesti elokuun lopulta huhtikuuhun, kun taivas on pimeä ja kirkas. Levin leveysasteella jo Kp-indeksi 2–3 voi riittää. LeviTV näyttää Kp-indeksin, ennusteen ja pilvisyyden.
+
+## Ylläs (https://levitv.com/yllas/)
+
+LeviTV shows Ylläs in Finnish Lapland in real time: live cameras from Ylläs Ski Resort, the weather now, a 5-day forecast, northern lights activity and today's daylight.
+Ylläs is a fell in Kolari, Finnish Lapland, rising to 719 m, with the villages of Äkäslompolo on the north side and Ylläsjärvi on the south side.
+
+### Live cameras in Ylläs
+
+- Gondola station (Ylläs South)
+- Ylläs Express chairlift
+- Summit camera (719 m)
+
+### What LeviTV shows
+
+- Weather now: the current hour of the Finnish Meteorological Institute (FMI) forecast for Ylläs
+- Forecast: 5-day FMI forecast for Ylläs with daily highs, lows and cloud cover
+- Northern lights: live Kp index and Kp forecast from NOAA, rated for Ylläs' latitude (67.6°N), plus tonight's cloud cover
+- Daylight: sunrise, sunset and day length for Ylläs, calculated for today
+
+### Questions and answers
+
+**Where can I watch Ylläs webcams live?**
+On LeviTV (levitv.com/yllas/), which rotates the live cameras of Ylläs Ski Resort: the gondola station, the Ylläs Express chairlift and the summit camera.
+
+**Can you see the northern lights in Ylläs?**
+Yes. Ylläs is in the auroral zone of Finnish Lapland, so northern lights are common from late August to April on dark, clear nights. LeviTV shows the live Kp index, the Kp forecast and tonight's cloud cover.
+
+**What is the weather in Ylläs today?**
+LeviTV shows the current conditions and a 5-day forecast for Ylläs from the Finnish Meteorological Institute.
+
+### Ylläs live — webkamerat, sää ja revontulet
+
+LeviTV näyttää Ylläksen reaaliajassa: Ylläs Ski Resortin live-kamerat (gondoli, tuolihissi, huippu), Ylläksen sää ja 5 päivän ennuste, revontuliennuste (Kp-indeksi) sekä auringonnousu ja -lasku.
+
+**Missä näen Ylläksen webkamerat livenä?**
+LeviTV:ssä (levitv.com/yllas/). Sivu kierrättää Ylläs Ski Resortin live-kameroita: gondoliasema, Ylläs Express -tuolihissi ja huippukamera.
+
+**Mikä on Ylläksen sää tänään?**
+LeviTV näyttää Ylläksen tämänhetkisen sään ja 5 päivän ennusteen Ilmatieteen laitokselta.
+
+**Näkyvätkö revontulet Ylläksellä?**
+Kyllä. Ylläs on Lapin revontulivyöhykkeellä, joten revontulia näkyy yleisesti elokuun lopulta huhtikuuhun pimeinä ja kirkkaina öinä. LeviTV näyttää Kp-indeksin, ennusteen ja pilvisyyden.
+
+## Rovaniemi (https://levitv.com/rovaniemi/)
+
+LeviTV shows Rovaniemi, the capital of Finnish Lapland on the Arctic Circle, in real time: live cameras of Santa Claus Village and Apukka Resort, the weather now, a 5-day forecast, northern lights activity and today's daylight.
+
+### Live cameras in Rovaniemi
+
+- Santa Claus Village (Arctic Circle)
+- Apukka Resort (aurora cam)
+
+### What LeviTV shows
+
+- Weather now: observations from the Finnish Meteorological Institute (FMI) station Rovaniemi railway station, refreshed every 10 minutes
+- Forecast: 5-day FMI forecast for Rovaniemi with daily highs, lows and cloud cover
+- Northern lights: live Kp index and Kp forecast from NOAA, rated for Rovaniemi's latitude (66.5°N), plus tonight's cloud cover
+- Daylight: sunrise, sunset and day length for Rovaniemi, calculated for today
+
+### Questions and answers
+
+**Is there a live webcam at Santa Claus Village?**
+Yes. LeviTV (levitv.com/rovaniemi/) shows the live camera of Santa Claus Village on the Arctic Circle in Rovaniemi, together with an aurora camera at Apukka Resort, the weather and the northern lights forecast.
+
+**Can you see the northern lights in Rovaniemi?**
+Yes, often. Rovaniemi is on the Arctic Circle and northern lights can be seen from late August to early April on dark, clear nights — already at a Kp index of about 2–3. Head away from city lights and look north.
+
+### Rovaniemi live — webkamerat, sää ja revontulet
+
+LeviTV näyttää Rovaniemen reaaliajassa: Joulupukin Pajakylän ja Apukka Resortin live-kamerat, Rovaniemen sää ja 5 päivän ennuste, revontuliennuste (Kp-indeksi) sekä auringonnousu ja -lasku.
+
+**Onko Joulupukin Pajakylässä live-webkameraa?**
+Kyllä. LeviTV (levitv.com/rovaniemi/) näyttää Joulupukin Pajakylän live-kameran napapiiriltä sekä Apukka Resortin revontulikameran, sään ja revontuliennusteen.
+
+**Näkyvätkö revontulet Rovaniemellä?**
+Kyllä, usein. Revontulia voi nähdä elokuun lopulta huhtikuun alkuun pimeinä ja kirkkaina öinä, jo noin Kp-indeksillä 2–3. Mene pois kaupungin valoista ja katso pohjoiseen.
+
+## Helsinki (https://levitv.com/helsinki/)
+
+LeviTV shows Helsinki in real time: live cameras of Market Square (Kauppatori) and the Port of Helsinki, the weather now, a 5-day forecast, northern lights activity and today's daylight.
+
+### Live cameras in Helsinki
+
+- Market Square & city centre
+- South Harbour (Port of Helsinki)
+- West Harbour — south (Port of Helsinki)
+- West Harbour — north (Port of Helsinki)
+
+### What LeviTV shows
+
+- Weather now: observations from the Finnish Meteorological Institute (FMI) station Helsinki Kaisaniemi
+- Forecast: 5-day FMI forecast for Helsinki with daily highs, lows and cloud cover
+- Northern lights: live Kp index and Kp forecast from NOAA, rated for Helsinki's latitude (60.2°N)
+- Daylight: sunrise, sunset and day length for Helsinki, calculated for today
+
+### Questions and answers
+
+**Where can I watch Helsinki webcams live?**
+On LeviTV (levitv.com/helsinki/), which rotates live cameras of Market Square and the South and West Harbour of the Port of Helsinki.
+
+**Can you see the northern lights in Helsinki?**
+Sometimes. Helsinki is far south of the auroral zone, so northern lights are usually visible only during strong geomagnetic activity (roughly Kp 4–5 or more) on dark, clear nights, low on the northern horizon. LeviTV shows the live Kp index.
+
+### Helsinki live — webkamerat ja sää
+
+LeviTV näyttää Helsingin reaaliajassa: Kauppatorin ja Helsingin Sataman live-kamerat, Helsingin sää (Kaisaniemi) ja 5 päivän ennuste, revontuliennuste sekä auringonnousu ja -lasku.
+
+**Missä näen Helsingin webkamerat livenä?**
+LeviTV:ssä (levitv.com/helsinki/). Sivu kierrättää Kauppatorin sekä Helsingin Sataman Etelä- ja Länsisataman live-kameroita.
+
+**Näkyvätkö revontulet Helsingissä?**
+Joskus. Helsinki on kaukana revontulivyöhykkeen eteläpuolella, joten revontulet näkyvät yleensä vain voimakkaalla aktiivisuudella (noin Kp 4–5 tai enemmän) pimeinä ja kirkkaina öinä, matalalla pohjoisessa.

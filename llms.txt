@@ -4,14 +4,22 @@
 
 ## Live views
 
-- [Levi live](https://levitv.com/levi/): 10 live webcams (Levi Center Zero Point, South Point, Village View, Levi Black gondola area, Levi West, Glacier Express, Top of Levi summit 531 m, Lifts 13 & 14, Elves Village (Tonttula), Aurora Cam at Levi Igloos), weather from FMI station Kittilä Kenttärova, forecast, northern lights, daylight.
+- [Levi live](https://levitv.com/levi/): 10 live webcams (Levi Center Zero Point, South Point, Village View, Levi Black gondola area, Levi West, Glacier Express, Top of Levi summit 531 m, Lifts 13 & 14, Elves Village (Tonttula), Aurora Cam at Levi Igloos), weather from FMI station Kittilä Kenttärova, forecast, open slopes and lifts, northern lights, daylight.
 - [Ylläs live](https://levitv.com/yllas/): Ylläs Ski Resort cameras (gondola station, Ylläs Express chairlift, summit 719 m), weather, forecast, northern lights, daylight.
 - [Rovaniemi live](https://levitv.com/rovaniemi/): Santa Claus Village (Arctic Circle) and Apukka Resort aurora cameras, weather from FMI station Rovaniemi railway station, forecast, northern lights, daylight.
 - [Helsinki live](https://levitv.com/helsinki/): Market Square and Port of Helsinki harbour cameras, weather from FMI station Helsinki Kaisaniemi, forecast, daylight.
 
+## Full guide
+
+- [Full guide](https://levitv.com/llms-full.txt): all locations, cameras, data sources and questions and answers in English and Finnish.
+
 ## For screens
 
 - [Levi full-screen TV view](https://levitv.com/levi/full/): 1080p layout for hotel lobbies and info screens.
+
+## For businesses
+
+- [LeviTV yrityksille](https://levitv.com/yrityksille/): info screen for hotels, restaurants and rental shops in Levi, with their own offers and notices on the same screen (in Finnish, includes pricing).
 
 ## Data sources
 

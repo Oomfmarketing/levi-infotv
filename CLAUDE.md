@@ -26,6 +26,8 @@ commit messages and on-screen texts in English (TV UI is English; customer admin
 - `scripts/check_streams.py` (workflow `streams.yml`, daily 07:17) writes `cam-status.json`; offline cams are skipped
   24 h and an issue is opened. Data-centre checks are unreliable: only specific reasons count as offline, plus a >50 % sanity check.
 
+- SEO: a new camera needs its YouTube upload date in `CAM_UPLOADED` and the texts in `LOCATIONS` (both in `build.py`); the build warns if they are out of sync.
+
 ## Slope data
 External Grok bot writes `slopes.json` to the **`data` branch** (every 30 min 06:30–21:00). Per location:
 `slopesOpen/Total, liftsOpen/Total, snowDepthCm, openSlopes[{name,difficulty,hours}], openLifts, updated`.
