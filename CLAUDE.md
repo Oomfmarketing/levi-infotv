@@ -76,9 +76,9 @@ Product image `yrityksille/levitv-yrityksille.jpg` is a real screenshot with an 
 1. **Google Play production:** everything prepared in `android/play-assets/` (Grok bot fills the Console). Release **1.0.25**,
    Android TV form factor, Lassi sends for review himself. Add a demo customer code under "Sign-in details".
 2. **Cloudflare:** live. Worker `levitv` (Workers Builds on `main`, `https://levitv.flat-cloud-8d4c.workers.dev`), KV `levitv` as `DB`,
-   secret `ADMIN_KEY`. Test customer "Levihovi 1" (code E68CWB). Verify `/api/lead` works after deploy (send a test from the page).
+   secret `ADMIN_KEY`. Test customer "Levihovi 1" (code E68CWB).
    Later: if the site moves from GitHub Pages to the Worker, `api` can be `https://levitv.com`.
-3. Lead notifications by email: live once a test email has reached hello@oomf.fi.
+3. Lead notifications by email: done and tested 1 Nov 2026.
 4. B2B page phone: 040 513 2723 (header "Soita" on mobile, contact section, footer).
 5. Demo customer "LeviTV Demo" with sample banners for sales and Google review.
 6. After Play approval: point `levitv.com/app` to the Play listing (now redirects to the APK).
