@@ -11,12 +11,16 @@
  *   GET  /api/me                own settings and content
  *   PUT  /api/me                save settings and content
  *   POST /api/me/image          upload an image (raw body, image/jpeg|png|webp)
+ * Public form
+ *   POST /api/lead              demo code / quote request from levitv.com/yrityksille/
  * OOMF (Authorization: Bearer <ADMIN_KEY>)
  *   GET    /api/admin/customers
  *   POST   /api/admin/customers              {name, email, loc, until}
  *   PUT    /api/admin/customers/:id          {name, email, loc, until, active}
  *   POST   /api/admin/customers/:id/link     new management link (old one stops working)
  *   DELETE /api/admin/customers/:id
+ *   GET    /api/admin/leads                  form requests, newest first
+ *   DELETE /api/admin/leads/:id
  *
  * KV keys: cust:<id> → JSON · code:<CODE> → id · tok:<sha256(token)> → id · img:<id>-<rand> → bytes
  */
@@ -190,6 +194,29 @@ async function customer(env, req, rest) {
   return fail(404, 'not found');
 }
 
+// ── public lead form (yrityksille page) ───────────────────────────
+async function lead(env, req) {
+  let b; try { b = await req.json(); } catch { return fail(400, 'invalid JSON'); }
+  if (str(b.website, 100)) return json({ ok: true });                 // honeypot: bots fill every field
+  const l = {
+    company: str(b.company, 100), name: str(b.name, 80), email: str(b.email, 120), phone: str(b.phone, 40),
+    loc: LOCS.includes(b.loc) ? b.loc : '', screens: str(b.screens, 20), want: str(b.want, 40),
+    msg: str(b.msg, 1000), at: new Date().toISOString(),
+  };
+  if (!l.company) return fail(400, 'Kerro yrityksen tai kohteen nimi.');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(l.email) && l.phone.replace(/\D/g, '').length < 7)
+    return fail(400, 'Anna sähköposti tai puhelinnumero.');
+  const ip = req.headers.get('CF-Connecting-IP') || '';
+  if (ip) {                                                             // at most a few posts per address per hour
+    const k = 'rl:' + await sha256(ip), n = +(await env.DB.get(k) || 0);
+    if (n >= 5) return fail(429, 'Liian monta yritystä. Kokeile myöhemmin tai lähetä sähköpostia hello@oomf.fi.');
+    await env.DB.put(k, String(n + 1), { expirationTtl: 3600 });
+  }
+  const id = l.at.replace(/[-:.TZ]/g, '').slice(0, 14) + '-' + rand(4, CODE_ABC.toLowerCase());
+  await env.DB.put('lead:' + id, JSON.stringify({ id, ...l }));
+  return json({ ok: true }, 201);
+}
+
 async function admin(env, req, rest) {
   if (!env.ADMIN_KEY || env.ADMIN_KEY.length < 16) return fail(503, 'ADMIN_KEY is not set');
   if (!sameString(bearer(req), env.ADMIN_KEY)) return fail(401, 'wrong admin key');
@@ -224,6 +251,19 @@ async function admin(env, req, rest) {
     await putCust(env, c);
     return json({ ...adminView(c), token }, 201);
   }
+  if (rest === '/leads' && req.method === 'GET') {
+    const out = []; let cursor;
+    do {
+      const r = await env.DB.list({ prefix: 'lead:', cursor });
+      for (const k of r.keys) { const l = await env.DB.get(k.name, 'json'); if (l) out.push(l); }
+      cursor = r.list_complete ? null : r.cursor;
+    } while (cursor);
+    out.sort((a, b) => b.at.localeCompare(a.at));
+    return json(out);
+  }
+  const ml = rest.match(/^\/leads\/([\w-]{10,40})$/);
+  if (ml && req.method === 'DELETE') { await env.DB.delete('lead:' + ml[1]); return json({ ok: true }); }
+
   const m = rest.match(/^\/customers\/(c[a-z0-9]{7})(\/link)?$/);
   if (!m) return fail(404, 'not found');
   const c = await getCust(env, m[1]);
@@ -255,6 +295,7 @@ export async function onRequest(ctx) {
     if ((m = path.match(/^\/api\/screen\/([^/]+)$/)) && req.method === 'GET') return await screen(env, m[1], req, ctx);
     if ((m = path.match(/^\/api\/img\/([^/]+)$/)) && req.method === 'GET') return await image(env, m[1]);
     if ((m = path.match(/^\/api\/me(\/image)?$/))) return await customer(env, req, m[1] || '');
+    if (path === '/api/lead' && req.method === 'POST') return await lead(env, req);
     if ((m = path.match(/^\/api\/admin(\/.*)?$/))) return await admin(env, req, m[1] || '');
     return fail(404, 'not found');
   } catch (e) {

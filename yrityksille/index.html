@@ -19,11 +19,12 @@
 <script defer src="https://cloud.umami.is/script.js" data-website-id="ced80469-2f42-45f0-8153-00f6fa4c2f66"></script>
 <link rel="preload" href="/fonts/literata/literata-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/fonts/literata/literata.css">
+<script src="/config.js"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[
 {"@type":"Service","name":"LeviTV yrityksille","serviceType":"Infonäyttö / digital signage","areaServed":["Levi","Ylläs","Rovaniemi"],"provider":{"@type":"Organization","name":"OOMF Marketing Oy","email":"hello@oomf.fi","url":"https://levitv.com/"},
  "offers":[
   {"@type":"Offer","name":"LeviTV-kausi","price":"485","priceCurrency":"EUR","valueAddedTaxIncluded":false,"description":"Talvikausi, itse asennettuna"},
-  {"@type":"Offer","name":"LeviTV-kausi asennettuna","price":"585","priceCurrency":"EUR","valueAddedTaxIncluded":false,"description":"Talvikausi, OOMF asentaa paikan päällä"},
+  {"@type":"Offer","name":"LeviTV-kausi asennettuna","price":"585","priceCurrency":"EUR","valueAddedTaxIncluded":false,"description":"Talvikausi 1.11.–31.5., OOMF asentaa paikan päällä. Lanseeraustarjous: asennus veloituksetta 30.11.2026 asti (485 €)."},
   {"@type":"Offer","name":"Google TV Streamer -laite","price":"125","priceCurrency":"EUR","valueAddedTaxIncluded":false,"description":"Kertamaksu, laite jää asiakkaalle"}]},
 {"@type":"FAQPage","mainEntity":[
  {"@type":"Question","name":"Montako näyttöä yhdellä kausimaksulla saa?","acceptedAnswer":{"@type":"Answer","text":"Kausimaksu on per kohde. Kaikki saman kohteen näytöt käyttävät samaa näyttökoodia ja näyttävät samaa sisältöä."}},
@@ -117,6 +118,30 @@ details p{margin-top:8px;font-size:16px}
 
 .final{text-align:center;padding:72px 0 80px}
 .final .btns{justify-content:center}
+.offer{display:inline-flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:22px;padding:8px 14px;border-radius:999px;background:rgba(255,179,102,.12);border:1px solid rgba(255,179,102,.45);color:var(--text);text-decoration:none;font-size:15px}
+.offer b{color:var(--sun)}.offer span{color:var(--sun)}
+.amt{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 8px}.amt small{white-space:nowrap;margin-left:0}
+.amt s{font-size:.5em;color:var(--muted)}
+section{scroll-margin-top:66px}
+@media(max-width:700px){.offer{display:block;border-radius:12px;line-height:1.45}.offer b{display:block}}
+.deal{margin-top:10px;font-size:14px;color:var(--sun);line-height:1.45}
+.contact h2{margin-bottom:14px}
+.mini{list-style:none;margin:18px 0}.mini li{padding:6px 0 6px 26px;position:relative;font-size:16px}
+.mini li:before{content:'';position:absolute;left:2px;top:13px;width:12px;height:7px;border-left:2px solid var(--ok);border-bottom:2px solid var(--ok);transform:rotate(-45deg)}
+.muted-s{font-size:14px;color:var(--muted);margin-top:10px}
+#lead label{display:block;font-size:14px;color:var(--dim);margin-bottom:12px}
+#lead input,#lead select,#lead textarea{display:block;width:100%;margin-top:5px;padding:11px 12px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--text);font:inherit;font-size:16px}
+#lead input:focus,#lead select:focus,#lead textarea:focus{outline:2px solid var(--glacier);border-color:transparent}
+#lead .two{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+#lead .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+#lead button{width:100%;margin-top:4px;cursor:pointer;font-family:inherit}
+#lead button:disabled{opacity:.6;cursor:wait}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:16px}
+.seg label{margin:0!important;position:relative}#lead .seg input{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;margin:0;padding:0;border:0}
+.seg span{display:block;text-align:center;padding:10px 6px;border-radius:9px;border:1px solid var(--line);color:var(--dim);font-weight:600;font-size:14.5px;cursor:pointer}
+.seg input:checked+span{background:var(--glacier);border-color:var(--glacier);color:#06111D}
+.seg input:focus-visible+span{outline:2px solid var(--glacier);outline-offset:2px}
+.form-msg{margin-top:12px;font-size:15px;min-height:1px}.form-msg.ok{color:var(--ok)}.form-msg.bad{color:#FF7B7B}
 footer{border-top:1px solid rgba(55,85,106,.45);padding:26px 0 40px;font-size:14px;color:var(--muted)}
 footer .wrap{display:flex;gap:14px;justify-content:space-between;flex-wrap:wrap}
 footer a{color:var(--dim)}
@@ -129,17 +154,18 @@ footer a{color:var(--dim)}
     <a href="#miten">Näin se toimii</a>
     <a href="#hinnasto">Hinnasto</a>
     <a href="#tarvitaan">Mitä tarvitaan</a>
-    <a class="cta-s" href="mailto:hello@oomf.fi?subject=LeviTV%20yrityksille%20%E2%80%93%20tarjouspyynt%C3%B6" data-umami-event="b2b_contact" data-umami-event-at="top">Pyydä tarjous</a>
+    <a class="cta-s" href="#yhteys" data-umami-event="b2b_cta" data-umami-event-at="top">Pyydä demokoodi</a>
   </nav>
 </div></header>
 
 <main>
 <div class="wrap hero">
+  <a class="offer" href="#hinnasto"><b>Lanseeraustarjous</b> Tilaa 30.11.2026 mennessä: asennus paikan päällä veloituksetta <span>→</span></a>
   <div class="eyebrow">LeviTV yrityksille · Levi · Ylläs · Rovaniemi</div>
   <h1>Aulan TV, joka kertoo vieraille kaiken – ja myy samalla.</h1>
   <p class="lead">Vieraasi näkevät Levin live-kamerat, sään, revontuliennusteen ja rinnetilanteen ajantasaisena omalla TV:lläsi. Samalle ruudulle saat omat tarjouksesi, aukioloajat ja tiedotteet, ilman omaa sisällöntuottajaa.</p>
   <div class="btns">
-    <a class="btn primary" href="mailto:hello@oomf.fi?subject=LeviTV%20yrityksille%20%E2%80%93%20tarjouspyynt%C3%B6" data-umami-event="b2b_contact" data-umami-event-at="hero">Pyydä tarjous</a>
+    <a class="btn primary" href="#yhteys" data-umami-event="b2b_cta" data-umami-event-at="hero">Pyydä demokoodi</a>
     <a class="btn" href="/levi/full/" target="_blank" rel="noopener" data-umami-event="b2b_demo">Katso live-demo ↗</a>
   </div>
   <figure class="shot">
@@ -190,8 +216,8 @@ footer a{color:var(--dim)}
 </div></section>
 
 <section id="hinnasto"><div class="wrap">
-  <div class="sub"><div class="eyebrow">Hinnasto · talvikausi 2026–27</div><h2>Yksi selkeä kausimaksu</h2>
-    <p>Ostopäätös kerran syksyllä, yksi lasku koko talvikaudelle. 485 € kaudelta on noin 70 € kuukaudessa seitsemän kuukauden talvikaudella.</p></div>
+  <div class="sub"><div class="eyebrow">Hinnasto · talvikausi 1.11.2026–31.5.2027</div><h2>Yksi selkeä kausimaksu</h2>
+    <p>Yksi lasku koko talvikaudelle 1.11.–31.5. 485 € kaudelta on noin 70 € kuukaudessa.</p></div>
   <div class="grid g3 price">
     <div class="card">
       <h3>LeviTV-kausi</h3><div class="per">itse asennettuna</div>
@@ -199,9 +225,10 @@ footer a{color:var(--dim)}
       <ul><li>LeviTV-näkymä kohteen TV:ihin</li><li>Oma logo, bannerit ja juokseva teksti</li><li>Ajastus ja QR-koodit</li><li>Hallinta selaimessa</li><li>Tuki sähköpostilla</li></ul>
     </div>
     <div class="card hi">
-      <span class="badge">Helpoin</span>
+      <span class="badge">Lanseeraustarjous</span>
       <h3>LeviTV-kausi asennettuna</h3><div class="per">valmiina paikan päällä</div>
-      <div class="amt">585 €<small>+ alv / kausi</small></div>
+      <div class="amt"><s>585 €</s> 485 €<small>+ alv / kausi</small></div>
+      <div class="deal">Lanseeraustarjous: asennus veloituksetta, kun tilaat 30.11.2026 mennessä. Normaalisti 585 € + alv.</div>
       <ul><li>Kaikki LeviTV-kauden sisältö</li><li>OOMF asentaa ja testaa laitteen paikan päällä</li><li>Näyttökoodi ja asetukset valmiina</li></ul>
     </div>
     <div class="card">
@@ -239,21 +266,72 @@ footer a{color:var(--dim)}
   <details><summary>Tarvitsenko omaa sisällöntuottajaa tai mainostoimistoa?</summary><p>Et. Live-kuva, sää ja rinnetilanne päivittyvät itsestään. Sinä lisäät vain omat viestisi, ja hallinnassa on mitat, merkkimäärät ja esimerkit valmiina.</p></details>
   <details><summary>Millä kielellä sisältö on?</summary><p>LeviTV:n oma sisältö on englanniksi, koska suurin osa katsojista on matkailijoita. Omat bannerisi voit kirjoittaa millä kielellä haluat, tai molemmilla vuorotellen.</p></details>
   <details><summary>Entä Ylläs ja Rovaniemi?</summary><p>LeviTV:ssä on omat näkymät myös Ylläkselle ja Rovaniemelle. Palvelu toimii samalla tavalla, ja kohde valitaan TV:n asetuksista. Kysy tarjous muille paikkakunnille.</p></details>
-  <details><summary>Voinko kokeilla ennen ostamista?</summary><p>Kyllä. Avaa <a href="/levi/full/">levitv.com/levi/full/</a> minkä tahansa TV:n tai tietokoneen selaimessa ja katso, miltä näkymä näyttää. Pyydä meiltä demokoodi, niin näet myös oman sisällön toiminnassa.</p></details>
+  <details><summary>Voinko kokeilla ennen ostamista?</summary><p>Kyllä. Avaa <a href="/levi/full/">levitv.com/levi/full/</a> minkä tahansa TV:n tai tietokoneen selaimessa ja katso, miltä näkymä näyttää. <a href="#yhteys">Pyydä demokoodi</a>, niin näet myös oman sisällön toiminnassa omalla TV:lläsi.</p></details>
 </div></section>
 
-<div class="wrap final">
-  <h2>Talvikausi alkaa – nyt on hyvä hetki</h2>
-  <p class="lead" style="margin:12px auto 0">Kerro kohteesi ja näyttöjen määrä, niin lähetämme tarjouksen ja demokoodin.</p>
-  <div class="btns">
-    <a class="btn primary" href="mailto:hello@oomf.fi?subject=LeviTV%20yrityksille%20%E2%80%93%20tarjouspyynt%C3%B6&amp;body=Kohde%3A%0ANäyttöjen%20määrä%3A%0ATV%3An%20merkki%20%2F%20Android%20TV%3F%3A%0AAsennus%20(kyllä%2Fei)%3A%0AYhteyshenkilö%20ja%20puhelin%3A" data-umami-event="b2b_contact" data-umami-event-at="bottom">Pyydä tarjous – hello@oomf.fi</a>
+<section id="yhteys"><div class="wrap">
+  <div class="grid g2 contact">
+    <div>
+      <div class="eyebrow">Pyydä demokoodi tai tarjous</div>
+      <h2>Kokeile omalla TV:lläsi ennen kuin päätät</h2>
+      <p>Saat demokoodin, jolla näet LeviTV:n ja esimerkkibannerit omalla TV:lläsi. Lähetämme samalla tarjouksen kohteesi näyttömäärälle.</p>
+      <ul class="mini">
+        <li>Vastaamme yleensä saman päivän aikana</li>
+        <li>Lanseeraustarjous: asennus veloituksetta 30.11.2026 asti</li>
+        <li>Talvikausi 1.11.2026–31.5.2027</li>
+      </ul>
+      <p class="muted-s">Mieluummin sähköpostilla? <a href="mailto:hello@oomf.fi?subject=LeviTV%20yrityksille">hello@oomf.fi</a></p>
+    </div>
+    <form id="lead" class="card" novalidate>
+      <div class="seg" role="radiogroup" aria-label="Mitä haluat">
+        <label><input type="radio" name="want" value="demo" checked><span>Demokoodi</span></label>
+        <label><input type="radio" name="want" value="offer"><span>Tarjous</span></label>
+        <label><input type="radio" name="want" value="ads"><span>Mainospaikka</span></label>
+      </div>
+      <label>Yritys tai kohde *<input name="company" required maxlength="100" autocomplete="organization"></label>
+      <div class="two"><label>Nimi<input name="name" maxlength="80" autocomplete="name"></label>
+        <label>Puhelin<input name="phone" type="tel" maxlength="40" autocomplete="tel"></label></div>
+      <label>Sähköposti<input name="email" type="email" maxlength="120" autocomplete="email"></label>
+      <div class="two"><label>Paikkakunta<select name="loc"><option value="levi">Levi</option><option value="yllas">Ylläs</option><option value="rovaniemi">Rovaniemi</option><option value="helsinki">Muu</option></select></label>
+        <label>Näyttöjä<select name="screens"><option>1</option><option>2–3</option><option>4–10</option><option>yli 10</option><option value="">en tiedä vielä</option></select></label></div>
+      <label>Viesti (valinnainen)<textarea name="msg" rows="3" maxlength="1000" placeholder="Esim. TV:n merkki, tarvitaanko asennus"></textarea></label>
+      <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+      <button class="btn primary" type="submit">Lähetä</button>
+      <p class="form-msg" role="status"></p>
+      <p class="muted-s">Käytämme tietoja vain yhteydenottoon. <a href="/privacy/">Tietosuoja</a></p>
+    </form>
   </div>
-</div>
+</div></section>
 </main>
 
 <footer><div class="wrap">
   <span>LeviTV · OOMF Marketing Oy · <a href="mailto:hello@oomf.fi">hello@oomf.fi</a></span>
   <span><a href="/">Live-näkymät</a> · <a href="/privacy/">Tietosuoja</a></span>
 </div></footer>
+<script>
+(function(){
+  var f=document.getElementById('lead'), msg=f.querySelector('.form-msg'), btn=f.querySelector('button');
+  var API=((window.INFOTV||{}).api||'').replace(/\/$/,'');
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var d={}; new FormData(f).forEach(function(v,k){d[k]=String(v).trim();});
+    if(!d.company){ msg.className='form-msg bad'; msg.textContent='Kerro yrityksen tai kohteen nimi.'; f.company.focus(); return; }
+    if(!d.email&&!d.phone){ msg.className='form-msg bad'; msg.textContent='Anna sähköposti tai puhelinnumero, niin otamme yhteyttä.'; f.email.focus(); return; }
+    btn.disabled=true; msg.className='form-msg'; msg.textContent='Lähetetään…';
+    fetch(API+'/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)})
+      .then(function(r){ return r.json().catch(function(){return {};}).then(function(j){ if(!r.ok) throw new Error(j.error||('HTTP '+r.status)); }); })
+      .then(function(){
+        f.reset(); msg.className='form-msg ok';
+        msg.textContent='Kiitos! Otamme yhteyttä pian, yleensä saman päivän aikana.';
+        if(window.umami) umami.track('b2b_lead',{want:d.want});
+      })
+      .catch(function(err){
+        msg.className='form-msg bad';
+        msg.innerHTML='Lähetys ei onnistunut ('+String(err.message).replace(/[<>&]/g,'')+'). Lähetä viesti osoitteeseen <a href="mailto:hello@oomf.fi?subject=LeviTV%20yrityksille">hello@oomf.fi</a>.';
+      })
+      .then(function(){ btn.disabled=false; });
+  });
+})();
+</script>
 </body>
 </html>

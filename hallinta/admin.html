@@ -44,6 +44,12 @@
     </section>
 
     <section class="card">
+      <div class="row"><h2>Yhteydenotot</h2><span class="sp"></span><span id="lcount" class="muted small"></span></div>
+      <p class="muted small">Demokoodi- ja tarjouspyynnöt sivulta levitv.com/yrityksille/. Poista käsitellyt, kun ne ovat CRM:ssä.</p>
+      <div id="leads"></div>
+    </section>
+
+    <section class="card">
       <div class="row"><h2>Asiakkaat</h2><span class="sp"></span><span id="count" class="muted small"></span></div>
       <div class="table-wrap"><table>
         <thead><tr><th>Nimi</th><th>Paikka</th><th>Koodi</th><th>Kausi asti</th><th>Päällä</th><th>Sisältöjä</th><th>Muokattu</th><th></th></tr></thead>
@@ -74,7 +80,7 @@ async function load(){
   let list;
   try{ list=await api('/customers'); }
   catch(e){ if(e.status===401){ try{sessionStorage.removeItem(LS);}catch(_){} key=''; show(false); toast('Väärä avain',true); } else toast(e.message,true); return; }
-  show(true);
+  show(true); loadLeads();
   $('#count').textContent=list.length+' asiakasta';
   $('#rows').innerHTML=list.map(c=>`<tr data-id="${c.id}">
     <td><b>${esc(c.name)}</b><div class="muted small">${esc(c.email||'')}</div></td>
@@ -103,6 +109,24 @@ function showLink(c){
   $('#cpm').onclick=()=>navigator.clipboard.writeText(body).then(()=>toast('Viesti kopioitu'));
   $('#linkbox').scrollIntoView({behavior:'smooth',block:'center'});
 }
+const WANT={demo:'Demokoodi',offer:'Tarjous',ads:'Mainospaikka'};
+async function loadLeads(){
+  let L=[]; try{ L=await api('/leads'); }catch(e){ return; }
+  $('#lcount').textContent=L.length?L.length+' kpl':'';
+  $('#leads').innerHTML=L.length?L.map(l=>`<div class="item" data-lid="${esc(l.id)}">
+    <div class="item-head"><span class="kind">${esc(l.company)}</span><span class="state wait">${esc(WANT[l.want]||l.want||'Yhteydenotto')}</span><span class="sp"></span>
+      <span class="muted small">${new Date(l.at).toLocaleString('fi-FI',{dateStyle:'short',timeStyle:'short'})}</span>
+      <button class="icon danger" data-del-lead title="Poista">✕</button></div>
+    <div class="small">${esc(l.name||'')} ${l.email?`· <a href="mailto:${encodeURIComponent(l.email)}?subject=${encodeURIComponent('LeviTV – '+l.company)}">${esc(l.email)}</a>`:''} ${l.phone?`· <a href="tel:${esc(l.phone.replace(/\s/g,''))}">${esc(l.phone)}</a>`:''}</div>
+    <div class="muted small">${[LOCN[l.loc],l.screens?l.screens+' näyttöä':''].filter(Boolean).join(' · ')}</div>
+    ${l.msg?`<p class="small" style="margin-top:6px;white-space:pre-wrap">${esc(l.msg)}</p>`:''}</div>`).join('')
+    :'<p class="muted small">Ei uusia yhteydenottoja.</p>';
+}
+$('#leads').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-del-lead]'); if(!b) return;
+  const it=b.closest('[data-lid]'); if(!confirm('Poistetaanko yhteydenotto?')) return;
+  try{ await api('/leads/'+it.dataset.lid,{method:'DELETE'}); loadLeads(); }catch(err){ toast(err.message,true); }
+});
 $('#login-f').onsubmit=e=>{ e.preventDefault(); key=$('#key').value.trim(); try{sessionStorage.setItem(LS,key);}catch(_){} load(); };
 $('#logout').onclick=e=>{ e.preventDefault(); try{sessionStorage.removeItem(LS);}catch(_){} location.reload(); };
 $('#new-f').onsubmit=async e=>{
