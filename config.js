@@ -10,7 +10,7 @@ window.INFOTV = {
   // Customer content API (Cloudflare Pages Functions, see functions/api and README).
   // Screens with a customer code load their banners and logo from here; /hallinta/ edits them.
   // After levitv.com itself moves to Cloudflare this can be 'https://levitv.com'.
-  api: 'https://levitv.pages.dev',
+  api: 'https://levitv.flat-cloud-8d4c.workers.dev',
 
   // How often each TV/full screen reports that it is online (minutes).
   heartbeatMinutes: 60,

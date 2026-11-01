@@ -115,21 +115,21 @@ Hotels, restaurants and other businesses can show their own banners, ticker line
 - **Screens:** Android TV menu → *Customer code*; Samsung / LG menu (OK) → *Customer code*; any browser:
   `levi-infotv.html?view=tv&c=CODE`. Content refreshes every 5 min, schedules every minute. While a customer
   has banners showing, LeviTV's own ads are hidden.
-- **Backend:** `functions/api/[[path]].js` (Cloudflare Pages Functions) with one KV namespace. `config.js → api`
-  tells the pages where it runs.
+- **Backend:** Cloudflare Worker `levitv`: `worker.js` sends `/api/*` to `functions/api/[[path]].js` and everything else
+  to the static assets (`.assetsignore` lists what is left out). One KV namespace, configured in `wrangler.jsonc`.
+  `config.js → api` tells the pages where it runs.
 
-### Cloudflare setup (once)
-1. Cloudflare → Workers & Pages → Create → Pages → *Connect to Git* → `Oomfmarketing/levi-infotv`.
-   Project name `levitv`, production branch `main`, framework *None*, build command empty, output directory `/`.
-2. Settings → Builds → Branch control: *Preview branches: None* (the `data` branch updates every 30 min).
-3. Workers & Pages → KV → create namespace `levitv`. Then the project → Settings → Bindings → *KV namespace*:
-   variable name `DB`, namespace `levitv`.
-4. Settings → Variables and secrets → add **secret** `ADMIN_KEY` (a long random password, keep it in the password manager).
-5. Deployments → *Retry deployment* so the bindings take effect. Check `https://levitv.pages.dev/api/screen/AAAAAA`
-   answers `{"error":"unknown code"}`.
-6. If the project got another address than `levitv.pages.dev`, change `api` in `config.js`.
+### Cloudflare setup
+The Worker `levitv` is connected to this repo with Workers Builds: every push to `main` runs `npx wrangler deploy`.
+It is served at `https://levitv.flat-cloud-8d4c.workers.dev`. KV namespace `levitv` is bound as `DB` in `wrangler.jsonc`.
 
-Local test: `npx wrangler pages dev . --kv DB --binding ADMIN_KEY=<16+ chars>` and point `config.js → api` at it.
+The admin key is set once: Workers & Pages → `levitv` → Settings → Variables and secrets → add **secret** `ADMIN_KEY`
+(a long random password, at least 16 characters, keep it in the password manager).
+Check: `https://levitv.flat-cloud-8d4c.workers.dev/api/screen/AAAAAA` answers `{"error":"unknown code"}`.
+
+`levitv.pages.dev` belongs to an unrelated third party. Never use it as the API address.
+
+Local test: `npx wrangler dev --var ADMIN_KEY:<16+ chars>` and point `config.js → api` at it.
 
 ## TV apps
 

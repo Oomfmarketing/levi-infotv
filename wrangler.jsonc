@@ -1,0 +1,17 @@
+// LeviTV on Cloudflare Workers: static assets plus the customer API (see worker.js).
+// Deployed by Workers Builds on every push to main. ADMIN_KEY is a secret set in the dashboard, never here.
+{
+  "name": "levitv",
+  "main": "worker.js",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "kv_namespaces": [
+    { "binding": "DB", "id": "a9d0ab299b7d426897f49b286cc4efa5" }
+  ]
+}

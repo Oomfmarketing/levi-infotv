@@ -17,7 +17,7 @@ commit messages and on-screen texts in English (TV UI is English; customer admin
 - Brand V9: dark arctic theme (#06111D, #0B1B2B, #F2F6FA, #ADC4D5, glacier #76C7EF, sun #FFB366, lines #37556A),
   Literata (self-hosted, `fonts/literata`) for headings, system sans for UI. Product name is always **"LeviTV"**;
   the place goes in the brand-sub row. Logos in `brand/`.
-- Hosting today: **GitHub Pages** (`CNAME` → levitv.com). `_headers` / `_redirects` are prepared for Cloudflare Pages.
+- Hosting today: **GitHub Pages** (`CNAME` → levitv.com). The Cloudflare Worker `levitv` serves the same files plus the API, and uses `_headers` / `_redirects`.
 
 ## Cameras
 - YouTube IFrame API, double buffer with single-player fallback, thumbnail cover while buffering, watchdogs,
@@ -31,12 +31,13 @@ External Grok bot writes `slopes.json` to the **`data` branch** (every 30 min 06
 Older than 6 h is hidden. Never push to `data` yourself.
 
 ## Customer content (new, Oct 2026)
-- API: `functions/api/[[path]].js` — Cloudflare Pages Function, KV binding `DB`, secret `ADMIN_KEY`. Endpoints documented in the file header.
+- API: `functions/api/[[path]].js`, called from `worker.js` — Cloudflare Worker `levitv` (`wrangler.jsonc`), KV binding `DB`, secret `ADMIN_KEY`. Endpoints documented in the file header.
+- `.assetsignore` lists what the Worker must not serve: add anything new that should stay private. `levitv.pages.dev` is an unrelated third-party site, never use it.
 - `/hallinta/` customer admin (login = one-time link `#t=<token>`), `/hallinta/admin.html` OOMF admin (ADMIN_KEY),
   `hallinta/schedule.js` shared ES5 schedule logic (also loaded by the TV page).
 - TV page: `?c=CODE` or the app setting → `loadCustomer()`; customer banners replace LeviTV ads (`.cx-off`), logo goes to `#tag`,
   ticker lines go first. All customer text is escaped.
-- Local test: `npx wrangler pages dev . --kv DB --binding ADMIN_KEY=<16+ chars>` and point `config.js → api` at it. `.wrangler/` is gitignored.
+- Local test: `npx wrangler dev --var ADMIN_KEY:<16+ chars>` and point `config.js → api` at it. `.wrangler/` is gitignored.
 
 ## TV apps
 - **Android TV** (`android/`, package `com.levitv.app`, GeckoView 140–149, minSdk 26, TV-only/leanback).
@@ -56,8 +57,7 @@ Older than 6 h is hidden. Never push to `data` yourself.
 ## Open items (25 Oct 2026)
 1. **Google Play production:** fill App content + store listing (EN default, FI translation), add Android TV form factor,
    create the production release with **1.0.25** (has customer code), send for review. Give Google a demo customer code under "Sign-in details".
-2. **Cloudflare:** create Pages project `levitv` from this repo (no build, output `/`, preview branches None), KV `levitv` bound as `DB`,
-   secret `ADMIN_KEY`, redeploy. Steps in README → "Customer content". If the address isn't `levitv.pages.dev`, update `config.js → api`.
-   Later: move levitv.com DNS (GoDaddy) to Cloudflare, then `api` can be `https://levitv.com`.
+2. **Cloudflare:** Worker `levitv` (Workers Builds on `main`, `https://levitv.flat-cloud-8d4c.workers.dev`), KV `levitv` bound as `DB`, secret `ADMIN_KEY`.
+   Steps in README → "Customer content". Later: move levitv.com DNS (GoDaddy) to Cloudflare, then `api` can be `https://levitv.com`.
 3. After Play approval: point `levitv.com/app` to the Play listing (now redirects to the APK).
 4. Open question for sales: agreement with Levi ski resort on slope data / brand use.

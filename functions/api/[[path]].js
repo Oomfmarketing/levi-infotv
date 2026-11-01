@@ -1,6 +1,6 @@
-/* LeviTV customer content API — Cloudflare Pages Function.
+/* LeviTV customer content API — called from worker.js (Cloudflare Workers).
  *
- * Bindings (Cloudflare dashboard → the Pages project → Settings):
+ * Bindings (KV in wrangler.jsonc; secret in Cloudflare dashboard → the levitv Worker → Settings):
  *   DB         KV namespace  (customers, codes, images)
  *   ADMIN_KEY  secret        (OOMF admin page; at least 16 characters)
  *
