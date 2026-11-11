@@ -1,5 +1,5 @@
 {
- "checked": "2026-11-10T12:40Z",
+ "checked": "2026-11-11T11:53Z",
  "cams": {
   "LwihxyJ4V20": {
    "loc": "levi",
@@ -35,7 +35,7 @@
    "loc": "levi",
    "name": "Glacier Express",
    "state": "unknown",
-   "reason": "YouTube bot check"
+   "reason": "This video is unavailable"
   },
   "eXDCi75TjM8": {
    "loc": "levi",
@@ -77,7 +77,7 @@
    "loc": "yllas",
    "name": "Summit",
    "state": "unknown",
-   "reason": "YouTube is no longer supported in this application or device."
+   "reason": "This video is unavailable"
   },
   "Cp4RRAEgpeU": {
    "loc": "rovaniemi",
