@@ -1,11 +1,12 @@
 {
-  "updated": "2026-11-14T09:52:38Z",
+  "updated": "2026-11-14T12:56:18Z",
   "levi": {
-    "updated": "2026-11-14T09:52:39Z",
+    "updated": "2026-11-14T12:56:19Z",
     "slopesOpen": 1,
     "slopesTotal": 44,
     "liftsOpen": 3,
     "liftsTotal": 28,
+    "snowDepthCm": 4,
     "openSlopes": [
       {
         "name": "N.1",
@@ -30,7 +31,7 @@
     "source": "https://levi-CloudProd-agent.frendsapp.com/api/statistics/v1/today"
   },
   "yllas": {
-    "updated": "2026-11-14T09:52:45Z",
+    "updated": "2026-11-14T12:56:24Z",
     "slopesOpen": 0,
     "liftsOpen": 0,
     "openSlopes": [],
