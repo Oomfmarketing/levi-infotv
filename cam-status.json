@@ -1,5 +1,5 @@
 {
- "checked": "2026-11-14T11:28Z",
+ "checked": "2026-11-15T11:57Z",
  "cams": {
   "LwihxyJ4V20": {
    "loc": "levi",
@@ -59,7 +59,7 @@
    "loc": "levi",
    "name": "Aurora Cam",
    "state": "offline",
-   "reason": "This live stream recording is not available. (kept from last check)"
+   "reason": "This live stream recording is not available."
   },
   "PeLTbbI2i6U": {
    "loc": "yllas",
