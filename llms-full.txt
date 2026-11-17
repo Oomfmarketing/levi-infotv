@@ -22,7 +22,7 @@ Levi is a fell and ski resort in Kittilä, Finnish Lapland, about 170 km north o
 
 ### What LeviTV shows
 
-- Weather now: observations from the Finnish Meteorological Institute (FMI) station Kittilä Kenttärova, refreshed every 10 minutes
+- Weather now: the current hour of the Finnish Meteorological Institute (FMI) forecast for Levi village
 - Forecast: 5-day FMI forecast for Levi with daily highs, lows and cloud cover
 - Slopes and lifts: how many slopes and lifts are open and the snow depth, when reported; data older than 6 hours is hidden
 - Northern lights: live planetary Kp index and 12-hour Kp forecast from NOAA, rated for Levi's latitude (67.8°N), plus tonight's cloud cover
@@ -34,7 +34,7 @@ Levi is a fell and ski resort in Kittilä, Finnish Lapland, about 170 km north o
 On LeviTV (levitv.com/levi/). It rotates through 10 live cameras around Levi Fell — Levi Center, the slopes, the gondola area, the summit and an aurora camera — and you can pick a single camera on your phone.
 
 **What is the weather in Levi right now?**
-LeviTV shows the latest observation from the FMI weather station Kittilä Kenttärova near Levi, with temperature, feels-like temperature, wind and cloud cover, plus a 5-day forecast.
+LeviTV shows the current weather in Levi village from the Finnish Meteorological Institute (FMI) forecast, with temperature, feels-like temperature, wind and cloud cover, plus a 5-day forecast.
 
 **How many slopes are open in Levi today?**
 LeviTV shows the number of open slopes and lifts in Levi and the snow depth when they are reported, and hides data older than 6 hours. For the official slope status see levi.fi.
@@ -56,7 +56,7 @@ LeviTV näyttää Levin reaaliajassa: 10 live-kameraa Levitunturilta (myös revo
 LeviTV:ssä (levitv.com/levi/). Sivu kierrättää 10 live-kameraa Levitunturilta: Levin keskusta, rinteet, gondolialue, huippu ja revontulikamera. Puhelimella voit valita yksittäisen kameran.
 
 **Mikä on Levin sää nyt?**
-LeviTV näyttää Ilmatieteen laitoksen Kittilän Kenttärovan havaintoaseman tuoreimman havainnon: lämpötilan, tuntuvan lämpötilan, tuulen ja pilvisyyden sekä 5 päivän ennusteen.
+LeviTV näyttää Levin kylän sään nyt Ilmatieteen laitoksen ennusteesta: lämpötilan, tuntuvan lämpötilan, tuulen ja pilvisyyden sekä 5 päivän ennusteen.
 
 **Montako rinnettä Levillä on auki?**
 LeviTV näyttää avoimien rinteiden ja hissien määrän sekä lumensyvyyden, kun tiedot on ilmoitettu. Yli 6 tuntia vanhoja tietoja ei näytetä. Virallinen rinnetilanne on osoitteessa levi.fi.

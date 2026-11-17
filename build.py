@@ -49,7 +49,7 @@ LOCATIONS = {
              'Levi West (West Slopes)', 'Glacier Express', 'Top of Levi (summit, 531 m)',
              'Lifts 13 & 14 (North)', 'Elves Village (Tonttula)', 'Aurora Cam (Levi Igloos)'],
     'data': [
-      ('Weather now', 'observations from the Finnish Meteorological Institute (FMI) station Kittilä Kenttärova, refreshed every 10 minutes'),
+      ('Weather now', 'the current hour of the Finnish Meteorological Institute (FMI) forecast for Levi village'),
       ('Forecast', '5-day FMI forecast for Levi with daily highs, lows and cloud cover'),
       ('Slopes and lifts', 'how many slopes and lifts are open and the snow depth, when reported; data older than 6 hours is hidden'),
       ('Northern lights', 'live planetary Kp index and 12-hour Kp forecast from NOAA, rated for Levi\'s latitude (67.8°N), plus tonight\'s cloud cover'),
@@ -60,7 +60,7 @@ LOCATIONS = {
        'On LeviTV (levitv.com/levi/). It rotates through 10 live cameras around Levi Fell — Levi Center, the slopes, '
        'the gondola area, the summit and an aurora camera — and you can pick a single camera on your phone.'),
       ('What is the weather in Levi right now?',
-       'LeviTV shows the latest observation from the FMI weather station Kittilä Kenttärova near Levi, '
+       'LeviTV shows the current weather in Levi village from the Finnish Meteorological Institute (FMI) forecast, '
        'with temperature, feels-like temperature, wind and cloud cover, plus a 5-day forecast.'),
       ('How many slopes are open in Levi today?',
        'LeviTV shows the number of open slopes and lifts in Levi and the snow depth when they are reported, and hides data '
@@ -84,7 +84,7 @@ LOCATIONS = {
        'LeviTV:ssä (levitv.com/levi/). Sivu kierrättää 10 live-kameraa Levitunturilta: Levin keskusta, rinteet, '
        'gondolialue, huippu ja revontulikamera. Puhelimella voit valita yksittäisen kameran.'),
       ('Mikä on Levin sää nyt?',
-       'LeviTV näyttää Ilmatieteen laitoksen Kittilän Kenttärovan havaintoaseman tuoreimman havainnon: lämpötilan, '
+       'LeviTV näyttää Levin kylän sään nyt Ilmatieteen laitoksen ennusteesta: lämpötilan, '
        'tuntuvan lämpötilan, tuulen ja pilvisyyden sekä 5 päivän ennusteen.'),
       ('Montako rinnettä Levillä on auki?',
        'LeviTV näyttää avoimien rinteiden ja hissien määrän sekä lumensyvyyden, kun tiedot on ilmoitettu. '

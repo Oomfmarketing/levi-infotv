@@ -55,7 +55,7 @@ in their own analytics too. Ad targets live in `config.js` (`ads`).
 
 | What | Source |
 |---|---|
-| Weather now | FMI observations: Levi `fmisid=101886`, Helsinki Kaisaniemi `100971`; Ylläs uses the FMI forecast for the current hour |
+| Weather now | FMI observations: Rovaniemi `fmisid=101928`, Helsinki Kaisaniemi `100971`; Levi (village) and Ylläs have no nearby station and use the FMI forecast for the current hour |
 | Forecast, cloud cover | FMI forecast for the location's coordinates |
 | Northern lights | NOAA SWPC planetary Kp + Kp forecast |
 | Sunrise / sunset / night mode | Calculated in the browser |
