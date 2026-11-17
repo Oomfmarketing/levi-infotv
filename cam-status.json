@@ -1,11 +1,11 @@
 {
- "checked": "2026-11-15T11:57Z",
+ "checked": "2026-11-17T13:28Z",
  "cams": {
   "LwihxyJ4V20": {
    "loc": "levi",
    "name": "Zero Point",
    "state": "unknown",
-   "reason": "This video is unavailable"
+   "reason": "YouTube bot check"
   },
   "89vRm9bb9_c": {
    "loc": "levi",
@@ -83,7 +83,7 @@
    "loc": "rovaniemi",
    "name": "Santa Claus Village",
    "state": "unknown",
-   "reason": "This video is unavailable"
+   "reason": "YouTube is no longer supported in this application or device."
   },
   "wT8Zhh9MBEE": {
    "loc": "rovaniemi",
@@ -107,7 +107,7 @@
    "loc": "helsinki",
    "name": "West Harbour S",
    "state": "unknown",
-   "reason": "This video is unavailable"
+   "reason": "YouTube is no longer supported in this application or device."
   },
   "JnJhFYhIjFs": {
    "loc": "helsinki",
