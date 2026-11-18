@@ -1,11 +1,11 @@
 {
- "checked": "2026-11-17T13:28Z",
+ "checked": "2026-11-18T13:04Z",
  "cams": {
   "LwihxyJ4V20": {
-   "loc": "levi",
+   "loc": "lapland",
    "name": "Zero Point",
    "state": "unknown",
-   "reason": "YouTube bot check"
+   "reason": "This video is unavailable"
   },
   "89vRm9bb9_c": {
    "loc": "levi",
@@ -14,13 +14,13 @@
    "reason": "This video is unavailable"
   },
   "X7tdyNFpp1g": {
-   "loc": "levi",
+   "loc": "lapland",
    "name": "Village View",
    "state": "unknown",
    "reason": "This video is unavailable"
   },
   "gehi4YiVYdY": {
-   "loc": "levi",
+   "loc": "lapland",
    "name": "Levi Black",
    "state": "unknown",
    "reason": "This video is unavailable"
@@ -80,10 +80,10 @@
    "reason": "This video is unavailable"
   },
   "Cp4RRAEgpeU": {
-   "loc": "rovaniemi",
+   "loc": "lapland",
    "name": "Santa Claus Village",
    "state": "unknown",
-   "reason": "YouTube is no longer supported in this application or device."
+   "reason": "This video is unavailable"
   },
   "wT8Zhh9MBEE": {
    "loc": "rovaniemi",
@@ -107,7 +107,7 @@
    "loc": "helsinki",
    "name": "West Harbour S",
    "state": "unknown",
-   "reason": "YouTube is no longer supported in this application or device."
+   "reason": "This video is unavailable"
   },
   "JnJhFYhIjFs": {
    "loc": "helsinki",
