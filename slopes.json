@@ -1,37 +1,23 @@
 {
-  "updated": "2026-11-18T15:55:47Z",
+  "updated": "2026-11-18T17:50:41Z",
   "levi": {
-    "updated": "2026-11-18T15:55:48Z",
-    "slopesOpen": 1,
+    "updated": "2026-11-18T17:50:42Z",
+    "slopesOpen": 0,
     "slopesTotal": 44,
-    "liftsOpen": 3,
+    "liftsOpen": 1,
     "liftsTotal": 28,
     "snowDepthCm": 4,
-    "openSlopes": [
-      {
-        "name": "N.1",
-        "difficulty": "red",
-        "hours": "09:30-19:00"
-      }
-    ],
+    "openSlopes": [],
     "openLifts": [
       {
         "name": "Express gondoli",
         "hours": "09:30-23:00"
-      },
-      {
-        "name": "North tuolihissi",
-        "hours": "09:30-19:00"
-      },
-      {
-        "name": "Glacier Express",
-        "hours": "09:30-19:00"
       }
     ],
     "source": "https://levi-CloudProd-agent.frendsapp.com/api/statistics/v1/today"
   },
   "yllas": {
-    "updated": "2026-11-18T15:55:54Z",
+    "updated": "2026-11-18T17:50:48Z",
     "slopesOpen": 0,
     "liftsOpen": 0,
     "openSlopes": [],
