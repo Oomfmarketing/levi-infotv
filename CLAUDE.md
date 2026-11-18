@@ -11,7 +11,7 @@ commit messages and on-screen texts in English (TV UI is English; customer admin
 ## How the site is built
 - `levi-infotv.html` is the **one template** for every view (mobile, `view=tv`, `view=full`). Location config is the
   `LOCS` block (name, sub, lat/lon, fmisid, cams, ticker, ads, kp, mark, site).
-- After **any** edit to the template run `python3 build.py`. It generates `/levi/ /yllas/ /rovaniemi/ /helsinki/`,
+- After **any** edit to the template run `python3 build.py`. It generates `/levi/ /yllas/ /rovaniemi/ /helsinki/ /lapland/` (`lapland` = combined Levi + Rovaniemi view, Levi weather/slopes),
   their `/full/` redirects, `sitemap.xml` and `tv.html` (esbuild-transpiled to chrome56 for old Samsung/LG browsers;
   install esbuild with npm if missing). Commit the generated files too.
 - `config.js`: analytics (Umami), ad target URLs (`lwa, edmc, haus, oomf`, routed via `go.html`), `api` (customer API base).

@@ -434,6 +434,7 @@ html.full,html.full body{cursor:none}
   }
   html.longname #m-site-h{font-size:clamp(20px,7vw,34px);letter-spacing:.06em;overflow-wrap:anywhere}
   #brand-sub{font-size:11px;letter-spacing:.08em;color:var(--accent);margin-top:4px;white-space:nowrap}
+  html.xlongname .psub{display:none}   /* keep the clock on screen */
   #coords{display:none}
   #live-pill{display:none}
   #clock{display:flex;flex-direction:column-reverse;align-items:flex-end}
@@ -780,7 +781,7 @@ if(!Object.fromEntries)Object.fromEntries=function(a){var o={};Array.from(a).for
    EDIT HERE
 ══════════════════════════════════════════════════════════ */
 
-// Each location has its own settings. Pick one with ?loc=levi, ?loc=yllas, ?loc=rovaniemi or ?loc=helsinki
+// Each location has its own settings. Pick one with ?loc=levi, ?loc=yllas, ?loc=rovaniemi, ?loc=helsinki or ?loc=lapland (Levi + Rovaniemi)
 const LOCS = {
   levi: {
     name:'Levi', sub:'Lapland · Finland', lat:67.8009, lon:24.8009,
@@ -926,6 +927,45 @@ const LOCS = {
        p:'Reach visitors on screens and phones — contact <b>hello@oomf.fi</b>'},
     ],
   },
+  // combined view: Levi village + Santa Claus Village; weather, daylight and slopes are Levi's
+  lapland: {
+    name:'Levi + Rovaniemi', sub:'Lapland', lat:67.8009, lon:24.8009,
+    live:'Live from Levi &amp; Rovaniemi', pill:'Levi + Rovaniemi',
+    fmisid:null, station:'Levi village · FMI', place:'Kittil%C3%A4', slopes:'levi',
+    tag:'#LAPLAND', site:{h:'LEVI.FI', p:'Tickets · Slopes · Events', url:'https://www.levi.fi/'},
+    kp:[2,3,4,5],
+    mark:'<circle cx="24" cy="24" r="22.5"/><path d="M24 9v30M11 16.5l26 15M11 31.5l26-15M24 9l-3.5 3.5M24 9l3.5 3.5M24 39l-3.5-3.5M24 39l3.5-3.5"/>',
+    cams:[
+      {id:'LwihxyJ4V20', n:'Zero Point', l:'Levi Center — Zero Point'},
+      {id:'Cp4RRAEgpeU', n:'Santa Claus Village', l:'Santa Claus Village — Rovaniemi'},
+      {id:'X7tdyNFpp1g', n:'Village View', l:'Levi — Village View'},
+      {id:'gehi4YiVYdY', n:'Levi Black', l:'Levi Black — Gondola Base Station'},
+    ],
+    ticker:[
+      'LeviTV — live from Levi and Rovaniemi',
+      'Welcome to Lapland · Tervetuloa Lappiin',
+      'Live from Levi village and Santa Claus Village on the Arctic Circle',
+      'Slope & lift status: levi.fi',
+      'Northern lights: look north on clear, dark evenings',
+      'Emergency number 112',
+      'Advertise on LeviTV: hello@oomf.fi',
+    ],
+    ads:[
+      {tag:'Activities', t:'accent', ad:'lwa',
+       h:'Husky safaris, northern lights &amp; snowmobile tours',
+       p:'Find, compare and book activities in Levi and Rovaniemi — <b>laplandwinteractivities.com</b>'},
+      'aurora',
+      {tag:'Groups &amp; companies', t:'sun', ad:'edmc',
+       h:'Bring your group to Lapland',
+       p:'Incentives, meetings &amp; events in Levi, Rovaniemi and across Finland — <b>elamysdmc.com</b>'},
+      {tag:'Stay in Levi', t:'accent', ad:'haus',
+       h:'Rent your holiday week in Levi',
+       p:'Comfortable 70 m² holiday apartment, book directly from the owner — <b>levi.haus</b>'},
+      {tag:'Advertise here', t:'accent', ad:'oomf',
+       h:'Advertise on LeviTV',
+       p:'Reach visitors on screens and phones — contact <b>hello@oomf.fi</b>'},
+    ],
+  },
 };
 const LOC_KEY = (new URLSearchParams(location.search).get('loc')||window.INFOTV_LOC||'levi').toLowerCase().replace('ä','a');
 const LOC = LOCS[LOC_KEY] || LOCS.levi;
@@ -1008,7 +1048,8 @@ if(VIEW()!=='mobile'){
   q('logo').textContent='LeviTV';
   q('brand-meta').dataset.name='LeviTV';
   if(LOC.name.length>7) document.documentElement.classList.add('longname');   // e.g. Rovaniemi
-  q('brand-sub').innerHTML=`<span class="place">${LOC.name}</span> · ${LOC.sub}`;
+  if(LOC.name.length>12) document.documentElement.classList.add('xlongname');   // e.g. Levi + Rovaniemi
+  q('brand-sub').innerHTML=`<span class="place">${LOC.name}</span><span class="psub"> · ${LOC.sub}</span>`;
   const ns=(v,p,n)=>`${Math.abs(v).toFixed(2)}°${v>=0?p:n}`;
   q('coords').textContent=`${ns(LOC.lat,'N','S')} · ${ns(LOC.lon,'E','W')}`;
   q('live-txt').innerHTML=WM+' · '+LOC.live;
@@ -1497,7 +1538,7 @@ const tvMenu=(()=>{
   if(TVAPP!=='tizen'&&TVAPP!=='webos') return null;
   let P={}; try{P=JSON.parse(localStorage.getItem('levitv.app')||'{}');}catch(_){}
   const start=JSON.stringify(P);
-  const LOCN={levi:'Levi',yllas:'Ylläs',rovaniemi:'Rovaniemi',helsinki:'Helsinki'}, VIEWN={full:'Full screen',tv:'Info TV'};
+  const LOCN={levi:'Levi',yllas:'Ylläs',rovaniemi:'Rovaniemi',helsinki:'Helsinki',lapland:'Levi + Rovaniemi'}, VIEWN={full:'Full screen',tv:'Info TV'};
   const cyc=(o,v)=>{const k=Object.keys(o);return k[(k.indexOf(v)+1)%k.length];};
   const items=[
     {l:'Location', v:()=>LOCN[P.loc||'levi'], go:()=>{P.loc=cyc(LOCN,P.loc||'levi');}},
@@ -1893,7 +1934,7 @@ async function loadSlopes(){
     const r=await fetch(SLOPE_FEED_URL,{cache:'no-store'});
     if(!r.ok) return;
     const all=await r.json();
-    const d=all[LOC_KEY]||(all.slopesTotal?all:null);        // per location, or one flat object
+    const d=all[LOC.slopes||LOC_KEY]||(all.slopesTotal?all:null);        // per location, or one flat object
     const it=[];
     const fresh=d&&(!d.updated||Date.now()-Date.parse(d.updated)<6*3600e3);   // stale data is not shown
     const n=v=>typeof v==='number'&&isFinite(v);

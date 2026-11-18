@@ -175,3 +175,38 @@ LeviTV:ssä (levitv.com/helsinki/). Sivu kierrättää Kauppatorin sekä Helsing
 
 **Näkyvätkö revontulet Helsingissä?**
 Joskus. Helsinki on kaukana revontulivyöhykkeen eteläpuolella, joten revontulet näkyvät yleensä vain voimakkaalla aktiivisuudella (noin Kp 4–5 tai enemmän) pimeinä ja kirkkaina öinä, matalalla pohjoisessa.
+
+## Levi + Rovaniemi (https://levitv.com/lapland/)
+
+This LeviTV view combines two Lapland destinations: live cameras from Levi village and the gondola base station, and the Santa Claus Village camera on the Arctic Circle in Rovaniemi.
+The weather, slope status and daylight shown are for Levi village. Levi and Rovaniemi are about 170 km apart.
+
+### Live cameras in Levi and Rovaniemi
+
+- Zero Point (Levi Center)
+- Santa Claus Village (Rovaniemi, Arctic Circle)
+- Village View (Levi)
+- Levi Black (gondola base station)
+
+### What LeviTV shows
+
+- Weather now: the current hour of the Finnish Meteorological Institute (FMI) forecast for Levi village
+- Forecast: 5-day FMI forecast for Levi with daily highs, lows and cloud cover
+- Slopes and lifts: how many slopes and lifts are open in Levi and the snow depth, when reported; data older than 6 hours is hidden
+- Northern lights: live Kp index and Kp forecast from NOAA, rated for Lapland's latitude, plus tonight's cloud cover
+- Daylight: sunrise, sunset and day length for Levi, calculated for today
+
+### Questions and answers
+
+**Can I watch Levi and Santa Claus Village live at the same time?**
+Yes. LeviTV (levitv.com/lapland/) rotates live cameras from Levi village and the Levi Black gondola base station with the Santa Claus Village camera in Rovaniemi.
+
+**Whose weather does the Levi + Rovaniemi view show?**
+Levi village: the current hour of the Finnish Meteorological Institute forecast and a 5-day forecast. For Rovaniemi weather see levitv.com/rovaniemi/.
+
+### Levi ja Rovaniemi live — webkamerat samalla näytöllä
+
+LeviTV:n yhdistetty näkymä: Levin kylän ja gondolin ala-aseman live-kamerat sekä Joulupukin Pajakylä napapiiriltä. Sää, rinnetilanne ja päivänvalo näytetään Levin kylälle.
+
+**Näkyvätkö Levi ja Joulupukin Pajakylä samalla näytöllä?**
+Kyllä. LeviTV (levitv.com/lapland/) kierrättää Levin kylän ja ala-aseman kameroita sekä Joulupukin Pajakylän kameraa Rovaniemeltä.

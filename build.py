@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the location pages (/levi/, /yllas/, /rovaniemi/, /helsinki/) from levi-infotv.html.
+"""Build the location pages (/levi/, /yllas/, /rovaniemi/, /helsinki/, /lapland/) from levi-infotv.html.
 
 Each page is the full live app with its own title, description, canonical URL,
 structured data (JSON-LD) and a crawlable text section for search engines and
@@ -214,6 +214,44 @@ LOCATIONS = {
       ('Näkyvätkö revontulet Helsingissä?',
        'Joskus. Helsinki on kaukana revontulivyöhykkeen eteläpuolella, joten revontulet näkyvät yleensä vain voimakkaalla '
        'aktiivisuudella (noin Kp 4–5 tai enemmän) pimeinä ja kirkkaina öinä, matalalla pohjoisessa.'),
+    ],
+  },
+  'lapland': {
+    'name': 'Levi + Rovaniemi', 'lat': 67.8009, 'lon': 24.8009, 'region': 'Levi and Rovaniemi, Lapland, Finland',
+    'type': 'TouristDestination', 'wiki': 'https://en.wikipedia.org/wiki/Lapland_(Finland)',
+    'title': 'Levi & Rovaniemi Live Webcams: Levi Village & Santa Claus Village — LeviTV',
+    'desc': 'Watch Levi and Rovaniemi live on one screen: Levi village and gondola base webcams, Santa Claus Village '
+            'on the Arctic Circle, Levi weather, open slopes, northern lights (Kp) and daylight.',
+    'h1': 'Levi and Rovaniemi live webcams on one screen',
+    'intro': [
+      'This LeviTV view combines two Lapland destinations: live cameras from Levi village and the gondola base station, '
+      'and the Santa Claus Village camera on the Arctic Circle in Rovaniemi.',
+      'The weather, slope status and daylight shown are for Levi village. Levi and Rovaniemi are about 170 km apart.',
+    ],
+    'cams_title': 'Live cameras in Levi and Rovaniemi',
+    'cams': ['Zero Point (Levi Center)', 'Santa Claus Village (Rovaniemi, Arctic Circle)', 'Village View (Levi)',
+             'Levi Black (gondola base station)'],
+    'data': [
+      ('Weather now', 'the current hour of the Finnish Meteorological Institute (FMI) forecast for Levi village'),
+      ('Forecast', '5-day FMI forecast for Levi with daily highs, lows and cloud cover'),
+      ('Slopes and lifts', 'how many slopes and lifts are open in Levi and the snow depth, when reported; data older than 6 hours is hidden'),
+      ('Northern lights', 'live Kp index and Kp forecast from NOAA, rated for Lapland\'s latitude, plus tonight\'s cloud cover'),
+      ('Daylight', 'sunrise, sunset and day length for Levi, calculated for today'),
+    ],
+    'faq': [
+      ('Can I watch Levi and Santa Claus Village live at the same time?',
+       'Yes. LeviTV (levitv.com/lapland/) rotates live cameras from Levi village and the Levi Black gondola base station '
+       'with the Santa Claus Village camera in Rovaniemi.'),
+      ('Whose weather does the Levi + Rovaniemi view show?',
+       'Levi village: the current hour of the Finnish Meteorological Institute forecast and a 5-day forecast. '
+       'For Rovaniemi weather see levitv.com/rovaniemi/.'),
+    ],
+    'fi_title': 'Levi ja Rovaniemi live — webkamerat samalla näytöllä',
+    'fi': 'LeviTV:n yhdistetty näkymä: Levin kylän ja gondolin ala-aseman live-kamerat sekä Joulupukin Pajakylä napapiiriltä. '
+          'Sää, rinnetilanne ja päivänvalo näytetään Levin kylälle.',
+    'fi_faq': [
+      ('Näkyvätkö Levi ja Joulupukin Pajakylä samalla näytöllä?',
+       'Kyllä. LeviTV (levitv.com/lapland/) kierrättää Levin kylän ja ala-aseman kameroita sekä Joulupukin Pajakylän kameraa Rovaniemeltä.'),
     ],
   },
 }
