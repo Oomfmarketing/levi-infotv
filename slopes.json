@@ -1,10 +1,10 @@
 {
-  "updated": "2026-11-19T13:57:04Z",
+  "updated": "2026-11-19T15:51:31Z",
   "levi": {
-    "updated": "2026-11-19T13:57:05Z",
+    "updated": "2026-11-19T15:51:33Z",
     "slopesOpen": 1,
     "slopesTotal": 44,
-    "liftsOpen": 4,
+    "liftsOpen": 3,
     "liftsTotal": 28,
     "snowDepthCm": 10,
     "openSlopes": [
@@ -26,16 +26,12 @@
       {
         "name": "Glacier Express",
         "hours": "09:30-19:00"
-      },
-      {
-        "name": "Gondoli 2000",
-        "hours": "09:30-17:00"
       }
     ],
     "source": "https://levi-CloudProd-agent.frendsapp.com/api/statistics/v1/today"
   },
   "yllas": {
-    "updated": "2026-11-19T13:57:11Z",
+    "updated": "2026-11-19T15:51:39Z",
     "slopesOpen": 0,
     "liftsOpen": 0,
     "openSlopes": [],
