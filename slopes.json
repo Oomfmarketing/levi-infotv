@@ -1,21 +1,66 @@
 {
-  "updated": "2026-11-21T06:53:49Z",
+  "updated": "2026-11-21T07:52:00Z",
   "levi": {
-    "updated": "2026-11-21T06:53:50Z",
-    "slopesOpen": 0,
+    "updated": "2026-11-21T07:52:02Z",
+    "slopesOpen": 2,
     "slopesTotal": 44,
-    "liftsOpen": 0,
+    "liftsOpen": 7,
     "liftsTotal": 28,
     "snowDepthCm": 10,
-    "openSlopes": [],
-    "openLifts": [],
+    "openSlopes": [
+      {
+        "name": "N.1",
+        "difficulty": "red",
+        "hours": "09:30-19:00"
+      },
+      {
+        "name": "8.3",
+        "difficulty": "blue",
+        "hours": "09:30-18:00"
+      }
+    ],
+    "openLifts": [
+      {
+        "name": "Express gondoli",
+        "hours": "09:30-23:00"
+      },
+      {
+        "name": "North tuolihissi",
+        "hours": "09:30-19:00"
+      },
+      {
+        "name": "Glacier Express",
+        "hours": "09:30-19:00"
+      },
+      {
+        "name": "Sunny Express",
+        "hours": "09:30-18:00"
+      },
+      {
+        "name": "Etelän sompahissi",
+        "hours": "09:30-18:00"
+      },
+      {
+        "name": "Leevilandia – Family Park mattohissi 1",
+        "hours": "09:30-18:00"
+      },
+      {
+        "name": "Gondoli 2000",
+        "hours": "09:30-17:00"
+      }
+    ],
     "source": "https://levi-CloudProd-agent.frendsapp.com/api/statistics/v1/today"
   },
   "yllas": {
-    "updated": "2026-11-21T06:53:56Z",
-    "slopesOpen": 2,
-    "liftsOpen": 2,
+    "updated": "2026-11-21T07:52:07Z",
+    "slopesOpen": 3,
+    "liftsOpen": 3,
     "openSlopes": [
+      {
+        "name": "Koulurinne (valaistu, lumetettu)",
+        "difficulty": "blue",
+        "hours": "10:00-17:00"
+      },
       {
         "name": "Vekkulirinne 2 (valaistu, lumetettu)",
         "difficulty": "green",
@@ -28,6 +73,10 @@
       }
     ],
     "openLifts": [
+      {
+        "name": "Tenava",
+        "hours": "10:00-17:00"
+      },
       {
         "name": "Vekkuli",
         "hours": "10:00-17:00"
