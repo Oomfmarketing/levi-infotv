@@ -1,5 +1,5 @@
 {
- "checked": "2026-11-18T13:04Z",
+ "checked": "2026-11-25T14:23Z",
  "cams": {
   "LwihxyJ4V20": {
    "loc": "lapland",
@@ -82,8 +82,8 @@
   "Cp4RRAEgpeU": {
    "loc": "lapland",
    "name": "Santa Claus Village",
-   "state": "unknown",
-   "reason": "This video is unavailable"
+   "state": "offline",
+   "reason": "embedding disabled by the channel"
   },
   "wT8Zhh9MBEE": {
    "loc": "rovaniemi",
