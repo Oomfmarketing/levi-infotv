@@ -1,7 +1,7 @@
 {
-  "updated": "2026-11-25T07:52:31Z",
+  "updated": "2026-11-25T09:55:13Z",
   "levi": {
-    "updated": "2026-11-25T07:52:32Z",
+    "updated": "2026-11-25T09:55:14Z",
     "slopesOpen": 2,
     "slopesTotal": 44,
     "liftsOpen": 7,
@@ -52,9 +52,9 @@
     "source": "https://levi-CloudProd-agent.frendsapp.com/api/statistics/v1/today"
   },
   "yllas": {
-    "updated": "2026-11-25T07:52:38Z",
+    "updated": "2026-11-25T09:55:20Z",
     "slopesOpen": 4,
-    "liftsOpen": 3,
+    "liftsOpen": 4,
     "openSlopes": [
       {
         "name": "Perherinne (valaistu, lumetettu)",
@@ -88,6 +88,10 @@
       },
       {
         "name": "Vekkuli",
+        "hours": "10:00-17:00"
+      },
+      {
+        "name": "Ylläs Express",
         "hours": "10:00-17:00"
       }
     ],
