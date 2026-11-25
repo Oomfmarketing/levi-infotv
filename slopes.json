@@ -1,23 +1,18 @@
 {
-  "updated": "2026-11-24T17:52:42Z",
+  "updated": "2026-11-25T04:51:10Z",
   "levi": {
-    "updated": "2026-11-24T17:52:43Z",
+    "updated": "2026-11-25T04:51:12Z",
     "slopesOpen": 0,
     "slopesTotal": 44,
-    "liftsOpen": 1,
+    "liftsOpen": 0,
     "liftsTotal": 28,
     "snowDepthCm": 10,
     "openSlopes": [],
-    "openLifts": [
-      {
-        "name": "Express gondoli",
-        "hours": "09:30-23:00"
-      }
-    ],
+    "openLifts": [],
     "source": "https://levi-CloudProd-agent.frendsapp.com/api/statistics/v1/today"
   },
   "yllas": {
-    "updated": "2026-11-24T17:52:48Z",
+    "updated": "2026-11-25T04:51:17Z",
     "slopesOpen": 3,
     "liftsOpen": 3,
     "openSlopes": [
